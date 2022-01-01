@@ -1,0 +1,5 @@
+﻿  Breakout.cpp
+C:\Users\Leki\Desktop\Breakout\Breakout\Breakout\Breakout.cpp(31,47): warning C4244: 'argument': conversion from 'double' to 'size_t', possible loss of data
+C:\Users\Leki\Desktop\Breakout\Breakout\Breakout\Breakout.cpp(34,33): warning C4129: '.': unrecognized character escape sequence
+C:\Users\Leki\Desktop\Breakout\Breakout\Breakout\Breakout.cpp(36,61): warning C4129: '.': unrecognized character escape sequence
+  Breakout.vcxproj -> C:\Users\Leki\Desktop\Breakout\Breakout\Debug\Breakout.exe
