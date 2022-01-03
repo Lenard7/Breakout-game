@@ -4,17 +4,22 @@
 #include <string>
 #include <exception>
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+
 #include "Level.h"
 
-
+// Constants for parsing XML file
 #define LEVELNUM 1
 #define NAMELEVEL "Level"
 #define NAMEEXTENSION ".xml"
 //#define PATHRESOURCES "" 
-
 //#pragma warning(disable:4996) // _CRT_SECURE_NO_WARNINGS
 #define PATHRESOURCES "\.\.\\\.\.\\Resources\\" // ..\..\resources\
 
+// Constants for SDL library and graphics implementation
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 // TODO [lpavic]: Implement main program here, loading levels, see when is last level...
 int main()
@@ -73,27 +78,51 @@ int main()
             return -1;
         }
 
+        // Implementation graphics with SDL library
+        SDL_SetMainReady(); // That will do any initialization that is needed by SDL 
+                            // (currently does nothing other than setting a global variable named SDL_MainIsReady to true)
+
+        SDL_Window* window = NULL;
+
+        if (SDL_Init(SDL_INIT_VIDEO) < 0) 
+        {
+            std::cout << "SDL could not be initialized: " <<
+                SDL_GetError();
+        }
+        else 
+        {
+            std::cout << "SDL video system is ready to go\n";
+        }
+
+        window = SDL_CreateWindow("BreakOut.exe",
+            100,
+            250,
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            SDL_WINDOW_SHOWN);
+
+        bool isRunning = true;
+        while (isRunning)
+        {
+            SDL_Event event;
+
+            while (SDL_PollEvent(&event))
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    isRunning = false;
+                }
+            }
+        }
+
+
+        SDL_DestroyWindow(window);
+
+        SDL_Quit();
+
 
 
     }
 
     return 0;
 }
-
-
-
-
-
-
-
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
