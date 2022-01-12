@@ -72,23 +72,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x86;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x86;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;$(IncludePath)</IncludePath>
+    <ReferencePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <ReferencePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
+    <ReferencePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
+    <ReferencePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,7 +104,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,7 +121,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -130,7 +134,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,16 +151,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Breakout.cpp" />
     <ClCompile Include="BrickType.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="HandleGraphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrickType.h" />
+    <ClInclude Include="HandleGraphics.h" />
     <ClInclude Include="Level.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

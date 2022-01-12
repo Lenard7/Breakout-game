@@ -1,10 +1,9 @@
 #include "BrickType.h"
 
 
-BrickType::BrickType() {}
+BrickType::BrickType() : breakScore(0) {}
 
 
-// TODO [lpavic]: if this function is to be created as Reading from XML function, then this arguments are not needed here
 BrickType::BrickType(tinyxml2::XMLElement* brickType)
 {
 	
@@ -34,6 +33,9 @@ std::string BrickType::getHitSound() { return this->hitSound; }
 std::string BrickType::getBreakSound() { return this->breakSound; }
 unsigned int BrickType::getBreakScore() { return this->breakScore; }
 std::string BrickType::getID() { return this->ID; }
+
+void BrickType::setID(std::string ID) { this->ID = ID; }
+void BrickType::setHitPoints(std::string hitPoints) { this->hitPoints = hitPoints; }
 
 /**/
 BrickType::BrickType(BrickType&&) {}
