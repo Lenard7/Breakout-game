@@ -8,10 +8,10 @@ class BrickType
 {
 private:
 	std::string ID;
-	std::string texture;
+	std::string texture; // TODO [lpavic]: this variable is unused (load unique image (.dds file) (instead of making path inside program))
 	std::string hitPoints;
-	std::string hitSound;
-	std::string breakSound;
+	std::string hitSound; // TODO [lpavic]: this variable is unused (load unique sound file (.wav file) (instead of making path inside program)) 
+	std::string breakSound; // TODO [lpavic]: this variable is unused (load unique sound file (.wav file) (instead of making path inside program))
 	unsigned int breakScore;
 public:
 	BrickType();

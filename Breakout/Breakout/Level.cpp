@@ -54,7 +54,7 @@ Level::Level(tinyxml2::XMLDocument & doc)
 		j++;
 	}
 
-	this->brickType[4].setID("_");
+	this->brickType[4].setID("_"); // TODO [lpavic]: this hardcoded 4 should be variable depending how many brickTypes are there
 
 	PrintLevel();
 

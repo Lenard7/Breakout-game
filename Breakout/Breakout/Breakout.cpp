@@ -1,3 +1,8 @@
+/*TODOs outside code (in workspace folder)
+* TODO [lpavic]: make .xml files to have only brick types that are used inside each level
+* TODO [lpavic]: edit README.md file 
+* TODO [lpavic]: setup git diff tool to be more efficient (more user friendly)
+*/
 /***********************************************/
 /********************BreakOut*******************/
 
@@ -108,13 +113,15 @@ Beginning:
         
             // Implementation graphics with SDL library
 
-            // TODO [lpavic]: move SDL_Init and SetupWindowSettings before main for loop, at the beginning of main function
-                // so window wont load when level is loaded
-
+            /* TODO [lpavic]: move SDL_Init and SetupWindowSettings before main for loop, at the beginning of main function
+            *   so window wont load when level is loaded
+            */
             SDL_SetMainReady(); // That will do any initialization that is needed by SDL 
                                 // setting a global variable named SDL_MainIsReady to true
 
-            // TODO [lpavic]: see where to put all these definitions
+            
+            // these definitons do not consume memory, so they do not be organized, unless they need to be put inside some new class
+            // TODO [lpavic]: see where to put all these definitions, maybe inside new class
             bool shutDown = false;
             SDL_Window* window = NULL;
             SDL_Renderer* renderer = NULL;
@@ -141,7 +148,8 @@ Beginning:
             SDL_Color color = { 255, 255, 255 };
 
             /*
-                // TODO [lpavic]: make delay of 3 seconds; on window should be written "LEVEL %d"
+            * TODO [lpavic]: make delay of 3 seconds; on window should be written "LEVEL %d"
+            *   make display screen when level is loaded - on loading screen should be ordinal number of level - loading screen should be displayed for 3 seconds
             */
 
             setLevelScene(&bricks, 
@@ -171,7 +179,7 @@ Beginning:
                 }
                 if (SDL_HasIntersection(&paddle, &ball))
                 {
-                    // TODO [lpavic]: make this loading a sound as a function
+                    // TODO [lpavic]: make this loading a sound as a function (implement function for loading audio files)
                     SDL_AudioSpec wavSpec;
                     Uint32 wavLength;
                     Uint8* wavBuffer;
@@ -212,6 +220,7 @@ Beginning:
 
                 std::vector<BrickType>& vecRef = levelObject.getPointerToBlockOfBricks();
                 
+                // TODO [lpavic]: whole game lags when there are more bricks -> optimize drawing brciks and setting bricks (optimize those for loops used)
                 for (unsigned int j = 0; j < levelObject.getColumnCount() * levelObject.getRowCount(); j++)
                 {
                     brick.x = (j % levelObject.getColumnCount()) * (brick.w + levelObject.getColumnSpacing()) + levelObject.getColumnSpacing() / 2; // TODO [lpavic]: is it here neccessary, in drawing this function runs again
@@ -301,6 +310,7 @@ Beginning:
                     tempPath);
 
                 /********************Write lives remaining, levelNum and score***********/
+                // TODO [lpavic]: display lives, score and level as multiline string
                 std::string tempNumOfLivesDisplay = "Lives:" + std::to_string(numOfLives); // TODO [lpavic]: display as multiline string
                 const char* numOfLivesDisplay = tempNumOfLivesDisplay.c_str();
                 DrawSurface(numOfLivesRect,

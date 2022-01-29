@@ -35,7 +35,7 @@ void SetupWindowSettings(SDL_Window** window,
     }
 
     GetDesktopResolution(SCREEN_horizontal, SCREEN_vertical);
-    SCREEN_vertical = static_cast<int>(0.95 * SCREEN_vertical); // hardcoded so title track can be seen; see for better dynamicall solution
+    SCREEN_vertical = static_cast<int>(0.95 * SCREEN_vertical); // TODO [lpavic]: hardcoded so title track can be seen; see for better dynamicall solution
     OFFSET = static_cast<int>(min(SCREEN_vertical, SCREEN_horizontal) * 0.01); // 1% of min dimenzion of screen
                                                              // TODO [lpavic]: this variable is implemented because some
                                                              // functions have delay, like SDL_HasIntersection();
@@ -189,7 +189,7 @@ void RelativePositionBallBrick(SDL_Rect& ball,
     {
         if (static_cast<double>(ball.y) >= static_cast<double>(brick.y) + static_cast<double>(brick.h) - sqrt(pow(velocityY, 2) + pow(velocityX, 2)) - OFFSET) // TODO [lpavic]: whis condition should be implemented in all conditions where cordinates are checked
         {
-            velocityY = abs(velocityY); // TODO [lpavic]: next 5 lines should be refactored in single function
+            velocityY = abs(velocityY); // TODO [lpavic]: next 5 lines should be refactored in single function; checking boundaries should be implemented as unique function
             if (velocityX >= 0)
             {
                 velocityX = -velocityX;
@@ -297,7 +297,7 @@ bool ReadInput(bool& isRunning,
         }
     }
     */
-
+    // TODO [lpavic]: handle control of keyboard: decrease delay when any key is pressed   
     if (keyboard[SDL_SCANCODE_LEFT])
     {
         paddle.x += -paddleSpeed;
@@ -317,31 +317,6 @@ bool ReadInput(bool& isRunning,
         }
     }
     return false;
-    // alternative way, but slower
-    /*
-    if (event.type == SDL_KEYDOWN)
-    {
-        // std::cout << "A key has been pressed\n"; // for test purpose only
-
-        if (event.key.keysym.sym == SDLK_DOWN)
-        {
-            std::cout << "Down key has been pressed\n";
-            // TODO [lpavic]: Add funcionality to accelerate the ball
-        }
-        if (event.key.keysym.sym == SDLK_LEFT)
-        {
-            // std::cout << "Left key has been pressed\n";
-            paddle.x += -paddleSpeed;
-            // TODO [lpavic]: Add funcionality to move player to the left
-        }
-        if (event.key.keysym.sym == SDLK_RIGHT)
-        {
-            // std::cout << "Right key has been pressed\n";
-            paddle.x += paddleSpeed;
-            // TODO [lpavic]: Add funcionality to move player to the right
-        }
-    }
-    */
 }
 
 
