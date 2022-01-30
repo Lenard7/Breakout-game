@@ -3,6 +3,7 @@
 * TODO [lpavic]: edit README.md file 
 * TODO [lpavic]: setup git diff tool to be more efficient (more user friendly)
 * TODO [lpavic]: see if Breakout.vcxproj and Breakout.vcxproj.user should be registered in git status and git diff
+* TODO [lpavic]: make x64 Platform configuration work as well (tinyxml headers not supported for this version, find solution for this problem)
 */
 /***********************************************/
 /********************BreakOut*******************/
@@ -121,7 +122,7 @@ Beginning:
                                 // setting a global variable named SDL_MainIsReady to true
 
             
-            // these definitons do not consume memory, so they do not be organized, unless they need to be put inside some new class
+            // these definitons do not consume memory (declarations do not consume memory, unlike definitions), so they do not be organized, unless they need to be put inside some new class
             // TODO [lpavic]: see where to put all these definitions, maybe inside new class
             bool shutDown = false;
             SDL_Window* window = NULL;
@@ -145,7 +146,7 @@ Beginning:
             SetupWindowSettings(&window, &renderer);
             TTF_Init();
             
-            TTF_Font* font = TTF_OpenFont("Fonts\\arial.ttf", FONT_SIZE); // TODO [lpavic]: move Fonts folder outside work folder
+            TTF_Font* font = TTF_OpenFont("..\\..\\Textures\\Fonts\\arial.ttf", FONT_SIZE);
             SDL_Color color = { 255, 255, 255 };
 
             /*

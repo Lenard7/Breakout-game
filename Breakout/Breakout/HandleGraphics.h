@@ -5,6 +5,7 @@
 #include "Level.h"
 #include <SDL_ttf.h>
 
+// TODO [lpavic]: make FONT_SIZE as variable which value depends on characteristics of user's screen properties
 #define FONT_SIZE 96
 
 extern int paddleSpeed;
