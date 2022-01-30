@@ -1,9 +1,10 @@
 /*TODOs outside code (in workspace folder)
 * TODO [lpavic]: make .xml files to have only brick types that are used inside each level
 * TODO [lpavic]: edit README.md file 
-* TODO [lpavic]: setup git diff tool to be more efficient (more user friendly)
 * TODO [lpavic]: see if Breakout.vcxproj and Breakout.vcxproj.user should be registered in git status and git diff
 * TODO [lpavic]: make x64 Platform configuration work as well (tinyxml headers not supported for this version, find solution for this problem)
+* TODO [lpavic]: The game cannot be run by executing Breakout.exe. It crashes because some .dll-s are missing. After copping .dll files, The window of application opens up for a moment and then closes
+* TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example: sounds, sprites, fonts
 */
 /***********************************************/
 /********************BreakOut*******************/
@@ -52,7 +53,13 @@ int OFFSET = 0;
 #define THROW_FAILURE(x) (throw std::iostream::failure(FILE_AND_LINE_ERR_MSG(x)))
 */
 
-// TODO [lpavic]: handle bug when ball stucks between Impenetrable brick and upper screen grid
+/*General TODOs inside code
+* TODO [lpavic]: The game is not implemented using object-oriented principles.
+* TODO [lpavic]: Many constants are hardcoded.
+* TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, std::vector causes unnecessary dynamic memory allocation.
+* TODO [lpavic]: Const - correctness is not used in the project
+* TODO [lpavic]: handle bug when ball stucks between Impenetrable brick and upper screen grid
+*/
 int main()
 {
 Beginning:
