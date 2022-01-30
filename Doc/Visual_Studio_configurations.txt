@@ -1,0 +1,42 @@
+/********************************************************************/
+(1) 
+If the header is not in the project directory (.h file), you must use a relative path in #include command in code, e.g.
+#include "..\..\SomeOtherDir\myheader.hpp"
+
+Another solution may be to add ..\..\SomeOtherDir (Note "PATH", not file name or extension.) to the
+C++ -> General -> Additional Include Directories
+properties for the project. In this case,
+when writing #include inside code, there is no need to 
+write relative or absolute path, just name of header file
+
+(2)
+go to:
+Configuration Properties->Linker->General
+and set the *path* for the .lib files in
+"Additional Library Directories"
+
+Also go to:
+Configuration Properties->Linker->Input
+and set the .lib *file name* in
+"Additional Dependencies"
+
+Header files don't get "added" automatically. They
+become part of a build via #include statements.
+/********************************************************************/
+
+ERROR: 
+Error 0xc00007b “Application was unable to start correctly”
+FIX: 
+this error occurs if something is wrong with .dll files, e.g.
+if path to .dll files is wrong setup, or .dll file is corrupted 
+or for different platform (x64 and not for x86)
+
+
+ERROR:
+"This application has failed to start because xxx.dll was not found."
+FIX:
+-1- Go to project properties (Alt+F7)
+-2- Under Debugging, look to the right
+-3- There's an Environment field.
+-4- Add your relative path there (relative to vcproj folder) i.e. ..\some-framework\lib by appending PATH=%PATH%;$(ProjectDir)\some-framework\lib or prepending to the path PATH=C:\some-framework\lib;%PATH%
+-5- Hit F5 (debug) again and it should work.

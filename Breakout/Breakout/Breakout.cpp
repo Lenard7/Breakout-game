@@ -2,6 +2,7 @@
 * TODO [lpavic]: make .xml files to have only brick types that are used inside each level
 * TODO [lpavic]: edit README.md file 
 * TODO [lpavic]: setup git diff tool to be more efficient (more user friendly)
+* TODO [lpavic]: see if Breakout.vcxproj and Breakout.vcxproj.user should be registered in git status and git diff
 */
 /***********************************************/
 /********************BreakOut*******************/
