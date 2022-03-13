@@ -187,7 +187,7 @@ void RelativePositionBallBrick(SDL_Rect& ball,
 {
     if (ball.x <= brick.x + brick.w / 2 && ball.x + ball.w >= brick.x)
     {
-        if (static_cast<double>(ball.y) >= static_cast<double>(brick.y) + static_cast<double>(brick.h) - sqrt(pow(velocityY, 2) + pow(velocityX, 2)) - OFFSET) // TODO [lpavic]: whis condition should be implemented in all conditions where cordinates are checked
+        if (static_cast<double>(ball.y) >= static_cast<double>(brick.y) + static_cast<double>(brick.h) - sqrt(pow(velocityY, 2) + pow(velocityX, 2)) - OFFSET) // TODO [lpavic]: this condition should be implemented in all conditions where cordinates are checked
         {
             velocityY = abs(velocityY); // TODO [lpavic]: next 5 lines should be refactored in single function; checking boundaries should be implemented as unique function
             if (velocityX >= 0)
@@ -328,9 +328,9 @@ void RefreshFrames(int& frameCount,
     frameCount++;
     timerFPS = SDL_GetTicks() - lastFrame;
 
-    if (timerFPS < (1000 / 50)) // TODO [lpavic]: make this dynamical so program doesnt lag
+    if (timerFPS < (1000 / 60)) // TODO [lpavic]: make this dynamical, not hardcoded
     {
-        SDL_Delay((1000 / 50) - timerFPS);
+        SDL_Delay((1000 / 60) - timerFPS);
     }
 }
 

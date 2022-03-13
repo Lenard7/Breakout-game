@@ -1,13 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include <vector>
 
-// TODO [lpavic]: write comment why is this pragma added to code
-#pragma warning(push, 0)
 #include "tinyxml2.h"
-// TODO [lpavic]: write comment why is this pragma added to code
-#pragma warning(pop)
 #include "BrickType.h"
 
 class Level

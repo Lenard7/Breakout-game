@@ -1,28 +1,27 @@
 /*TODOs outside code (in workspace folder)
 * TODO [lpavic]: make .xml files to have only brick types that are used inside each level
 * TODO [lpavic]: edit README.md file 
-* TODO [lpavic]: see if Breakout.vcxproj and Breakout.vcxproj.user should be registered in git status and git diff
 * TODO [lpavic]: make x64 Platform configuration work as well (tinyxml headers not supported for this version, find solution for this problem)
-* TODO [lpavic]: The game cannot be run by executing Breakout.exe. It crashes because some .dll-s are missing. After copping .dll files, The window of application opens up for a moment and then closes
-* TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example: sounds, sprites, fonts
+* TODO [lpavic]: tinyXML folder is missing in project (.h files at least)
+* TODO [lpavic]: The game cannot be run by executing Breakout.exe. It crashes because some .dll-s are missing. After copping .dll files, 
+                    the window of application opens up for a moment and then closes. See how to automatically deliver SDL dll files in Debug and Release folders
+* TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example: sounds, sprites, fonts. That is why Release configuration will not 
+                    handle parsing xml files -> path to that folder is wrong.
 */
 /***********************************************/
 /********************BreakOut*******************/
-
-#include <cstdio> // TODO [lpavic]: test which libraries are not needed here
-#include <cstdlib>
+// before pushing to git repository, always build in Debug and Release configurations
+// always check if some header is needed somewhere or it is not when making bigger changes
 #include <string>
 #include <exception>
-//#pragma warning(disable:4996) // _CRT_SECURE_NO_WARNINGS
 
 #define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <SDL_ttf.h>
+
 #include "Level.h"
 #include "HandleGraphics.h"
 
 // Constants for parsing XML file
-#define LEVELNUM 3 // TODO [lpavic]: variable LEVELNUM should be dynamic variable depending on number of "Level" files
+#define LEVELNUM 3 // TODO [lpavic]: variable LEVELNUM should be dynamic variable depending on number of "Level" files - implement searching through file explorer and see how many files are there
 #define NAMELEVEL "Level"
 #define NAMEEXTENSION ".xml"
 #define PATHRESOURCES "\.\.\\\.\.\\Resources\\" // ..\..\Resources\
@@ -42,19 +41,22 @@ int totalScore = 0;
 int OFFSET = 0;
 
 // TODO [lpavic]: implement error handling
-/*
+#if 0
 #ifdef DEBUG
 // print error with File name, Line number and custom message
 #define FILE_AND_LINE_ERR_MSG(x) ("ERROR: In file\n\n" + std::string(__FILE__) + "\nat line " + std::to_string((long long)(__LINE__)) + "\n\n" + x)
 #else
 #define FILE_AND_LINE_ERR_MSG(x) ("ERROR: " + std::string(x))
 #endif
-
 #define THROW_FAILURE(x) (throw std::iostream::failure(FILE_AND_LINE_ERR_MSG(x)))
-*/
+#endif
+
+#define THROW_FAILURE(x) (throw x)
+
 
 /*General TODOs inside code
-* TODO [lpavic]: The game is not implemented using object-oriented principles.
+* TODO [lpavic]: The game is not implemented using object-oriented principles. On the paper should be drawn
+* UML (Unified Modeling Language) diagram
 * TODO [lpavic]: Many constants are hardcoded.
 * TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, std::vector causes unnecessary dynamic memory allocation.
 * TODO [lpavic]: Const - correctness is not used in the project
@@ -63,56 +65,55 @@ int OFFSET = 0;
 int main()
 {
 Beginning:
-    bool gameOver = false;
-    
-    // TODO [lpavic]: implement function that will check levelnum variable
-    if (LEVELNUM < 1)
+    try
     {
-        std::cout << "Level configuration invalid or corrupted!\n";
-        return -1;
-    }
-    else if (LEVELNUM >= 1 && LEVELNUM < 4)
-    {
-        numOfLives = LEVELNUM - 1;
-    }
-    else
-    {
-        numOfLives = 3;
-    }
-
-    for (unsigned int i = 0; i < LEVELNUM; i++)
-    {
-        bool levelFinished = false;
-
-        tinyxml2::XMLDocument doc;
-        tinyxml2::XMLError docError;
-        errno_t err;
-        char* levelFileName;
-        size_t fileNameLength;
-        char* levelOrdinalNum;
-
-        levelOrdinalNum = (char*) malloc(static_cast<size_t>(floor(log10(i + 1) + 2)));
-        snprintf(levelOrdinalNum, strlen(levelOrdinalNum) + 1, "%d", i + 1);
-
-        fileNameLength = strlen(PATHRESOURCES) + strlen(NAMELEVEL) + strlen(levelOrdinalNum) + strlen(NAMEEXTENSION) + 1;
-        levelFileName = (char*)malloc(sizeof(char*) * fileNameLength);
-        snprintf(levelFileName, fileNameLength, "%s%s%s%s", PATHRESOURCES, NAMELEVEL, levelOrdinalNum, NAMEEXTENSION);
+        bool gameOver = false;
         
-        FILE* fp;
-        err = fopen_s(&fp, levelFileName, "rb");
-        if (err == 0)
+        // TODO [lpavic]: implement function that will check levelnum variable
+        if (LEVELNUM < 1)
         {
-            std::cout << "Configuration file successfully loaded!\n";
+            THROW_FAILURE("Level configuration invalid or corrupted!\n");
+            return -1;
+        }
+        else if (LEVELNUM >= 1 && LEVELNUM < 4)
+        {
+            numOfLives = LEVELNUM - 1;
         }
         else
         {
-            std::cout << "Cannot open configuration file:\n"
-                << "File corrupted or file does not exist!\n";
-            return -1;
+            numOfLives = 3;
         }
 
-        try
+        for (unsigned int i = 0; i < LEVELNUM; i++)
         {
+            bool levelFinished = false;
+
+            tinyxml2::XMLDocument doc;
+            tinyxml2::XMLError docError;
+            errno_t err;
+            char* levelFileName;
+            size_t fileNameLength;
+            char* levelOrdinalNum;
+
+            levelOrdinalNum = (char*) malloc(static_cast<size_t>(floor(log10(i + 1) + 2)));
+            snprintf(levelOrdinalNum, strlen(levelOrdinalNum) + 1, "%d", i + 1);
+
+            fileNameLength = strlen(PATHRESOURCES) + strlen(NAMELEVEL) + strlen(levelOrdinalNum) + strlen(NAMEEXTENSION) + 1;
+            levelFileName = (char*)malloc(sizeof(char*) * fileNameLength);
+            snprintf(levelFileName, fileNameLength, "%s%s%s%s", PATHRESOURCES, NAMELEVEL, levelOrdinalNum, NAMEEXTENSION);
+            
+            FILE* fp;
+            err = fopen_s(&fp, levelFileName, "rb");
+            if (err == 0)
+            {
+                std::cout << "Configuration file successfully loaded!\n";
+            }
+            else
+            {
+                THROW_FAILURE("Cannot open configuration file:\nFile corrupted or file does not exist!\n");
+            }
+
+        
             std::cout << levelFileName << "\n"; // print levelFileName
             docError = doc.LoadFile(fp);
             std::cout << docError << "\n\n"; // print docError
@@ -130,7 +131,7 @@ Beginning:
 
             
             // these definitons do not consume memory (declarations do not consume memory, unlike definitions), so they do not be organized, unless they need to be put inside some new class
-            // TODO [lpavic]: see where to put all these definitions, maybe inside new class
+            // TODO [lpavic]: see where to put all these definitions, maybe inside new class or struct
             bool shutDown = false;
             SDL_Window* window = NULL;
             SDL_Renderer* renderer = NULL;
@@ -229,7 +230,7 @@ Beginning:
 
                 std::vector<BrickType>& vecRef = levelObject.getPointerToBlockOfBricks();
                 
-                // TODO [lpavic]: whole game lags when there are more bricks -> optimize drawing brciks and setting bricks (optimize those for loops used)
+                // TODO [lpavic]: whole game lags when there are more bricks -> optimize drawing bricks and setting bricks (optimize those for loops used)
                 for (unsigned int j = 0; j < levelObject.getColumnCount() * levelObject.getRowCount(); j++)
                 {
                     brick.x = (j % levelObject.getColumnCount()) * (brick.w + levelObject.getColumnSpacing()) + levelObject.getColumnSpacing() / 2; // TODO [lpavic]: is it here neccessary, in drawing this function runs again
@@ -388,14 +389,21 @@ Close:
                 totalScore = 0;
                 goto Beginning; 
             }
-        }
-        catch (std::exception& e)
+        } 
+    }
+    catch (const char* e)
+    {
+        std::cout << "Error: " << e << "\n";
+        return -1;
+    }
+    // TODO [lpavic]: see how to catch failure with std::exception
+    /*
+    catch (std::exception& e)
         {
             std::cout << e.what() << "\n";
             return -1;
         }
- 
-    }
+    */
 Exit:
     return 0;
 }
