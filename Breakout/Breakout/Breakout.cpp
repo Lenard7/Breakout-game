@@ -1,17 +1,21 @@
 /*TODOs outside code (in workspace folder)
-* TODO [lpavic]: make .xml files to have only brick types that are used inside each level
-* TODO [lpavic]: edit README.md file 
-* TODO [lpavic]: make x64 Platform configuration work as well (tinyxml headers not supported for this version, find solution for this problem)
+* TODO [lpavic]: the window of application opens up for a moment and then closes.This project is console application, 
+    so it must be ran inside terminal - switch it from CONSOLE to WINDOWS in properties
+* TODO [lpavic]: make .xml files to have only brick types that are used inside each level 
+* TODO [lpavic]: make x64 Platform configuration work as well (tinyxml headers not supported for this version, find 
+    solution for this problem)
 * TODO [lpavic]: tinyXML folder is missing in project (.h files at least)
-* TODO [lpavic]: The game cannot be run by executing Breakout.exe. It crashes because some .dll-s are missing. After copping .dll files, 
-                    the window of application opens up for a moment and then closes. See how to automatically deliver SDL dll files in Debug and Release folders
-* TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example: sounds, sprites, fonts. That is why Release configuration will not 
-                    handle parsing xml files -> path to that folder is wrong.
+* TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example: 
+    sounds, sprites, fonts -> Release configuration will not handle parsing xml files -> xml files, iamges, sounds etc.
+    should be inside "Resource Files" folder
+* TODO [lpavic]: add display message if some files are missing (dll-s or others)
 */
+
 /***********************************************/
 /********************BreakOut*******************/
 // before pushing to git repository, always build in Debug and Release configurations
-// always check if some header is needed somewhere or it is not when making bigger changes
+// always check if some header, dll or other lib objects are needed somewhere or it is not when making bigger changes
+// edit README.md file 
 #include <string>
 #include <exception>
 
@@ -19,16 +23,6 @@
 
 #include "Level.h"
 #include "HandleGraphics.h"
-
-// Constants for parsing XML file
-#define LEVELNUM 3 // TODO [lpavic]: variable LEVELNUM should be dynamic variable depending on number of "Level" files - implement searching through file explorer and see how many files are there
-#define NAMELEVEL "Level"
-#define NAMEEXTENSION ".xml"
-#define PATHRESOURCES "\.\.\\\.\.\\Resources\\" // ..\..\Resources\
-
-#define PATHTEXTURES "\.\.\\\.\.\\Textures\\" // ..\..\Textures\
-
-#define PATHSOUNDS "\.\.\\\.\.\\Sounds\\" // ..\..\Sounds\
 
 
 /*Global Variables*/
@@ -56,14 +50,24 @@ int OFFSET = 0;
 
 /*General TODOs inside code
 * TODO [lpavic]: The game is not implemented using object-oriented principles. On the paper should be drawn
-* UML (Unified Modeling Language) diagram
+    UML (Unified Modeling Language) diagram
+* TODO [lpavic]: Delete opening files by stating the file path, it should be managed by putting these resource files inside "Resource Files" folder
 * TODO [lpavic]: Many constants are hardcoded.
-* TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, std::vector causes unnecessary dynamic memory allocation.
+* TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, 
+    std::vector causes unnecessary dynamic memory allocation.
 * TODO [lpavic]: Const - correctness is not used in the project
 * TODO [lpavic]: handle bug when ball stucks between Impenetrable brick and upper screen grid
 */
 int main()
 {
+    // Constants for parsing XML file
+    constexpr unsigned int LEVELNUM = 3; // TODO [lpavic]: variable LEVELNUM should be dynamic variable depending on number of "Level" files - implement searching through file explorer and see how many files are there
+    constexpr char NAMELEVEL[] = "Level";
+    constexpr char NAMEEXTENSION[] = ".xml";
+    constexpr char PATHRESOURCES[] = "\.\.\\\.\.\\Resources\\"; // "..\..\Resources\"
+    constexpr char PATHTEXTURES[] = "\.\.\\\.\.\\Textures\\"; // "..\..\Textures\" 
+    constexpr char PATHSOUNDS[] = "\.\.\\\.\.\\Sounds\\"; // "..\..\Sounds\"
+    
 Beginning:
     try
     {
@@ -113,7 +117,6 @@ Beginning:
                 THROW_FAILURE("Cannot open configuration file:\nFile corrupted or file does not exist!\n");
             }
 
-        
             std::cout << levelFileName << "\n"; // print levelFileName
             docError = doc.LoadFile(fp);
             std::cout << docError << "\n\n"; // print docError
@@ -159,7 +162,8 @@ Beginning:
 
             /*
             * TODO [lpavic]: make delay of 3 seconds; on window should be written "LEVEL %d"
-            *   make display screen when level is loaded - on loading screen should be ordinal number of level - loading screen should be displayed for 3 seconds
+            *   make display screen when level is loaded - on loading screen should be ordinal number of level - loading
+                screen should be displayed for 3 seconds
             */
 
             setLevelScene(&bricks, 
