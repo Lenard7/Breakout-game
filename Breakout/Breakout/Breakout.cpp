@@ -1,12 +1,13 @@
 /*TODOs outside code (in workspace folder)
 * TODO [lpavic]: the window of application opens up for a moment and then closes.This project is console application, 
     so it must be ran inside terminal - switch it from CONSOLE to WINDOWS in properties
+* TODO [lpavic]: Release configuration is not working - see project configurations and if memory was free correctly 
 * TODO [lpavic]: make .xml files to have only brick types that are used inside each level 
 * TODO [lpavic]: make x64 Platform configuration work as well (tinyxml headers not supported for this version, find 
     solution for this problem)
 * TODO [lpavic]: tinyXML folder is missing in project (.h files at least)
 * TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example: 
-    sounds, sprites, fonts -> Release configuration will not handle parsing xml files -> xml files, iamges, sounds etc.
+    sounds, sprites, fonts -> Release configuration will not handle parsing xml files -> xml files, images, sounds etc.
     should be inside "Resource Files" folder
 * TODO [lpavic]: add display message if some files are missing (dll-s or others)
 */
@@ -58,7 +59,9 @@ int OFFSET = 0;
 * TODO [lpavic]: Const - correctness is not used in the project
 * TODO [lpavic]: handle bug when ball stucks between Impenetrable brick and upper screen grid
 */
-int main()
+
+
+int main(int argc, char** argv)
 {
     // Constants for parsing XML file
     constexpr unsigned int LEVELNUM = 3; // TODO [lpavic]: variable LEVELNUM should be dynamic variable depending on number of "Level" files - implement searching through file explorer and see how many files are there
@@ -71,8 +74,33 @@ int main()
 Beginning:
     try
     {
-        bool gameOver = false;
+        SDL_SetMainReady(); // That will do any initialization that is needed by SDL - setting a global variable named SDL_MainIsReady to true
+
+        SDL_Window* window = NULL;
+        SDL_Renderer* renderer = NULL;
+        SetupWindowSettings(&window, &renderer);
+
+        TTF_Init();
+
+        TTF_Font* font = TTF_OpenFont("..\\..\\Textures\\Fonts\\arial.ttf", FONT_SIZE);
+        SDL_Color color = {255, 255, 255};
+
         
+MainMenu:
+        bool gameOver = false;
+
+        /*
+        * TODO [lpavic]: make main menu: it should be triggered:
+            - at the opening of the game
+            - during the game, when "Esc" button is pressed and game is paused
+            - when player loses the game
+            - when player wins the game
+        * TODO [lpavic]: display black screen with only certain messages:
+            - when new level is entered, message should be: "LEVEL levelOrdinalNum", delayed for 2 seconds
+            - when game is won, message should be: "WIN!", by pressing key "Esc" Main menu should be displayed
+            - when game is lost, message should be: "GAME LOST!", by pressing key "Esc" Main menu should be displayed
+        */
+
         // TODO [lpavic]: implement function that will check levelnum variable
         if (LEVELNUM < 1)
         {
@@ -119,25 +147,15 @@ Beginning:
 
             std::cout << levelFileName << "\n"; // print levelFileName
             docError = doc.LoadFile(fp);
-            std::cout << docError << "\n\n"; // print docError
 
             // Getting parsed data from xml into levelObject object
             Level levelObject(doc);
         
-            // Implementation graphics with SDL library
+            /*Data for level are parsed and rendering the level starts*/
 
-            /* TODO [lpavic]: move SDL_Init and SetupWindowSettings before main for loop, at the beginning of main function
-            *   so window wont load when level is loaded
-            */
-            SDL_SetMainReady(); // That will do any initialization that is needed by SDL 
-                                // setting a global variable named SDL_MainIsReady to true
-
-            
-            // these definitons do not consume memory (declarations do not consume memory, unlike definitions), so they do not be organized, unless they need to be put inside some new class
+            /*These declarations do not consume memory, unlike definitions, so they do not need to be organized, unless they need to be put inside some new class*/
             // TODO [lpavic]: see where to put all these definitions, maybe inside new class or struct
             bool shutDown = false;
-            SDL_Window* window = NULL;
-            SDL_Renderer* renderer = NULL;
             
             // TODO [lpavic]: maybe some variables should be put inside new class
             SDL_Rect paddle;
@@ -153,18 +171,7 @@ Beginning:
             double velocityX;
             double velocityY;
             bool *bricks = new bool [levelObject.getRowCount() * levelObject.getColumnCount()];
-            
-            SetupWindowSettings(&window, &renderer);
-            TTF_Init();
-            
-            TTF_Font* font = TTF_OpenFont("..\\..\\Textures\\Fonts\\arial.ttf", FONT_SIZE);
-            SDL_Color color = { 255, 255, 255 };
 
-            /*
-            * TODO [lpavic]: make delay of 3 seconds; on window should be written "LEVEL %d"
-            *   make display screen when level is loaded - on loading screen should be ordinal number of level - loading
-                screen should be displayed for 3 seconds
-            */
 
             setLevelScene(&bricks, 
                 numOfLivesRect, 
@@ -189,7 +196,7 @@ Beginning:
                 if (numOfLives < 1)
                 {
                     gameOver = true;
-                    goto Close;
+                    goto ShutDownSequence;
                 }
                 if (SDL_HasIntersection(&paddle, &ball))
                 {
@@ -207,12 +214,15 @@ Beginning:
                     {
                         // open audio device
                         SDL_AudioDeviceID deviceId;
-                        deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0); // TODO [lpavic]: after some time, it returns error, i.e 0
+
+                        // TODO [lpavic]: after some time, SDL_OpenAudioDevice returns error, i.e 0
+                        deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
                         // play audio
                         int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
                         SDL_PauseAudioDevice(deviceId, 0);
 
+                        //SDL_CloseAudioDevice(deviceId);
                         SDL_FreeWAV(wavBuffer);
                     }
 
@@ -254,12 +264,16 @@ Beginning:
                         else
                         {
                             // open audio device
-                            SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+                            SDL_AudioDeviceID deviceId;
+                            
+                            // TODO [lpavic]: after some time, SDL_OpenAudioDevice returns error, i.e 0
+                            deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
                             // play audio
                             int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
                             SDL_PauseAudioDevice(deviceId, 0);
 
+                            //SDL_CloseAudioDevice(deviceId);
                             SDL_FreeWAV(wavBuffer);
                         }
                         
@@ -290,7 +304,7 @@ Beginning:
                 if (reset)
                 {
                     levelFinished = true;
-                    goto Close;
+                    goto ShutDownSequence;
                 }
 
                 /***************INPUT***************/
@@ -302,7 +316,10 @@ Beginning:
                         paddle,
                         velocityX,
                         velocityY);
-                    if (shutDown) { goto Close; }
+                    if (shutDown) 
+                    { 
+                        goto ShutDownSequence; 
+                    }
                 }
 
                 /***************RENDER***************/
@@ -381,19 +398,29 @@ Beginning:
                 }
                 SDL_RenderPresent(renderer);   
             }
-Close:
-            TTF_CloseFont(font);
-            SDL_DestroyRenderer(renderer);
-            SDL_DestroyWindow(window);
-            TTF_Quit();
-            SDL_Quit();
-            if (shutDown) { goto Exit; }
+      
+ShutDownSequence: 
+            if (shutDown) 
+            {
+                TTF_CloseFont(font);
+                TTF_Quit();
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                goto Exit; 
+            }
             if (gameOver) 
             { 
                 totalScore = 0;
-                goto Beginning; 
+                goto MainMenu; 
             }
-        } 
+        }
+
+        TTF_CloseFont(font);
+        TTF_Quit();
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
     }
     catch (const char* e)
     {
