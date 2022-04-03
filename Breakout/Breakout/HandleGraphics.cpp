@@ -265,6 +265,7 @@ void RelativePositionBallBrick(SDL_Rect& ball,
 
 
 bool ReadInput(bool& isRunning,
+    bool& isPaused,
     SDL_Event& event,
     SDL_Rect& paddle,
     double& velocityX,
@@ -277,26 +278,12 @@ bool ReadInput(bool& isRunning,
         isRunning = false;
         return true;
     }
-
-    // TODO [lpavic]: implement Pause functionality; not working here yet
-    /*
-    if (keyboard[SDL_SCANCODE_P])
+    
+    if (keyboard[SDL_SCANCODE_ESCAPE])
     {
-        //SDL_Delay(1000);
-        while (1)
-        {
-            if (event.type == SDL_QUIT)
-            {
-                isRunning = false;
-                return true;
-            }
-            if (keyboard[SDL_SCANCODE_P])
-            {
-                break;
-            }
-        }
+        isPaused = true;
     }
-    */
+    
     // TODO [lpavic]: handle control of keyboard: decrease delay when any key is pressed   
     if (keyboard[SDL_SCANCODE_LEFT])
     {
@@ -374,4 +361,25 @@ void DrawSprite(SDL_Renderer** renderer,
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
+}
+
+
+bool ReadInputForPausedMenu(bool& isRunning,
+    bool& isPaused,
+    SDL_Event& pauseMenuEvent)
+{
+    const Uint8* keyboard = SDL_GetKeyboardState(NULL);
+
+    if (pauseMenuEvent.type == SDL_QUIT)
+    {
+        isRunning = false;
+        return true;
+    }
+
+    if (keyboard[SDL_SCANCODE_ESCAPE])
+    {
+        isPaused = false;
+    }
+
+    return false;
 }

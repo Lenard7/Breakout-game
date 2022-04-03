@@ -48,6 +48,7 @@ void RelativePositionBallBrick(SDL_Rect& ball,
     double& velocityX,
     double& velocityY);
 bool ReadInput(bool& isRunning,
+    bool& isPaused,
     SDL_Event& event,
     SDL_Rect& paddle,
     double& velocityX,
@@ -62,3 +63,6 @@ void DrawSurface(SDL_Rect& surfaceRect,
 void DrawSprite(SDL_Renderer** renderer,
     SDL_Rect& paddle,
     std::string tempPath);
+bool ReadInputForPausedMenu(bool& isRunning,
+    bool& isPaused,
+    SDL_Event& pauseMenuEvent);

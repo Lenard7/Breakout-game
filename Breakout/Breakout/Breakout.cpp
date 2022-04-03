@@ -185,6 +185,7 @@ MainMenu:
                 levelObject);
 
             bool isRunning = true;
+            bool isPaused = false;
             while (isRunning)
             {
                 std::cout << "velocity of ball: X: " << velocityX << " , Y: " << velocityY << "\n";
@@ -196,7 +197,7 @@ MainMenu:
                 if (numOfLives < 1)
                 {
                     gameOver = true;
-                    goto ShutDownSequence;
+                    goto EndingLevelSequence;
                 }
                 if (SDL_HasIntersection(&paddle, &ball))
                 {
@@ -304,24 +305,57 @@ MainMenu:
                 if (reset)
                 {
                     levelFinished = true;
-                    goto ShutDownSequence;
+                    goto EndingLevelSequence;
                 }
 
-                /***************INPUT***************/
+                /***************INPUT****************/
+                if (isPaused)
+                {
+                    isPaused = false;
+                }
+
                 SDL_Event event;
                 while (SDL_PollEvent(&event))
                 {                    
                     shutDown = ReadInput(isRunning,
+                        isPaused,
                         event,
                         paddle,
                         velocityX,
                         velocityY);
+
                     if (shutDown) 
                     { 
-                        goto ShutDownSequence; 
+                        goto EndingLevelSequence; 
                     }
                 }
 
+                // SEQUENCE: GAME IS PAUSED
+                // TODO [lpavic]: implement unpause menu
+                while (isPaused)
+                {
+                    SDL_Event pauseMenuEvent;
+                    
+                    while (SDL_PollEvent(&pauseMenuEvent))
+                    {
+                        shutDown = ReadInputForPausedMenu(isRunning,
+                            isPaused,
+                            pauseMenuEvent);
+
+                    }
+
+                    if (shutDown)
+                    {
+                        goto EndingLevelSequence;
+                    }
+
+                    if (!isPaused)
+                    {
+                        break;
+                    }
+                    
+                }
+                /***************INPUT****************/
                 /***************RENDER***************/
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderClear(renderer);
@@ -398,17 +432,13 @@ MainMenu:
                 }
                 SDL_RenderPresent(renderer);   
             }
-      
-ShutDownSequence: 
+
+EndingLevelSequence:
             if (shutDown) 
             {
-                TTF_CloseFont(font);
-                TTF_Quit();
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
-                goto Exit; 
+                goto ShutDownSequence; 
             }
+
             if (gameOver) 
             { 
                 totalScore = 0;
@@ -416,6 +446,7 @@ ShutDownSequence:
             }
         }
 
+ShutDownSequence:
         TTF_CloseFont(font);
         TTF_Quit();
         SDL_DestroyRenderer(renderer);
@@ -435,6 +466,6 @@ ShutDownSequence:
             return -1;
         }
     */
-Exit:
+   
     return 0;
 }
