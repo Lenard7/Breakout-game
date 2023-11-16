@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO [lpavic]: give correct paths and put seperate elenebts in different folder, like for bricks Texture="Textures/Bricks/Soft.dds"-->
 <Level
-	RowCount="2"
-	ColumnCount="15"
+	RowCount="1"
+	ColumnCount="5"
 	RowSpacing="5"
 	ColumnSpacing="5"
 	BackgroundTexture="Textures/Boards/Board_01.dds">
@@ -9,7 +10,7 @@
 			<!-- Soft Brick -->
 			<BrickType
 				Id="S"
-				Texture="Textures/Bricks/Soft.dds"
+				Texture="Textures\Soft.png"
 				HitPoints="1"
 				HitSound="Sounds/Hit_01.wav"
 				BreakSound="Sounds/Break_01.wav"
@@ -17,7 +18,7 @@
 			<!-- Medium Brick -->
 			<BrickType
 				Id="M"
-				Texture="Textures/Bricks/Medium.dds"
+				Texture="Textures\Medium.png"
 				HitPoints="2"
 				HitSound="Sounds/Hit_02.wav"
 				BreakSound="Sounds/Break_02.wav"
@@ -25,7 +26,7 @@
 			<!-- Hard Brick -->
 			<BrickType
 				Id="H"
-				Texture="Textures/Bricks/Hard.dds"
+				Texture="Textures\Hard.png"
 				HitPoints="3"
 				HitSound="Sounds/Hit_03.wav"
 				BreakSound="Sounds/Break_03.wav"
@@ -33,13 +34,12 @@
 			<!-- Impenetrable Brick -->
 			<BrickType
 				Id="I"
-				Texture="Textures/Bricks/Impenetrable.dds"
+				Texture="Textures\Impenetrable.png"
 				HitPoints="Infinite"
 				HitSound="Sounds/Hit_04.wav" />
 		</BrickTypes>
 		<Bricks>
-		S S S S S S S S S S S S S S S
-		S _ S S S S S _ S S S S S _ S
+		S S S S S 
 		
 		</Bricks>
 </Level>

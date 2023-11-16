@@ -168,16 +168,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Third_party\tinXML files\Source\tinyxml2.cpp" />
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Breakout.cpp" />
-    <ClCompile Include="BrickType.cpp" />
+    <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameElement.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="HandleGraphics.cpp" />
+    <ClCompile Include="LevelInformation.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Paddle.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BrickType.h" />
+    <ClInclude Include="Ball.h" />
+    <ClInclude Include="Brick.h" />
+    <ClInclude Include="ErrorHandler.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameElement.h" />
     <ClInclude Include="HandleGraphics.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelInformation.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Paddle.h" />
+    <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Resources.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Breakout.rc" />

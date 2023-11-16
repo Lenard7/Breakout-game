@@ -1,3 +1,7 @@
+
+/* Old implementation, see what to use, and what to discard */
+#if 0
+
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -5,7 +9,6 @@
 #include "HandleGraphics.h"
 #include "wtypes.h"
 
-// TODO [lpavic]: see if this function needs to be static
 void GetDesktopResolution(unsigned int& horizontal, unsigned int& vertical)
 {
     RECT desktop;
@@ -34,18 +37,18 @@ void SetupWindowSettings(SDL_Window** const window,
         std::cout << "SDL initialized successfully!\n";
     }
 
-    GetDesktopResolution(SCREEN_horizontal, SCREEN_vertical);
+    GetDesktopResolution(window_horizontal_size, window_vertical_size);
     
     // TODO [lpavic]: hardcoded so title track can be seen; see for better dynamicall solution
     // maybe without 0.95, and when main menu will be implemented, there should be quit button
-    SCREEN_vertical = static_cast<int>(0.95 * SCREEN_vertical);
+    window_vertical_size = static_cast<int>(0.95 * window_vertical_size);
     // 1% of min dimenzion of screen
     // TODO [lpavic]: this variable is implemented because some
     // functions have delay, like SDL_HasIntersection();
-    OFFSET = static_cast<int>(min(SCREEN_vertical, SCREEN_horizontal) * 0.01);
+    OFFSET = static_cast<int>(min(window_vertical_size, window_horizontal_size) * 0.01);
 
-    if (SDL_CreateWindowAndRenderer(SCREEN_horizontal,
-        SCREEN_vertical,
+    if (SDL_CreateWindowAndRenderer(window_horizontal_size,
+        window_vertical_size,
         0,
         window,
         renderer) < 0)
@@ -55,6 +58,20 @@ void SetupWindowSettings(SDL_Window** const window,
 
     SDL_SetWindowTitle(*window, "Breakout.exe");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // it happens when entering new level
@@ -83,41 +100,41 @@ void setLevelScene(bool*& bricks,
     numOfLives++;
 
     // one third of screen width
-    numOfLivesRect.w = SCREEN_horizontal / 3;
+    numOfLivesRect.w = window_horizontal_size / 3;
     // 10 percent of screen height
-    numOfLivesRect.h = SCREEN_vertical / 10;
+    numOfLivesRect.h = window_vertical_size / 10;
     numOfLivesRect.x = 0;
     numOfLivesRect.y = 0;
 
     // one third of screen width
-    levelNumRect.w = SCREEN_horizontal / 3;
+    levelNumRect.w = window_horizontal_size / 3;
     // 10 percent of screen height
-    levelNumRect.h = SCREEN_vertical / 10;
-    levelNumRect.x = SCREEN_horizontal / 3;
+    levelNumRect.h = window_vertical_size / 10;
+    levelNumRect.x = window_horizontal_size / 3;
     levelNumRect.y = 0;
 
     // one third of screen width
-    scoreRect.w = SCREEN_horizontal / 3;
+    scoreRect.w = window_horizontal_size / 3;
     // 10 percent of screen height
-    scoreRect.h = SCREEN_vertical / 10;
-    scoreRect.x = 2 * SCREEN_horizontal / 3;
+    scoreRect.h = window_vertical_size / 10;
+    scoreRect.x = 2 * window_horizontal_size / 3;
     scoreRect.y = 0;
 
     // set this adjustable to screen settings
-    paddle.h = SCREEN_vertical / 20;
-    paddle.w = SCREEN_horizontal / 6;
+    paddle.h = window_vertical_size / 20;
+    paddle.w = window_horizontal_size / 6;
     ball.w = paddle.h / 2;
     ball.h = ball.w;
-    brick.w = (SCREEN_horizontal - (levelObject.getColumnSpacing() * (levelObject.getColumnCount() + 1))) / levelObject.getColumnCount();
-    brick.h = static_cast<int>(0.1 * static_cast<double>((SCREEN_vertical - levelObject.getRowCount() * levelObject.getRowSpacing()) / levelObject.getRowCount()));
+    brick.w = (window_horizontal_size - (levelObject.getColumnSpacing() * (levelObject.getColumnCount() + 1))) / levelObject.getColumnCount();
+    brick.h = static_cast<int>(0.1 * static_cast<double>((window_vertical_size - levelObject.getRowCount() * levelObject.getRowSpacing()) / levelObject.getRowCount()));
 
     // this block of code should be unique function, it is also called later, (ctrl + f)
-    paddle.x = SCREEN_horizontal / 2 - paddle.w / 2;
+    paddle.x = window_horizontal_size / 2 - paddle.w / 2;
     // hardcoded 10 for making little space between bottom frame and the paddle
-    paddle.y = SCREEN_vertical - paddle.h - 10;
-    ball.x = SCREEN_horizontal / 2 - ball.w / 2;
+    paddle.y = window_vertical_size - paddle.h - 10;
+    ball.x = window_horizontal_size / 2 - ball.w / 2;
     // -paddle.y - ball.h
-    ball.y = SCREEN_vertical - ball.h - paddle.h - 10;
+    ball.y = window_vertical_size - ball.h - paddle.h - 10;
     // if velocityY or X drops below 1, ball wont move in that axis
     velocityY = sqrt(2) * ballSpeed / 2;
     velocityX = sqrt(2) * ballSpeed / 2;
@@ -166,9 +183,9 @@ void SetLimitSituations(SDL_Rect& paddle,
         paddle.x = 0;
     }
 
-    if (paddle.x > static_cast<int>(SCREEN_horizontal) - paddle.w)
+    if (paddle.x > static_cast<int>(window_horizontal_size) - paddle.w)
     {
-        paddle.x = SCREEN_horizontal - paddle.w;
+        paddle.x = window_horizontal_size - paddle.w;
     }
 
     if (ball.y < numOfLivesRect.h)
@@ -177,19 +194,19 @@ void SetLimitSituations(SDL_Rect& paddle,
         velocityY = -velocityY;
     }
 
-    if (ball.x < 0 || ball.x > static_cast<int>(SCREEN_horizontal) - ball.w)
+    if (ball.x < 0 || ball.x > static_cast<int>(window_horizontal_size) - ball.w)
     {
         velocityX = -velocityX;
     }
 
-    if (ball.y + ball.h > static_cast<int>(SCREEN_vertical))
+    if (ball.y + ball.h > static_cast<int>(window_vertical_size))
     {
         numOfLives--;
 
-        paddle.x = SCREEN_horizontal / 2 - paddle.w / 2;
-        paddle.y = SCREEN_vertical - paddle.h;
-        ball.x = SCREEN_horizontal / 2 - ball.w / 2;
-        ball.y = SCREEN_vertical - ball.h - paddle.h;
+        paddle.x = window_horizontal_size / 2 - paddle.w / 2;
+        paddle.y = window_vertical_size - paddle.h;
+        ball.x = window_horizontal_size / 2 - ball.w / 2;
+        ball.y = window_vertical_size - ball.h - paddle.h;
         velocityX = sqrt(2) * ballSpeed / 2;
         velocityY = sqrt(2) * ballSpeed / 2;
     }
@@ -203,10 +220,8 @@ void RelativePositionBallBrick(const SDL_Rect& ball,
 {
     if (ball.x <= brick.x + brick.w / 2 && ball.x + ball.w >= brick.x)
     {
-        // TODO [lpavic]: this condition should be implemented in all conditions where cordinates are checked
         if (static_cast<double>(ball.y) >= static_cast<double>(brick.y) + static_cast<double>(brick.h) - sqrt(pow(velocityY, 2) + pow(velocityX, 2)) - OFFSET)
         {
-            // TODO [lpavic]: next 5 lines should be refactored in single function; checking boundaries should be implemented as unique function
             velocityY = abs(velocityY);
             if (velocityX >= 0)
             {
@@ -302,7 +317,6 @@ bool ReadInput(bool& isRunning,
         isPaused = true;
     }
     
-    // TODO [lpavic]: handle control of keyboard: decrease delay when any key is pressed   
     if (keyboard[SDL_SCANCODE_LEFT])
     {
         paddle.x += -paddleSpeed;
@@ -317,14 +331,12 @@ bool ReadInput(bool& isRunning,
     {
         if (sqrt(pow(velocityY, 2) + pow(velocityX, 2)) < 2.0 * static_cast<double>(ballSpeed))
         {
-            // TODO [lpavic]: implement better
             velocityX *= sqrt(2);
             velocityY *= sqrt(2);
         }
     }
     return false;
 }
-
 
 void RefreshFrames(int& frameCount,
     const int& lastFrame)
@@ -334,7 +346,6 @@ void RefreshFrames(int& frameCount,
     frameCount++;
     timerFPS = SDL_GetTicks() - lastFrame;
 
-    // TODO [lpavic]: make this dynamical, not hardcoded
     if (timerFPS < (1000 / 60))
     {
         SDL_Delay((1000 / 60) - timerFPS);
@@ -403,3 +414,5 @@ bool ReadInputForPausedMenu(bool& isRunning,
 
     return false;
 }
+
+#endif

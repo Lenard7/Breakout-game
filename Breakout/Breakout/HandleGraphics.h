@@ -1,5 +1,8 @@
 #pragma once
 
+/* Old implementation, see what to use, and what to discard */
+#if 0
+
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
 #endif
@@ -8,14 +11,14 @@
 #include "Level.h"
 #include <SDL_ttf.h>
 
-// TODO [lpavic]: make FONT_SIZE as variable which value depends on characteristics of user's screen properties
-#define FONT_SIZE 96
+// TODO [lpavic]: make font_size as variable which value depends on characteristics of user's screen properties
+#define font_size 96
 
 extern int paddleSpeed;
 extern int ballSpeed;
 extern int numOfLives;
-extern unsigned int SCREEN_horizontal;
-extern unsigned int SCREEN_vertical;
+extern unsigned int window_horizontal_size;
+extern unsigned int window_vertical_size;
 extern int OFFSET;
 
 void GetDesktopResolution(unsigned int& horizontal, 
@@ -68,3 +71,5 @@ void DrawSprite(SDL_Renderer* const * const renderer,
 bool ReadInputForPausedMenu(bool& isRunning,
     bool& isPaused,
     const SDL_Event& pauseMenuEvent);
+
+#endif

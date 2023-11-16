@@ -1,16 +1,72 @@
+#include "Game.h"
+
+#include <iostream>
+#include <string>
+
+
+/**
+ * before pushing to git repository, always build in Debug and Release configurations
+ * always check if some header, dll or other lib objects are needed somewhere or it is not when making bigger changes
+ * edit README.md file
+ */
+
+
 /** TODOs outside code (in workspace folder)
  * TODO [lpavic]: There is no resource managament system, resources are loading from the disk "on the fly". For example:
  *      sounds, sprites, fonts -> Release configuration will not handle parsing xml files -> xml files, images, sounds etc.
  *      should be inside "Resource Files" folder
- * TODO [lpavic]: make .xml files to have only brick types that are used inside each level 
+ * TODO [lpavic]: make .xml files to have only brick types that are used inside each level
+ * TODO [lpavic]: make that .exe file is automatically generated inside BREAKOUT-GAME\Release folder in Release mode (not to manually copy paste each time before commiting and pushing to server)
+ * TODO [lpavic]: write inheritance classes inside BREAKOUT-GAME\Doc\Element_hierarchy.txt
  */
+
+
+/** General TODOs inside code
+ * TODO [lpavic]: Many constants are hardcoded.
+ * TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, 
+    std::vector causes unnecessary dynamic memory allocation.
+ * TODO [lpavic]: after major implementation, resolve warnings
+ * TODO [lpavic]: try to use template (functions and classes) where there is needed
+ */
+
+
+/**
+ * TODO [lpavic]: display black screen with only certain messages:
+    - when new level is entered, message should be: "LEVEL levelOrdinalNum", delayed for 2 seconds
+    - when game is won, message should be: "WIN!", by pressing key "Esc" Main menu should be displayed
+    - when game is lost, message should be: "GAME LOST!", by pressing key "Esc" Main menu should be displayed
+ */
+
+int main()
+{
+    try
+    {
+        Game & breakout = Game::getInstance();
+        breakout.runImplementation();
+    }
+    catch (std::string e)
+    {
+        std::cout << e << "\n";
+        return -1;
+    }
+
+    return 0;
+}
+
+
+/* Old implementation, see what to use, and what to discard */
+#if 0
+
+
+
 
 /***********************************************/
 /********************BreakOut*******************/
-// before pushing to git repository, always build in Debug and Release configurations
-// always check if some header, dll or other lib objects are needed somewhere or it is not when making bigger changes
-// edit README.md file 
 
+
+
+/*******************************************************************************************************************************/
+/********************************************************************** IMPORTANT INCLUDES *********************************************************************/
 // this #define is needed because of error when snprintf or strcpy was used: "This function or variable may be unsafe"
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -23,17 +79,24 @@
 
 #include "Level.h"
 #include "HandleGraphics.h"
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
 
-
+/*******************************************************************************************************************************/
+/*********************************************************GLOBAL VARIABLES**********************************************************************/
 /*Global Variables*/
 int numOfLives;
-unsigned int SCREEN_horizontal = 0;
-unsigned int SCREEN_vertical = 0;
+unsigned int window_horizontal_size = 0;
+unsigned int window_vertical_size = 0;
 int ballSpeed = 20;
 int paddleSpeed = 20;
 int totalScore = 0;
 int OFFSET = 0;
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
 
+/*******************************************************************************************************************************/
+/***************************************************ERROR HANDLING****************************************************************************/
 #ifndef NDEBUG
 // print error with file name and line number in debug mode - file name and line number would be written wrong(always the same value no metter where throw happened) without using macros
 #define FILE_AND_LINE_ERR_MSG(x) ("ERROR: In file\n\n" + std::string(__FILE__) + "\nat line " + std::to_string((long long)(__LINE__)) + "\n\n" + x)
@@ -41,37 +104,35 @@ int OFFSET = 0;
 #define FILE_AND_LINE_ERR_MSG(x) ("ERROR: " + std::string(x))
 #endif
 #define THROW_FAILURE(x) (throw std::string(FILE_AND_LINE_ERR_MSG(x)))
+/*******************************************************************************************************************************/
+/*******************************************************************************************************************************/
 
 
-/*General TODOs inside code
-* TODO [lpavic]: The game is not implemented using object-oriented principles. On the paper should be drawn
-    UML (Unified Modeling Language) diagram
-* TODO [lpavic]: Many constants are hardcoded.
-* TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, 
-    std::vector causes unnecessary dynamic memory allocation.
-* TODO [lpavic]: handle bug when ball stucks between Impenetrable brick and upper screen grid
-*/
-
-
-// TODO [lpavic]: make Game class as a singleton and inside main Game object will call its main methods, like init, startMenu, startgame etc.
 int main(int argc, char** argv)
 {
+
+    /*******************************************************************************************************************************/
+    /************************************************************CONSTANTS FOR PARSING XML FILES*******************************************************************/
     // Constants for parsing XML file
-    constexpr unsigned int LEVELNUM = 3; // TODO [lpavic]: variable LEVELNUM should be dynamic variable depending on number of "Level" files - implement searching through file explorer and see how many files are there
+    constexpr unsigned int LEVELNUM = 3;
     constexpr char NAMELEVEL[] = "Level";
     constexpr char NAMEEXTENSION[] = ".xml";
 
-    // TODO [lpavic]: this paths may not be hardcoded like this, maybe they should be inside resource managament
     // "..\..\Resources\Levels\"
     constexpr char PATHRESOURCES[] = "\.\.\\\.\.\\Resources\\Levels\\";
     // "..\..\Resources\Textures\"
     constexpr char PATHTEXTURES[] = "\.\.\\\.\.\\Resources\\Textures\\";
     // "..\..\Resources\Sounds\"
     constexpr char PATHSOUNDS[] = "\.\.\\\.\.\\Resources\\Sounds\\";
-    
+    /*******************************************************************************************************************************/
+    /*******************************************************************************************************************************/
+
 Beginning:
     try
     {
+
+        /*******************************************************************************************************************************/
+        /******************************************************INITIALIZING GRAPHICHS*************************************************************************/
         // That will do any initialization that is needed by SDL - setting a global variable named SDL_MainIsReady to true
         SDL_SetMainReady();
 
@@ -81,25 +142,18 @@ Beginning:
 
         TTF_Init();
         
-        TTF_Font* font = TTF_OpenFont("..\\..\\Resources\\Textures\\Fonts\\arial.ttf", FONT_SIZE);
+        TTF_Font* font = TTF_OpenFont("..\\..\\Resources\\Textures\\Fonts\\arial.ttf", font_size);
         SDL_Color color = {255, 255, 255};
+        /*******************************************************************************************************************************/
+        /*******************************************************************************************************************************/
+
 
 MainMenu:
+
+        /*******************************************************************************************************************************/
+        /********************************************************SETTING GAMEOVER AND NUMOFLIVES VARIABLES***********************************************************************/
         bool gameOver = false;
 
-        /*
-        * TODO [lpavic]: make main menu: it should be triggered:
-            - at the opening of the game
-            - during the game, when "Esc" button is pressed and game is paused
-            - when player loses the game
-            - when player wins the game
-        * TODO [lpavic]: display black screen with only certain messages:
-            - when new level is entered, message should be: "LEVEL levelOrdinalNum", delayed for 2 seconds
-            - when game is won, message should be: "WIN!", by pressing key "Esc" Main menu should be displayed
-            - when game is lost, message should be: "GAME LOST!", by pressing key "Esc" Main menu should be displayed
-        */
-
-        // TODO [lpavic]: implement function that will check levelnum variable
         if (LEVELNUM < 1)
         {
             THROW_FAILURE("Level configuration invalid or corrupted!\n");
@@ -113,9 +167,16 @@ MainMenu:
         {
             numOfLives = 3;
         }
+        /*******************************************************************************************************************************/
+        /*******************************************************************************************************************************/
 
+
+        /*******************************************************************************************************************************/
+        /************************************************FOR LOOP ITIRETING THROUGH EACH LEVEL*******************************************************************************/
         for (unsigned int i = 0; i < LEVELNUM; i++)
         {
+            /*******************************************************************************************************************************/
+            /*********************************************************PARSING XML FILES AND LOADING LEVEL DATA FROM IT**********************************************************************/
             bool levelFinished = false;
 
             tinyxml2::XMLDocument doc;
@@ -147,9 +208,14 @@ MainMenu:
 
             // Getting parsed data from xml into levelObject object
             Level levelObject(doc);
-        
+            /*******************************************************************************************************************************/
+            /*******************************************************************************************************************************/
+
+
+
+            /*******************************************************************************************************************************/
+            /******************************************************VARIABLES FOR RENDERING LEVEL SCENE*************************************************************************/
             //Data for level are parsed and rendering the level starts
-            // TODO [lpavic]: maybe some variables should be put inside new class (declare variables just above where they are really used)
             bool shutDown = false;
             SDL_Rect paddle;
             SDL_Rect ball;
@@ -164,7 +230,12 @@ MainMenu:
             double velocityX;
             double velocityY;
             bool *bricks = new bool [levelObject.getRowCount() * levelObject.getColumnCount()];
+            /*******************************************************************************************************************************/
+            /*******************************************************************************************************************************/
 
+
+            /*******************************************************************************************************************************/
+            /*****************************************************SETTING FIRST MOMENT WHEN LEVEL IS LOADED**************************************************************************/
             setLevelScene(bricks, 
                 numOfLivesRect, 
                 levelNumRect,
@@ -178,8 +249,16 @@ MainMenu:
 
             bool isRunning = true;
             bool isPaused = false;
+            /*******************************************************************************************************************************/
+            /*******************************************************************************************************************************/
+
+
+            /*******************************************************************************************************************************/
+            /**************************************************WHILE GAMEPLAY LASTS - NOT EXITING GAME OR NOT ENTERING MAIN MENU*****************************************************************************/
             while (isRunning)
             {
+                /*******************************************************************************************************************************/
+                /**********************************************************MINOR STUFF AND CONDITIONS*********************************************************************/
                 std::cout << "velocity of ball: X: " << velocityX << " , Y: " << velocityY << "\n";
                 RestartFrame(lastFrame,
                     lastTime,
@@ -191,16 +270,21 @@ MainMenu:
                     gameOver = true;
                     goto EndingLevelSequence;
                 }
-                
+                /*******************************************************************************************************************************/
+                /*******************************************************************************************************************************/
+
+
+
+                /*******************************************************************************************************************************/
+                /***************************************************WHAT HAPPENS WHEN THERE IS INTERSECTION BETWEEN PADDLE AND BALL****************************************************************************/
                 if (SDL_HasIntersection(&paddle, &ball))
                 {
-                    // TODO [lpavic]: make this loading a sound as a function (implement function for loading audio files)
                     SDL_AudioSpec wavSpec;
                     Uint32 wavLength;
                     Uint8* wavBuffer;
                     
                     std::string tempSoundPath = std::string(PATHSOUNDS) + std::string("activation.wav");
-                    if (SDL_LoadWAV(tempSoundPath.c_str(), &wavSpec, &wavBuffer, &wavLength) == NULL) // TODO [lpavic]: load relative path to .wav file
+                    if (SDL_LoadWAV(tempSoundPath.c_str(), &wavSpec, &wavBuffer, &wavLength) == NULL)
                     {
                         fprintf(stderr, "Could not open test.wav: %s\n", SDL_GetError());
                     }
@@ -209,7 +293,6 @@ MainMenu:
                         // open audio device
                         SDL_AudioDeviceID deviceId;
 
-                        // TODO [lpavic]: after some time, SDL_OpenAudioDevice returns error, i.e 0
                         deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
                         // play audio
@@ -225,6 +308,12 @@ MainMenu:
                         velocityX,
                         velocityY);
                 }
+                /*******************************************************************************************************************************/
+                /*******************************************************************************************************************************/
+
+
+                /*******************************************************************************************************************************/
+                /************************************************************SETTING POSITION OF BALL AND PADDLE*******************************************************************/
                 SetLimitSituations(paddle,
                     ball,
                     numOfLivesRect,
@@ -233,19 +322,22 @@ MainMenu:
                 
                 ball.x += static_cast<int>(velocityX);
                 ball.y += static_cast<int>(velocityY);
+                /*******************************************************************************************************************************/
+                /*******************************************************************************************************************************/
 
+
+                /*******************************************************************************************************************************/
+                /*****determine the position of  bricks one by one inside for loop, checking if there is intersection between ball and each brick (making sound), checking if the level is over********/
                 bool reset = true;
 
                 std::vector<BrickType>& vecRef = levelObject.getPointerToBlockOfBricks();
                 
-                // TODO [lpavic]: whole game lags when there are more bricks -> optimize drawing bricks and setting bricks (optimize those for loops used)
                 for (unsigned int j = 0; j < levelObject.getColumnCount() * levelObject.getRowCount(); j++)
                 {
-                    brick.x = (j % levelObject.getColumnCount()) * (brick.w + levelObject.getColumnSpacing()) + levelObject.getColumnSpacing() / 2; // TODO [lpavic]: is it here neccessary, in drawing this function runs again
-                    brick.y = numOfLivesRect.h + (j / levelObject.getColumnCount()) * (brick.h + levelObject.getRowSpacing()) + levelObject.getRowSpacing() / 2; // TODO [lpavic]: is it here neccessary, in drawing this function runs again
+                    brick.x = (j % levelObject.getColumnCount()) * (brick.w + levelObject.getColumnSpacing()) + levelObject.getColumnSpacing() / 2;
+                    brick.y = numOfLivesRect.h + (j / levelObject.getColumnCount()) * (brick.h + levelObject.getRowSpacing()) + levelObject.getRowSpacing() / 2;
                     if (SDL_HasIntersection(&ball, &brick) && bricks[j])
                     {
-                        // TODO [lpavic]: make this loading sound as a function
                         SDL_AudioSpec wavSpec;
                         Uint32 wavLength;
                         Uint8* wavBuffer;
@@ -260,7 +352,6 @@ MainMenu:
                             // open audio device
                             SDL_AudioDeviceID deviceId;
                             
-                            // TODO [lpavic]: after some time, SDL_OpenAudioDevice returns error, i.e 0
                             deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
                             // play audio
@@ -300,13 +391,31 @@ MainMenu:
                     levelFinished = true;
                     goto EndingLevelSequence;
                 }
+                /*******************************************************************************************************************************/
+                /*******************************************************************************************************************************/
 
-                /***************INPUT****************/
+
+                /**************************************************Handling Pausing and Exiting game*****************************************************************************/
+                /*******************************************************************************************************************************/
+
+
+                /***************reseting isPaused variable if it was true from before****************/
+                /************************************************************************************/
                 if (isPaused)
                 {
                     isPaused = false;
                 }
+                /************************************************************************************/
+                /************************************************************************************/
 
+                /************************Checking if game needs to be shut down**********************/
+                /************************************************************************************/
+
+                // https://stackoverflow.com/questions/29373203/sdl-2-0-key-repeat-and-delay
+                // reading from keyboard should not be inside 
+                // while (SDL_PollEvent) loop because of
+                // first delay when pressing one button for longer
+                // time
                 SDL_Event event;
                 while (SDL_PollEvent(&event))
                 {                    
@@ -323,8 +432,13 @@ MainMenu:
                     }
                 }
 
-                // SEQUENCE: GAME IS PAUSED
-                // TODO [lpavic]: implement unpause menu
+                /************************************************************************************/
+                /************************************************************************************/
+
+
+                /****************************************Pause sequence******************************/
+                /************************************************************************************/
+
                 while (isPaused)
                 {
                     SDL_Event pauseMenuEvent;
@@ -348,8 +462,17 @@ MainMenu:
                     }
                     
                 }
-                /***************INPUT****************/
-                /***************RENDER***************/
+
+                /************************************************************************************/
+                /************************************************************************************/
+                /************************************************************************************/
+                /************************************************************************************/
+
+
+                /*************************************Rendering the level***********************************************/
+                /************************************************************************************/
+
+
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderClear(renderer);
                 RefreshFrames(frameCount,
@@ -368,22 +491,21 @@ MainMenu:
                     tempPath);
 
                 /********************Write lives remaining, levelNum and score***********/
-                // TODO [lpavic]: display lives, score and level as multiline string
-                std::string tempNumOfLivesDisplay = "Lives:" + std::to_string(numOfLives); // TODO [lpavic]: display as multiline string
+                std::string tempNumOfLivesDisplay = "Lives:" + std::to_string(numOfLives);
                 const char* numOfLivesDisplay = tempNumOfLivesDisplay.c_str();
                 DrawSurface(numOfLivesRect,
                     &renderer,
                     numOfLivesDisplay,
                     &font,
                     color);
-                std::string tempLevelString = "Level:" + std::to_string(i + 1); // TODO [lpavic]: display as multiline string
+                std::string tempLevelString = "Level:" + std::to_string(i + 1);
                 const char* levelString = tempLevelString.c_str();
                 DrawSurface(levelNumRect,
                     &renderer,
                     levelString,
                     &font,
                     color);
-                std::string tempTotalScoreString = "Score:" + std::to_string(totalScore); // TODO [lpavic]: display as multiline string
+                std::string tempTotalScoreString = "Score:" + std::to_string(totalScore);
                 const char* totalScoreString = tempTotalScoreString.c_str();
                 DrawSurface(scoreRect,
                     &renderer,
@@ -411,7 +533,7 @@ MainMenu:
                             case 'I':
                                 tempPath += std::string("Impenetrable.png");
                                 break;
-                            default:    // TODO [lpavic]: maybe do something useful in this case
+                            default:
                                 break;
                         }
 
@@ -425,6 +547,11 @@ MainMenu:
                 }
                 SDL_RenderPresent(renderer);   
             }
+                /************************************************************************************/
+                /************************************************************************************/
+            /************************************************************************************/
+            /************************************************************************************/
+
 
         EndingLevelSequence:
             free(levelOrdinalNum);
@@ -455,3 +582,5 @@ ShutDownSequence:
    
     return 0;
 }
+
+#endif

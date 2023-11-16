@@ -1,38 +1,30 @@
-/*
- * TODO [lpavic]: edit these classes (BRICK)
- * maybe add STATIC_ELEMENTS class and DYNAMIC_ELEMENTS CLASS (BALL, PADDLE) 
- */
-
 // this is only pseudocode
 
 class GAME_ELEMENT
 {
     ID
     Texture
-    HitPoints
-    HitSound
+    height
+    width
+    velocityX
+    velocityY
 }
 
 class BRICK : GAME_ELEMENT
 {
+    HitPoints
+    HitSound
     BreakSound
     BreakScore
 }
 
 class PADDLE : GAME_ELEMENT
 {
-    velocityX
-    velocityY
-    height
-    width
+    HitSound
 }
 
 class BALL : GAME_ELEMENT
 {
-    velocityX
-    velocityY
-    height
-    width
 }
 
 // TODO [lpavic]: add other elements
