@@ -175,7 +175,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameElement.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="HandleGraphics.cpp" />
     <ClCompile Include="LevelInformation.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -188,7 +187,6 @@
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameElement.h" />
-    <ClInclude Include="HandleGraphics.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelInformation.h" />
     <ClInclude Include="MainMenu.h" />
