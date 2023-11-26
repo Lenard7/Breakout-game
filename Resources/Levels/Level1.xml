@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- TODO [lpavic]: give correct paths and put seperate elenebts in different folder, like for bricks Texture="Textures/Bricks/Soft.dds"-->
 <Level
-	RowCount="1"
-	ColumnCount="5"
+	RowCount="2"
+	ColumnCount="15"
 	RowSpacing="5"
 	ColumnSpacing="5"
 	BackgroundTexture="Textures/Boards/Board_01.dds">
@@ -39,7 +39,8 @@
 				HitSound="Sounds/Hit_04.wav" />
 		</BrickTypes>
 		<Bricks>
-		S S S S S 
+		S S S S S S S S S S S S S S S
+		S _ S S S S S _ S S S S S _ S
 		
 		</Bricks>
 </Level>

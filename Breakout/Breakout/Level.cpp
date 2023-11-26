@@ -600,6 +600,7 @@ void Level::relativePositionBallPaddle()
 void Level::restartFrame()
 {
 	// number of milliseconds since the SDL library initialized
+	// TODO[lpavic]: game is lagging when calling this function
     this->frame_information.lastFrame = SDL_GetTicks();
 
     if (this->frame_information.lastFrame >= this->frame_information.lastTime + 100)
@@ -619,36 +620,57 @@ void Level::setLevelScene()
 	this->level_information = std::make_unique<LevelInformation[]>(this->num_of_level_information);
 
 	// TODO [lpavic]: see that temp_rect is initialized in 1 line just like temp_color struct
+	// TODO [lpavic]: see what to erase here
 	SDL_Rect temp_rect;
 	SDL_Color temp_color{255, 255, 255};
 
 	// one third of screen width
-    temp_rect.w = this->window_horizontal_size / 3;
-    // 10 percent of screen height
-    temp_rect.h = this->window_vertical_size / 10;
-    temp_rect.x = 0;
-    temp_rect.y = 0;
-	// TODO [lpavic]: apply "rule of five" in definition of LevelInformation class
-	this->level_information[0] = std::move(LevelInformation(temp_rect, std::string("arial.ttf"), 100, 
-												  std::string("Lives: "), temp_color));
+    // temp_rect.w = this->window_horizontal_size / 3;
+    // // 10 percent of screen height
+    // temp_rect.h = this->window_vertical_size / 10;
+    // temp_rect.x = 0;
+    // temp_rect.y = 0;
+
+	// TODO [lpavic]: leave this std::move way of implementation as commented out code along with level_information.reset invocation
+	// this->level_information[0] = std::move(LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
+	// 											  std::string("Lives: "), temp_color));
 
     // one third of screen width
-    temp_rect.w = this->window_horizontal_size / 3;
-    // 10 percent of screen height
-    temp_rect.h = this->window_vertical_size / 10;
-    temp_rect.x = this->window_horizontal_size / 3;
-    temp_rect.y = 0;
-	this->level_information[1] = LevelInformation(temp_rect, std::string("arial.ttf"), 100, 
-												  std::string("Level: "), temp_color);
+    // temp_rect.w = this->window_horizontal_size / 3;
+    // // 10 percent of screen height
+    // temp_rect.h = this->window_vertical_size / 10;
+    // temp_rect.x = this->window_horizontal_size / 3;
+    // temp_rect.y = 0;
+	// this->level_information[1] = std::move(LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
+	// 											  std::string("Level: "), temp_color));
 
     // one third of screen width
-    temp_rect.w = this->window_horizontal_size / 3;
-    // 10 percent of screen height
-    temp_rect.h = this->window_vertical_size / 10;
-    temp_rect.x = 2 * this->window_horizontal_size / 3;
-    temp_rect.y = 0;
-	this->level_information[2] = LevelInformation(temp_rect, std::string("arial.ttf"), 100, 
-												  std::string("Score: "), temp_color);
+    // temp_rect.w = this->window_horizontal_size / 3;
+    // // 10 percent of screen height
+    // temp_rect.h = this->window_vertical_size / 10;
+    // temp_rect.x = 2 * this->window_horizontal_size / 3;
+    // temp_rect.y = 0;
+	// this->level_information[2] = std::move(LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
+	// 											  std::string("Score: "), temp_color));
+
+	this->level_information.reset(new LevelInformation[3]
+	{
+		LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
+						std::string("arial.ttf"), 
+						100, 
+						std::string("Lives: "), 
+						temp_color),
+		LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
+						std::string("arial.ttf"), 
+						100, 
+						std::string("Level: "), 
+						temp_color),
+		LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
+						std::string("arial.ttf"), 
+						100, 
+						std::string("Score: "), 
+						temp_color)
+	});
 
     // // one third of screen width
     // this->level_information.numOfLivesRect.w = this->window_horizontal_size / 3;

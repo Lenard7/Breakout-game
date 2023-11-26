@@ -38,8 +38,8 @@
 				HitSound="Sounds/Hit_04.wav" />
 		</BrickTypes>
 		<Bricks>
-		H H H H H H H H H H H H H H H H H H H H
-		M M I I M M _ _ M M M M _ _ M M I I M M
+		I H H H H H H H H H H H H H H H H H H I
+		M M S S M M _ _ M M M M _ _ M M S S M M
 		S S S S S S S S S S S S S S S S S S S S
 		</Bricks>
 </Level>

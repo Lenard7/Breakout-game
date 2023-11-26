@@ -27,6 +27,7 @@ public:
     GameElement& operator =(GameElement&&) = default;
     virtual ~GameElement() = default;
 
+    // TODO [lpavic]: see if this function should be virtual and reimplemented in derived classes
     void DrawSprite(SDL_Renderer* const * const renderer);
 
 	const std::string& getID() const;

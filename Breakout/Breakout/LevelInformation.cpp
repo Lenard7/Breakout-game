@@ -1,3 +1,4 @@
+#include "ErrorHandler.h"
 #include "LevelInformation.h"
 #include "Resources.h"
 
@@ -10,13 +11,14 @@ LevelInformation::LevelInformation() {}
 LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int font_size, 
                                    const std::string& display_string, const SDL_Color& color)
 {
-    std::cout << TTF_Init() << std::endl;
     this->texture = texture;
-    std::cout << std::endl << (std::string(Resources::fonts_resources) + font_type).c_str();
-    // this->font = TTF_OpenFont((std::string(Resources::fonts_resources) + font_type).c_str(), font_size);
-    this->font = TTF_OpenFont("..\\..\\Resources\\Textures\\Fonts\\LHANDW.TTF", font_size);
-    std::cout << "font" << font <<std::endl;
-    std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
+    this->font = TTF_OpenFont((std::string(Resources::fonts_resources) + font_type).c_str(), font_size);
+    if (this->font == nullptr)
+    {
+        // TODO [lpavic]: make this print better
+        // std::cout << TTF_GetError();
+        THROW_FAILURE("Font for Level Information not opened properly!\n");
+    }
     this->display_string = display_string;
     this->color = color;
 }
@@ -46,21 +48,25 @@ void LevelInformation:: drawSurface(SDL_Renderer* const * const renderer, const 
     SDL_Surface* surface;
     SDL_Texture* texture;
 
-    TTF_Init();
-    // surface = TTF_RenderText_Solid(*font, displayString, color);
-    std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
-    // surface = TTF_RenderText_Solid(this->font, (this->display_string + display_string_value).c_str(), this->color);
-    surface = TTF_RenderText_Solid(this->font, "Something", this->color);
-    std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
+    surface = TTF_RenderText_Solid(this->font, (this->display_string + display_string_value).c_str(), this->color);
+    if (surface == nullptr)
+    {
+        // TODO [lpavic]: make this print better
+        // std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
+        THROW_FAILURE("Surface for rendering Level Information not initialized properly!\n");
+    }
     
     texture = SDL_CreateTextureFromSurface(*renderer, surface);
+    if (texture == nullptr)
+    {
+        // TODO [lpavic]: make this print better
+        // std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
+        THROW_FAILURE("Texture for rendering Level Information not initialized properly!\n");
+    }
 
-    // surface->w = surfaceRect.w;
-    // surface->h = surfaceRect.h;
     surface->w = this->texture.w;
     surface->h = this->texture.h;
 
-    // SDL_RenderCopy(*renderer, texture, NULL, &surfaceRect);
     SDL_RenderCopy(*renderer, texture, NULL, &(this->texture));
 
     SDL_FreeSurface(surface);
@@ -74,8 +80,6 @@ LevelInformation::~LevelInformation()
     {
         TTF_CloseFont(this->font);
     }
-
-    TTF_Quit();
 }
 
 

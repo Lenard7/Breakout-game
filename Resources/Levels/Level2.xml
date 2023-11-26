@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Level
-	RowCount="1"
-	ColumnCount="2"
+	RowCount="3"
+	ColumnCount="10"
 	RowSpacing="10"
 	ColumnSpacing="5"
 	BackgroundTexture="Textures/Boards/Board_01.dds">
@@ -38,6 +38,8 @@
 				HitSound="Sounds/Hit_04.wav" />
 		</BrickTypes>
 		<Bricks>
-		I S 
+		I S I S I S I S I S
+		M M _ _ M M _ _ M M
+		S S S S S S S S S S
 		</Bricks>
 </Level>

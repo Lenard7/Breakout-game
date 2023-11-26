@@ -62,6 +62,7 @@ private:
 	std::string bricks_string{""};
 	
 	// gameplay data
+	// TODO [lpavic]: see if polymorphism and upcasting should be used - maybe use array of GameElement objects and upcast them to derived class?
 	std::unique_ptr<Brick[]> bricks{nullptr};
 	unsigned num_of_bricks{0};
 	Paddle paddle;

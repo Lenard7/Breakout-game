@@ -31,7 +31,6 @@ MainMenu::MainMenu(SDL_Window** window,
 
     this->font_size_title = this->window_vertical_size / 5;
     this->font_size_selection_box = this->font_size_title / 2;
-    TTF_Init();
     this->font_title = TTF_OpenFont(font_path_title, font_size_title);
     this->font_selection_box = TTF_OpenFont(font_path_selection_box, font_size_selection_box);
 

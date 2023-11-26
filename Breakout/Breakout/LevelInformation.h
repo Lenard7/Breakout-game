@@ -13,6 +13,7 @@
 
 // TODO [lpavic]: make intendations correct (also free lines at the end of files)
 // TODO [lpavic]: see to improve implementation
+// TODO [lpavic]: apply "rule of five" in definition of LevelInformation class
 class LevelInformation
 {
 private:

@@ -22,8 +22,6 @@ Menu::~Menu()
         TTF_CloseFont(this->font_selection_box);
     }
 
-    TTF_Quit();
-    
     if (this->renderer)
     {
         SDL_RenderClear(this->renderer);

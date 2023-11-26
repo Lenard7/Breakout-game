@@ -42,11 +42,6 @@ void Game::GetDesktopResolution()
 
 void Game::SetupWindowSettings()
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-    {
-        THROW_FAILURE("SDL could not be initialized!\n");
-    }
-
     GetDesktopResolution();
     
     this->window_vertical_size = static_cast<unsigned>(/* 0.95 * */ this->window_vertical_size);

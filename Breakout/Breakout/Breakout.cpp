@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <SDL_ttf.h>
+
 #include <iostream>
 #include <string>
 
@@ -39,6 +41,17 @@
 
 int main()
 {
+    // TODO[lpavic]: see if those SDL_Init and TTF_Init should be inside try block and also see which error messages should be printed out
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    {
+        return -1;
+    }
+
+    if (TTF_Init() == -1)
+    {
+        return -1;
+    }
+
     try
     {
         Game & breakout = Game::getInstance();
@@ -47,8 +60,15 @@ int main()
     catch (std::string e)
     {
         std::cout << e << "\n";
+
+        TTF_Quit();
+        SDL_Quit();
+        
         return -1;
     }
+    
+    TTF_Quit();
+    SDL_Quit();
 
     return 0;
 }
