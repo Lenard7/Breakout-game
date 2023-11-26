@@ -96,6 +96,7 @@
     <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
     <ReferencePath>C:\Users\Leki\Desktop\Breakout\Breakout-game\Third_party\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(ReferencePath)</ReferencePath>
+    <OutDir>$(ProjectDir)\..\..\Release\Breakout\Breakout</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

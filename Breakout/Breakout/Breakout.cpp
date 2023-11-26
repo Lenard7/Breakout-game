@@ -18,7 +18,6 @@
  *      sounds, sprites, fonts -> Release configuration will not handle parsing xml files -> xml files, images, sounds etc.
  *      should be inside "Resource Files" folder
  * TODO [lpavic]: make .xml files to have only brick types that are used inside each level
- * TODO [lpavic]: make that .exe file is automatically generated inside BREAKOUT-GAME\Release folder in Release mode (not to manually copy paste each time before commiting and pushing to server)
  * TODO [lpavic]: write inheritance classes inside BREAKOUT-GAME\Doc\Element_hierarchy.txt
  */
 
