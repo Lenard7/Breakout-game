@@ -40,19 +40,18 @@
 
 int main()
 {
-    // TODO[lpavic]: see if those SDL_Init and TTF_Init should be inside try block and also see which error messages should be printed out
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-    {
-        return -1;
-    }
-
-    if (TTF_Init() == -1)
-    {
-        return -1;
-    }
-
     try
     {
+        if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+        {
+            return -1;
+        }
+
+        if (TTF_Init() == -1)
+        {
+            return -1;
+        }
+        
         Game & breakout = Game::getInstance();
         breakout.runImplementation();
     }
