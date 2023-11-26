@@ -34,7 +34,6 @@ private:
     static Level * level;
     STATE state;
 	// TODO [lpavic]: make this variable non-static member that is assigned by checking folder that contains level files
-	// TODO [lpavic]: move level_num, num_of_lives and total_score to LevelInformation struct
 	static unsigned level_num;
 	unsigned current_level{0};
 	unsigned num_of_lives;

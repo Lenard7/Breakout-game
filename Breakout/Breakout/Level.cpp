@@ -356,7 +356,6 @@ void Level::drawLevel()
 	}
 
 	// TODO [lpavic]: display lives, score and level as multiline string
-	// TODO [lpavic]: implement drawing lives, score and level
 	this->level_information[0].drawSurface(&(this->renderer), std::to_string(this->num_of_lives));
 	this->level_information[1].drawSurface(&(this->renderer), std::to_string(this->current_level + 1));
 	this->level_information[2].drawSurface(&(this->renderer), std::to_string(this->total_score));
