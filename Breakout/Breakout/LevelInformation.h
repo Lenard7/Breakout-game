@@ -18,7 +18,7 @@ private:
     SDL_Rect texture{0, 0, 0, 0};
     TTF_Font* font{nullptr};
     std::string display_string{""};
-    SDL_Color color{0, 0, 0};
+    SDL_Color color{0, 0, 0, 255};
 
 public:
     LevelInformation();

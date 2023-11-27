@@ -26,6 +26,7 @@
  * see that setters and getters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
  * make setters and getters for all private and protected attributes for future potentional use
  * let compiler decide if small methods should be inlined by defining methods inside class' definition
+ * try to use smart pointer and/or containers instead of raw pointers and also inside each destructor check if all pointers are freed
  */
 
 
@@ -48,7 +49,7 @@
 
 /**
  * TODO [lpavic]: display black screen with only certain messages:
-    - when new level is entered, message should be: "LEVEL levelOrdinalNum", delayed for 2 seconds
+    - when new level is entered, message should be: "LEVEL level_ordinal_num", delayed for 2 seconds
     - when game is won, message should be: "WIN!", by pressing key "Esc" Main menu should be displayed
     - when game is lost, message should be: "GAME LOST!", by pressing key "Esc" Main menu should be displayed
  */

@@ -1,7 +1,7 @@
 #include "BrickType.h"
 
 
-BrickType::BrickType() : breakScore(0) {}
+BrickType::BrickType() : break_score(0) {}
 
 
 BrickType::BrickType(const tinyxml2::XMLElement& brickType)
@@ -9,13 +9,13 @@ BrickType::BrickType(const tinyxml2::XMLElement& brickType)
 	
 		this->ID = brickType.Attribute("Id");
 		this->texture = brickType.Attribute("Texture");
-		this->hitPoints = brickType.Attribute("HitPoints");
-		this->hitSound = brickType.Attribute("HitSound");
+		this->hit_points = brickType.Attribute("HitPoints");
+		this->hit_sound = brickType.Attribute("HitSound");
 
 		if (this->ID != "I")
 		{
-			this->breakSound = brickType.Attribute("BreakSound");
-			this->breakScore = brickType.UnsignedAttribute("BreakScore");
+			this->break_sound = brickType.Attribute("BreakSound");
+			this->break_score = brickType.UnsignedAttribute("BreakScore");
 		}
 
 }
@@ -27,13 +27,13 @@ BrickType::BrickType(const tinyxml2::XMLElement& brickType)
  	{
  		this->ID = temp.ID;
  		this->texture = temp.texture;
- 		this->hitPoints = temp.hitPoints;
- 		this->hitSound = temp.hitSound;
+ 		this->hit_points = temp.hit_points;
+ 		this->hit_sound = temp.hit_sound;
 
 		if (temp.ID != "I")
 		{
-			this->breakSound = temp.breakSound;
-			this->breakScore = temp.breakScore;
+			this->break_sound = temp.break_sound;
+			this->break_score = temp.break_score;
 		}
 	}
 	return *this;
@@ -41,11 +41,11 @@ BrickType::BrickType(const tinyxml2::XMLElement& brickType)
 
 
 const std::string& BrickType::getTexture() const { return this->texture; }
-const std::string& BrickType::getHitPoints() const { return this->hitPoints; }
-const std::string& BrickType::getHitSound() const { return this->hitSound; }
-const std::string& BrickType::getBreakSound() const { return this->breakSound; }
-const unsigned& BrickType::getBreakScore() const { return this->breakScore; }
+const std::string& BrickType::getHitPoints() const { return this->hit_points; }
+const std::string& BrickType::getHitSound() const { return this->hit_sound; }
+const std::string& BrickType::getBreakSound() const { return this->break_sound; }
+const unsigned& BrickType::getBreakScore() const { return this->break_score; }
 const std::string& BrickType::getID() const { return this->ID; }
 void BrickType::setID(const std::string ID) { this->ID = ID; }
-void BrickType::setHitPoints(const std::string hitPoints) { this->hitPoints = hitPoints; }
+void BrickType::setHitPoints(const std::string hit_points) { this->hit_points = hit_points; }
 

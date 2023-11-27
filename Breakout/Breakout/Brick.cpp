@@ -6,15 +6,15 @@ Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 {
 		this->ID = Brick.Attribute("Id");
 		this->texture_path = std::string(Resources::path_resources) + std::string(Brick.Attribute("Texture"));
-		this->hitPoints = Brick.Attribute("HitPoints");
+		this->hit_points = Brick.Attribute("HitPoints");
 		// TODO [lpavic]: make this hitsound path correct
-		this->hitSound = Brick.Attribute("HitSound");
+		this->hit_sound = Brick.Attribute("HitSound");
 
 		if (this->ID != "I")
 		{
 			// TODO [lpavic]: make this breaksound path correct
-			this->breakSound = Brick.Attribute("BreakSound");
-			this->breakScore = Brick.UnsignedAttribute("BreakScore");
+			this->break_sound = Brick.Attribute("BreakSound");
+			this->break_score = Brick.UnsignedAttribute("BreakScore");
 		}
 }
 
@@ -26,24 +26,24 @@ Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 		GameElement::operator=(std::move(temp));
  		this->ID = temp.ID;
  		this->texture_path = temp.texture_path;
- 		this->hitPoints = temp.hitPoints;
- 		this->hitSound = temp.hitSound;
+ 		this->hit_points = temp.hit_points;
+ 		this->hit_sound = temp.hit_sound;
 
 		if (temp.ID != "I")
 		{
-			this->breakSound = temp.breakSound;
-			this->breakScore = temp.breakScore;
+			this->break_sound = temp.break_sound;
+			this->break_score = temp.break_score;
 		}
 	}
 	return *this;
 }
 
 
-const unsigned& Brick::getBreakScore() const { return this->breakScore; }
-const std::string& Brick::getBreakSound() const { return this->breakSound; }
-const std::string& Brick::getHitPoints() const { return this->hitPoints; }
-const std::string& Brick::getHitSound() const { return this->hitSound; }
+const unsigned& Brick::getBreakScore() const { return this->break_score; }
+const std::string& Brick::getBreakSound() const { return this->break_sound; }
+const std::string& Brick::getHitPoints() const { return this->hit_points; }
+const std::string& Brick::getHitSound() const { return this->hit_sound; }
 const bool& Brick::getIsAlive() const { return this->is_alive; }
 
-void Brick::setHitPoints(const std::string hitPoints) { this->hitPoints = hitPoints; }
+void Brick::setHitPoints(const std::string hit_points) { this->hit_points = hit_points; }
 void Brick::setIsAlive(const bool is_alive) {this->is_alive = is_alive; }

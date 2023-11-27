@@ -73,20 +73,20 @@ Level::STATE Level::runImplementation()
 	for (this->current_level = 0; this->current_level < this->level_num; ++(this->current_level))
 	{
 		tinyxml2::XMLDocument doc;
-		char* levelFileName;
-		size_t fileNameLength;
-		char* levelOrdinalNum;
+		char* level_file_name;
+		size_t file_name_length;
+		char* level_ordinal_num;
 
 		// TODO [lpavic]: this reading of file should be done in C++ style (avoid malloc and free functions)
-		levelOrdinalNum = (char*) malloc((int)(floor(log10(current_level + 1) + 2)));
-		snprintf(levelOrdinalNum, (int)(floor(log10(current_level + 1) + 2)), "%u", current_level + 1);
+		level_ordinal_num = (char*) malloc((int)(floor(log10(current_level + 1) + 2)));
+		snprintf(level_ordinal_num, (int)(floor(log10(current_level + 1) + 2)), "%u", current_level + 1);
 
-		fileNameLength = strlen(Resources::level_resources) + strlen("Level") + strlen(levelOrdinalNum) + strlen(".xml") + 1;
-		levelFileName = (char*)malloc(sizeof(char*) * fileNameLength);
-		snprintf(levelFileName, fileNameLength, "%s%s%s%s", Resources::level_resources, "Level", levelOrdinalNum, ".xml");
+		file_name_length = strlen(Resources::level_resources) + strlen("Level") + strlen(level_ordinal_num) + strlen(".xml") + 1;
+		level_file_name = (char*)malloc(sizeof(char*) * file_name_length);
+		snprintf(level_file_name, file_name_length, "%s%s%s%s", Resources::level_resources, "Level", level_ordinal_num, ".xml");
 		
-		printf("Loading level:%s\n", levelFileName);
-		FILE* fp = fopen(levelFileName, "rb");
+		printf("Loading level:%s\n", level_file_name);
+		FILE* fp = fopen(level_file_name, "rb");
 		if (fp)
 		{
 			std::cout << "Configuration file successfully loaded!\n";
@@ -96,22 +96,22 @@ Level::STATE Level::runImplementation()
 			THROW_FAILURE("Cannot open configuration file:\nFile corrupted or file does not exist!\n");
 		}
 
-		std::cout << levelFileName << "\n"; // print levelFileName
+		std::cout << level_file_name << "\n"; // print level_file_name
 
 		if (doc.LoadFile(fp) != tinyxml2::XML_SUCCESS)
 		{
 			THROW_FAILURE("Error while parsing xml level file");
 		}
 
-		if (levelFileName)
+		if (level_file_name)
 		{
-			free(levelFileName);
-			levelFileName = NULL;
+			free(level_file_name);
+			level_file_name = NULL;
 		}
-		if (levelOrdinalNum)
+		if (level_ordinal_num)
 		{
-			free(levelOrdinalNum);
-			levelOrdinalNum = NULL;
+			free(level_ordinal_num);
+			level_ordinal_num = NULL;
 		}
 
 		parseLevelFile(doc);
@@ -149,12 +149,12 @@ Level::STATE Level::runImplementation()
 			{
 			/* TODO [lpavic]: make method that handles producing sound
 				// TODO [lpavic]: make this loading a sound as a function (implement function for loading audio files)
-				SDL_AudioSpec wavSpec;
-				Uint32 wavLength;
-				Uint8* wavBuffer;
+				SDL_AudioSpec wav_spec;
+				Uint32 wav_length;
+				Uint8* wav_buffer;
 				
-				std::string tempSoundPath = std::string(PATHSOUNDS) + std::string("activation.wav");
-				if (SDL_LoadWAV(tempSoundPath.c_str(), &wavSpec, &wavBuffer, &wavLength) == NULL) // TODO [lpavic]: load relative path to .wav file
+				std::string temp_sound_path = std::string(PATHSOUNDS) + std::string("activation.wav");
+				if (SDL_LoadWAV(temp_sound_path.c_str(), &wav_spec, &wav_buffer, &wav_length) == NULL) // TODO [lpavic]: load relative path to .wav file
 				{
 					fprintf(stderr, "Could not open test.wav: %s\n", SDL_GetError());
 				}
@@ -164,14 +164,14 @@ Level::STATE Level::runImplementation()
 					SDL_AudioDeviceID deviceId;
 
 					// TODO [lpavic]: after some time, SDL_OpenAudioDevice returns error, i.e 0
-					deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+					deviceId = SDL_OpenAudioDevice(NULL, 0, &wav_spec, NULL, 0);
 
 					// play audio
-					int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+					int success = SDL_QueueAudio(deviceId, wav_buffer, wav_length);
 					SDL_PauseAudioDevice(deviceId, 0);
 
 					//SDL_CloseAudioDevice(deviceId);
-					SDL_FreeWAV(wavBuffer);
+					SDL_FreeWAV(wav_buffer);
 				}
 			*/
 				
@@ -193,12 +193,12 @@ Level::STATE Level::runImplementation()
 					/* 
 					// TODO [lpavic]: make method that handles producing sound
 					// TODO [lpavic]: make this loading sound as a function
-					SDL_AudioSpec wavSpec;
-					Uint32 wavLength;
-					Uint8* wavBuffer;
+					SDL_AudioSpec wav_spec;
+					Uint32 wav_length;
+					Uint8* wav_buffer;
 
-					std::string tempSoundPath = std::string(PATHSOUNDS) + std::string("activation.wav");
-					if (SDL_LoadWAV(tempSoundPath.c_str(), &wavSpec, &wavBuffer, &wavLength) == NULL)
+					std::string temp_sound_path = std::string(PATHSOUNDS) + std::string("activation.wav");
+					if (SDL_LoadWAV(temp_sound_path.c_str(), &wav_spec, &wav_buffer, &wav_length) == NULL)
 					{
 						fprintf(stderr, "Could not open .wav file: %s\n", SDL_GetError());
 					}
@@ -208,14 +208,14 @@ Level::STATE Level::runImplementation()
 						SDL_AudioDeviceID deviceId;
 						
 						// TODO [lpavic]: after some time, SDL_OpenAudioDevice returns error, i.e 0
-						deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+						deviceId = SDL_OpenAudioDevice(NULL, 0, &wav_spec, NULL, 0);
 
 						// play audio
-						int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+						int success = SDL_QueueAudio(deviceId, wav_buffer, wav_length);
 						SDL_PauseAudioDevice(deviceId, 0);
 
 						//SDL_CloseAudioDevice(deviceId);
-						SDL_FreeWAV(wavBuffer);
+						SDL_FreeWAV(wav_buffer);
 					}
 					*/
 					if (this->bricks[i].getID() != "I" && this->bricks[i].getIsAlive())
@@ -394,24 +394,24 @@ void Level::handleKeyboardStates(const Uint8 * const keyboard)
 
 void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 {
-	tinyxml2::XMLElement* rootElement = doc.FirstChildElement("Level");
-	if (rootElement == NULL)
+	tinyxml2::XMLElement* root_element = doc.FirstChildElement("Level");
+	if (root_element == NULL)
 	{
 		THROW_FAILURE("Level element in xml file not found!");
 	}	
-	this->rowCount = rootElement->UnsignedAttribute("RowCount");
-	this->columnCount = rootElement->UnsignedAttribute("ColumnCount");
-	this->rowSpacing = rootElement->UnsignedAttribute("RowSpacing");
-	this->columnSpacing = rootElement->UnsignedAttribute("ColumnSpacing");
-	this->backgroundTexture = rootElement->Attribute("BackgroundTexture");
+	this->row_count = root_element->UnsignedAttribute("RowCount");
+	this->column_count = root_element->UnsignedAttribute("ColumnCount");
+	this->row_spacing = root_element->UnsignedAttribute("RowSpacing");
+	this->column_spacing = root_element->UnsignedAttribute("ColumnSpacing");
+	this->background_texture = root_element->Attribute("BackgroundTexture");
 
-	tinyxml2::XMLElement* brick_types = rootElement->FirstChildElement("BrickTypes");
+	tinyxml2::XMLElement* brick_types = root_element->FirstChildElement("BrickTypes");
 	if (brick_types == NULL)
 	{
 		THROW_FAILURE("BrickTypes element in xml file not found!");
 	}
 	
-	this->bricks = std::make_unique<Brick[]>(this->rowCount * this->columnCount);
+	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
 
 	tinyxml2::XMLElement* brick_type = brick_types->FirstChildElement("BrickType");
 	// vector of all types of bricks inside Level (if all bricks inside level are Soft, this vector will only have 2 elements with ID 'S' and '_')
@@ -438,13 +438,13 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 	brick_temp.setID("_");
 	brick_type_temp.push_back(brick_temp);
 
-	tinyxml2::XMLElement* bricks = rootElement->FirstChildElement("Bricks");
+	tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
 	if (brick_types == NULL)
 	{
 		THROW_FAILURE("Bricks element in xml file not found!");
 	}
 	this->bricks_string = bricks->GetText();
-	this->num_of_bricks = this->rowCount * this->columnCount; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
+	this->num_of_bricks = this->row_count * this->column_count; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
 
 	unsigned temp_brick_count = 0;
 	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned int>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
@@ -465,15 +465,15 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 
 void Level::printLevel() const // TODO [lpavic]: finish printing all attributes of class Level
 {
-	std::cout << "Row Count : " << this->rowCount << "\n"
-		<< "Column Count : " << this->columnCount << "\n"
-		<< "Row Spacing : " << this->rowSpacing << "\n"
-		<< "Column Spacing : " << this->columnSpacing << "\n"
-		<< "Background Texture : " << this->backgroundTexture << "\n\n";
+	std::cout << "Row Count : " << this->row_count << "\n"
+		<< "Column Count : " << this->column_count << "\n"
+		<< "Row Spacing : " << this->row_spacing << "\n"
+		<< "Column Spacing : " << this->column_spacing << "\n"
+		<< "Background Texture : " << this->background_texture << "\n\n";
 
 	if (bricks)
 	{
-		for (unsigned int i = 0; i < this->rowCount * this->columnCount; ++i)
+		for (unsigned int i = 0; i < this->row_count * this->column_count; ++i)
 		{
 			std::cout << i + 1 << ".\n";
 			std::cout << this->bricks[i].getID() << "\n"
@@ -487,15 +487,15 @@ void Level::printLevel() const // TODO [lpavic]: finish printing all attributes 
 
 void Level::refreshFrames()
 {
-    int timerFPS;
+    int timer_FPS;
 
-	this->frame_information.frameCount++;
-    timerFPS = SDL_GetTicks() - this->frame_information.lastFrame;
+	this->frame_information.frame_count++;
+    timer_FPS = SDL_GetTicks() - this->frame_information.last_frame;
 
     // TODO [lpavic]: make this dynamical, not hardcoded
-    if (timerFPS < (1000 / 60))
+    if (timer_FPS < (1000 / 60))
     {
-        SDL_Delay((1000 / 60) - timerFPS);
+        SDL_Delay((1000 / 60) - timer_FPS);
     }
 }
 
@@ -600,13 +600,13 @@ void Level::restartFrame()
 {
 	// number of milliseconds since the SDL library initialized
 	// TODO[lpavic]: game is lagging when calling this function
-    this->frame_information.lastFrame = SDL_GetTicks();
+    this->frame_information.last_frame = SDL_GetTicks();
 
-    if (this->frame_information.lastFrame >= this->frame_information.lastTime + 100)
+    if (this->frame_information.last_frame >= this->frame_information.last_time + 100)
     {
-        this->frame_information.lastTime = this->frame_information.lastFrame;
-        this->frame_information.fps = this->frame_information.frameCount;
-        this->frame_information.frameCount = 0;
+        this->frame_information.last_time = this->frame_information.last_frame;
+        this->frame_information.fps = this->frame_information.frame_count;
+        this->frame_information.frame_count = 0;
     }
 }
 
@@ -655,7 +655,7 @@ void Level::setLevelScene()
 							static_cast<int>(this->window_vertical_size - this->paddle.getTexture().h / 2 - this->paddle.getTexture().h - 10), 
 							this->paddle.getTexture().h / 2, 
 							this->paddle.getTexture().h / 2});
-	// if velocityY or X drops below 1, ball wont move in that axis
+	// if velocity_y or velocity_x drops below 1, ball wont move in that axis
 	// TODO [lpavic]: if there are more bricks, ball and paddle will move slowly
 	this->ball.setVelocityX(this->window_horizontal_size * 0.003);
 	this->ball.setVelocityY(this->window_vertical_size * 0.003);
@@ -731,9 +731,9 @@ void Level::setLimitSituations()
 }
 
 
-const unsigned Level::getRowCount() const { return this->rowCount; }
-const unsigned int Level::getColumnCount() const { return this->columnCount; }
-const unsigned int Level::getRowSpacing() const { return this->rowSpacing; }
-const unsigned int Level::getColumnSpacing() const { return this->columnSpacing; }
-const std::string Level::getBackgroundTexture() const { return this->backgroundTexture; }
+const unsigned Level::getRowCount() const { return this->row_count; }
+const unsigned int Level::getColumnCount() const { return this->column_count; }
+const unsigned int Level::getRowSpacing() const { return this->row_spacing; }
+const unsigned int Level::getColumnSpacing() const { return this->column_spacing; }
+const std::string Level::getBackgroundTexture() const { return this->background_texture; }
 const unsigned int Level::getNumOfBricks() const { return this->num_of_bricks; }

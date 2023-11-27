@@ -23,9 +23,9 @@ public:
 
 	struct FrameInformation
 	{
-		int lastTime = 0;
-		int frameCount = 0;
-		int lastFrame;
+		int last_time = 0;
+		int frame_count = 0;
+		int last_frame;
 		int fps;
 	};
 
@@ -51,12 +51,12 @@ private:
 	FrameInformation frame_information{0};
 
 	// data extracted from xml files
-	unsigned rowCount;
-	unsigned columnCount;
-	unsigned rowSpacing;
-	unsigned columnSpacing;
+	unsigned row_count;
+	unsigned column_count;
+	unsigned row_spacing;
+	unsigned column_spacing;
 	// this is image of board // TODO [lpavic]: this variable is unused (load unique image (.dds file) (instead of making path inside program))
-	std::string backgroundTexture;
+	std::string background_texture;
 	std::string bricks_string{""};
 	
 	// gameplay data

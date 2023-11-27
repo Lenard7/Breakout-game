@@ -9,12 +9,12 @@
 class Brick : public GameElement
 {
 private:
-	std::string hitPoints{""};
+	std::string hit_points{""};
 	// TODO [lpavic]: this variable is unused (load unique sound file (.wav file) (instead of making path inside program))
-	std::string hitSound{""};
+	std::string hit_sound{""};
 	// TODO [lpavic]: this variable is unused (load unique sound file (.wav file) (instead of making path inside program))
-	std::string breakSound{""};
-	unsigned int breakScore{0};
+	std::string break_sound{""};
+	unsigned int break_score{0};
 	// this variable is determining which brick is going to be drawn on screen - "_" bricks and brics with hit points = 0 are not alive
 	bool is_alive{false};
 
@@ -33,6 +33,6 @@ public:
 	const std::string& getHitSound() const;
 	const bool& getIsAlive() const;
 
-	void setHitPoints(const std::string hitPoints);
+	void setHitPoints(const std::string hit_points);
 	void setIsAlive(const bool is_alive);
 };

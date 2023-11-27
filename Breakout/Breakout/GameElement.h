@@ -16,8 +16,8 @@ protected:
     std::string ID{""};
 	std::string texture_path{""};
     SDL_Rect texture{0};
-    double velocityX{0};
-    double velocityY{0};
+    double velocity_x{0};
+    double velocity_y{0};
 
 public:
     GameElement() = default;

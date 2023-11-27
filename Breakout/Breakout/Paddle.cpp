@@ -9,4 +9,4 @@ Paddle::Paddle() : GameElement::GameElement()
 }
 
 
-const std::string& Paddle::getHitSound() const { return this->hitSound; }
+const std::string& Paddle::getHitSound() const { return this->hit_sound; }

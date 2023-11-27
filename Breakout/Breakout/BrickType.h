@@ -10,12 +10,12 @@ private:
 	std::string ID;
 	// TODO [lpavic]: this variable is unused (load unique image (.dds file) (instead of making path inside program))
 	std::string texture;
-	std::string hitPoints;
+	std::string hit_points;
 	// TODO [lpavic]: this variable is unused (load unique sound file (.wav file) (instead of making path inside program))
-	std::string hitSound;
+	std::string hit_sound;
 	// TODO [lpavic]: this variable is unused (load unique sound file (.wav file) (instead of making path inside program))
-	std::string breakSound;
-	unsigned int breakScore;
+	std::string break_sound;
+	unsigned int break_score;
 
 public:
 	BrickType();
@@ -33,5 +33,5 @@ public:
 	const unsigned& getBreakScore() const;
 	const std::string& getID() const;
 	void setID(const std::string ID);
-	void setHitPoints(const std::string hitPoints);
+	void setHitPoints(const std::string hit_points);
 };

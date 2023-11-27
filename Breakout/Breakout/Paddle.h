@@ -12,7 +12,7 @@
 class Paddle : public GameElement
 {
 private:
-	std::string hitSound{""};
+	std::string hit_sound{""};
 public:
     Paddle();
     Paddle(const Paddle&) = default;
