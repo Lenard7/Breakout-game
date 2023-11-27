@@ -364,18 +364,18 @@ void Level::drawLevel()
 }
 
 
-void Level::handleKeyboardStates(const Uint8 const* keyboard)
+void Level::handleKeyboardStates(const Uint8 * const keyboard)
 {
 	SDL_Rect temp = this->paddle.getTexture();
 	if (keyboard[SDL_SCANCODE_LEFT])
 	{
-		temp.x += -this->paddle.getVelocityX();
+		temp.x += static_cast<int>(-this->paddle.getVelocityX());
 		this->paddle.setTexture(temp);
 	}
 
 	if (keyboard[SDL_SCANCODE_RIGHT])
 	{
-		temp.x += this->paddle.getVelocityX();
+		temp.x += static_cast<int>(this->paddle.getVelocityX());
 		this->paddle.setTexture(temp);
 	}
 

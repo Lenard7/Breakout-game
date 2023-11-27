@@ -73,7 +73,7 @@ MainMenu::MainMenu(SDL_Window** window,
         this->selection_box[i].h = ((this->window_vertical_size / 4) / 
                                     static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count) );
         // each letter of text should take 1/50 of horizontal space of the window
-        this->selection_box[i].w = (this->window_horizontal_size / 50) * strlen(main_menu_selection_box_text[i]);
+        this->selection_box[i].w = (this->window_horizontal_size / 50) * static_cast<int>(strlen(main_menu_selection_box_text[i]));
         // TODO [lpavic]: multiplying with this->selection_box[i].h could be problematic if 
             // all selection boxes are not the same height; multiplying i by 2 because of blank space
         this->selection_box[i].y = (this->window_vertical_size / 3) + (i * this->selection_box[i].h);

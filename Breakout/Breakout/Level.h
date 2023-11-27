@@ -73,7 +73,7 @@ private:
 	~Level();
 
 	void drawLevel();
-	void handleKeyboardStates(const Uint8 const* keyboard);
+	void handleKeyboardStates(const Uint8 * const keyboard);
 	void parseLevelFile(tinyxml2::XMLDocument & doc);
 	void printLevel() const;
 	void refreshFrames();
