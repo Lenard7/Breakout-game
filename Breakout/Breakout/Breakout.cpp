@@ -6,7 +6,7 @@
 #include <string>
 
 
-/** NOTES [lpavic]:
+/** NOTES [lpavic] - follow these rules before merging to main branch:
  * before pushing to git repository, always build in Debug and Release configurations
  * always check if some header, dll or other lib objects are needed somewhere or it is not when making bigger changes
  * edit README.md file after bigger changes
@@ -16,6 +16,15 @@
  * check what is passed to function calls
  * check error cases inside code, e.g. if (SDL_Init() < 0) {...}
  * resolve warnings after major implementation
+ * see to use rule of 3/5/6
+ * see where to improve some implementation inside classes or simillar
+ * see where to inline functions
+ * see which variables are not used and remove them if they are not used
+ * make intendations correct (also free lines at the end of files)
+ * take in considerations if some methods should be private, variables protected etc.
+ * see which methods need to be marked as noexcept
+ * see that setters and getters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
+ * let compiler decide if small methods should be inlined by defining methods inside class' definition
  */
 
 

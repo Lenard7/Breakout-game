@@ -50,7 +50,6 @@ private:
 	unsigned offset{0};
 	FrameInformation frame_information{0};
 
-	// TODO [lpavic]: use snake case variable names
 	// data extracted from xml files
 	unsigned rowCount;
 	unsigned columnCount;
@@ -73,7 +72,6 @@ private:
 	Level(SDL_Window** window, unsigned& window_horizontal_size, unsigned& window_vertical_size);
 	~Level();
 
-	// TODO [lpavic]: use lower camel case names for functions
 	void drawLevel();
 	void handleKeyboardStates(const Uint8 const* keyboard);
 	void parseLevelFile(tinyxml2::XMLDocument & doc);

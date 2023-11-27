@@ -19,7 +19,6 @@ void GameElement::drawSprite(SDL_Renderer* const * const renderer)
 }
 
 
-// TODO [lpavic] : see that setters and getters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
 const std::string& GameElement::getID() const { return this->ID; }
 const SDL_Rect& GameElement::getTexture() const { return this->texture; }
 const std::string& GameElement::getTexturePath() const { return this->texture_path; }

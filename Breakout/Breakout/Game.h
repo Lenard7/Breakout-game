@@ -10,7 +10,6 @@
 #include "wtypes.h"
 
 // TODO [lpavic]: see to improve implementation
-// TODO [lpavic]: see which methods need to be marked as noexcept and see const correctness
 // this class is made as singleton (Meyer's implementation, no need of explicit destructor call)
 class Game
 {

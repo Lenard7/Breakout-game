@@ -12,7 +12,6 @@
 // TODO [lpavic]: see if this class needs to be implemented as abstract class or normal base class for Pause and Main menu;
     // with PauseMenu and MainMenu, there can also be OptionMenu, LoadMenu...
 // TODO [lpavic]: see if Factory pattern should be used (maybe it does not, maybe it will only complicate whole design)
-// TODO [lpavic]: see where to use rule of 0/3/5 and where smart pointers can be used
 class Menu
 {
 protected:

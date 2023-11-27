@@ -341,7 +341,7 @@ void Level::drawLevel()
 	}
 
 	// TODO [lpavic]: see if this is needed
-	refreshFrames();
+	// refreshFrames();
 
 	this->ball.drawSprite(&this->renderer);
 	this->paddle.drawSprite(&this->renderer);
@@ -782,7 +782,6 @@ void Level::setLimitSituations()
 }
 
 
-// TODO [lpavic]: put these functions in header as inline functions 
 const unsigned Level::getRowCount() const { return this->rowCount; }
 const unsigned int Level::getColumnCount() const { return this->columnCount; }
 const unsigned int Level::getRowSpacing() const { return this->rowSpacing; }

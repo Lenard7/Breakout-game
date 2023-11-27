@@ -19,7 +19,6 @@ private:
 	bool is_alive{false};
 
 public:
-	// TODO [lpavic]: see which constructors and assign operators are needed - apply rule of 0/3/5
 	Brick() = default;
 	Brick(const tinyxml2::XMLElement& Brick);
 	Brick(const Brick&) = default;

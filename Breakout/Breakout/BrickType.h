@@ -18,7 +18,6 @@ private:
 	unsigned int breakScore;
 
 public:
-	// TODO [lpavic]: see which constructors and assign operators are needed
 	BrickType();
 	BrickType(const tinyxml2::XMLElement& brickType);
 	BrickType(const BrickType&) = default;
