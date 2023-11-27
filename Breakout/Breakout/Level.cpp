@@ -618,39 +618,13 @@ void Level::setLevelScene()
 	this->num_of_level_information = 3;
 	this->level_information = std::make_unique<LevelInformation[]>(this->num_of_level_information);
 
-	// TODO [lpavic]: see that temp_rect is initialized in 1 line just like temp_color struct
-	// TODO [lpavic]: see what to erase here
-	SDL_Rect temp_rect;
-	SDL_Color temp_color{255, 255, 255};
-
-	// one third of screen width
-    // temp_rect.w = this->window_horizontal_size / 3;
-    // // 10 percent of screen height
-    // temp_rect.h = this->window_vertical_size / 10;
-    // temp_rect.x = 0;
-    // temp_rect.y = 0;
-
-	// TODO [lpavic]: leave this std::move way of implementation as commented out code along with level_information.reset invocation
+	// this is alternative way of setting values of level_information without using reset method of unique pointer
 	// this->level_information[0] = std::move(LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
-	// 											  std::string("Lives: "), temp_color));
-
-    // one third of screen width
-    // temp_rect.w = this->window_horizontal_size / 3;
-    // // 10 percent of screen height
-    // temp_rect.h = this->window_vertical_size / 10;
-    // temp_rect.x = this->window_horizontal_size / 3;
-    // temp_rect.y = 0;
+	// 											  std::string("Lives: "), {255, 255, 255, 255}));
 	// this->level_information[1] = std::move(LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
-	// 											  std::string("Level: "), temp_color));
-
-    // one third of screen width
-    // temp_rect.w = this->window_horizontal_size / 3;
-    // // 10 percent of screen height
-    // temp_rect.h = this->window_vertical_size / 10;
-    // temp_rect.x = 2 * this->window_horizontal_size / 3;
-    // temp_rect.y = 0;
+	// 											  std::string("Level: "), {255, 255, 255, 255}));
 	// this->level_information[2] = std::move(LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
-	// 											  std::string("Score: "), temp_color));
+	// 											  std::string("Score: "), {255, 255, 255, 255}));
 
 	this->level_information.reset(new LevelInformation[3]
 	{
@@ -658,60 +632,35 @@ void Level::setLevelScene()
 						std::string("arial.ttf"), 
 						100, 
 						std::string("Lives: "), 
-						temp_color),
+						{255, 255, 255, 255}),
 		LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
 						std::string("arial.ttf"), 
 						100, 
 						std::string("Level: "), 
-						temp_color),
+						{255, 255, 255, 255}),
 		LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
 						std::string("arial.ttf"), 
 						100, 
 						std::string("Score: "), 
-						temp_color)
+						{255, 255, 255, 255})
 	});
 
-    // // one third of screen width
-    // this->level_information.numOfLivesRect.w = this->window_horizontal_size / 3;
-    // // 10 percent of screen height
-    // this->level_information.numOfLivesRect.h = this->window_vertical_size / 10;
-    // this->level_information.numOfLivesRect.x = 0;
-    // this->level_information.numOfLivesRect.y = 0;
-
-    // // one third of screen width
-    // this->level_information.levelNumRect.w = this->window_horizontal_size / 3;
-    // // 10 percent of screen height
-    // this->level_information.levelNumRect.h = this->window_vertical_size / 10;
-    // this->level_information.levelNumRect.x = this->window_horizontal_size / 3;
-    // this->level_information.levelNumRect.y = 0;
-
-    // // one third of screen width
-    // this->level_information.scoreRect.w = this->window_horizontal_size / 3;
-    // // 10 percent of screen height
-    // this->level_information.scoreRect.h = this->window_vertical_size / 10;
-    // this->level_information.scoreRect.x = 2 * this->window_horizontal_size / 3;
-    // this->level_information.scoreRect.y = 0;
-
-    // set this adjustable to screen settings
-	temp_rect.w = this->window_horizontal_size / 6;
-    temp_rect.h = this->window_vertical_size / 20;
-	temp_rect.x = this->window_horizontal_size / 2 - temp_rect.w / 2;
-	// hardcoded 10 for making little space between bottom frame and the paddle
-    temp_rect.y = this->window_vertical_size - temp_rect.h - 10;
-	this->paddle.setTexture(temp_rect);
+	this->paddle.setTexture({static_cast<int>(this->window_horizontal_size / 2 - this->window_horizontal_size / 6 / 2), 
+							static_cast<int>(this->window_vertical_size - this->window_vertical_size / 20 - 10), // hardcoded 10 for making little space between bottom frame and the paddle
+							static_cast<int>(this->window_horizontal_size / 6), 
+							static_cast<int>(this->window_vertical_size / 20)});
 	this->paddle.setVelocityX(this->window_horizontal_size * 0.005);
 
-    temp_rect.w = this->paddle.getTexture().h / 2;
-    temp_rect.h = temp_rect.w;
-	temp_rect.x = this->window_horizontal_size / 2 - temp_rect.w / 2;
-    // -paddle.y - ball.h
-    temp_rect.y = this->window_vertical_size - temp_rect.h - this->paddle.getTexture().h - 10;
-	this->ball.setTexture(temp_rect);
+	this->ball.setTexture({static_cast<int>(this->window_horizontal_size / 2 - this->paddle.getTexture().h / 2 / 2), 
+							static_cast<int>(this->window_vertical_size - this->paddle.getTexture().h / 2 - this->paddle.getTexture().h - 10), 
+							this->paddle.getTexture().h / 2, 
+							this->paddle.getTexture().h / 2});
 	// if velocityY or X drops below 1, ball wont move in that axis
 	// TODO [lpavic]: if there are more bricks, ball and paddle will move slowly
 	this->ball.setVelocityX(this->window_horizontal_size * 0.003);
 	this->ball.setVelocityY(this->window_vertical_size * 0.003);
 
+	SDL_Rect temp_rect; // using this local variable because calculations for each dimension would be very long and unreadable
 	for (unsigned int i = 0; i < (this->getColumnCount() * this->getRowCount()); ++i)
     {
         if (this->bricks[i].getID() != "_")

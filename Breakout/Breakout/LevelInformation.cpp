@@ -15,9 +15,7 @@ LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& f
     this->font = TTF_OpenFont((std::string(Resources::fonts_resources) + font_type).c_str(), font_size);
     if (this->font == nullptr)
     {
-        // TODO [lpavic]: make this print better
-        // std::cout << TTF_GetError();
-        THROW_FAILURE("Font for Level Information not opened properly!\n");
+        THROW_FAILURE((std::string("Font for Level Information not opened properly: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
     }
     this->display_string = display_string;
     this->color = color;
@@ -51,23 +49,22 @@ void LevelInformation:: drawSurface(SDL_Renderer* const * const renderer, const 
     surface = TTF_RenderText_Solid(this->font, (this->display_string + display_string_value).c_str(), this->color);
     if (surface == nullptr)
     {
-        // TODO [lpavic]: make this print better
-        // std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
-        THROW_FAILURE("Surface for rendering Level Information not initialized properly!\n");
+        THROW_FAILURE((std::string("Surface for rendering Level Information not initialized properly: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
     }
     
     texture = SDL_CreateTextureFromSurface(*renderer, surface);
     if (texture == nullptr)
     {
-        // TODO [lpavic]: make this print better
-        // std::cout << "TTF_GetError: " << TTF_GetError() << std::endl;
-        THROW_FAILURE("Texture for rendering Level Information not initialized properly!\n");
+        THROW_FAILURE((std::string("Texture for rendering Level Information not initialized properly: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
     }
 
     surface->w = this->texture.w;
     surface->h = this->texture.h;
 
-    SDL_RenderCopy(*renderer, texture, NULL, &(this->texture));
+    if (SDL_RenderCopy(*renderer, texture, NULL, &(this->texture)) < 0)
+    {
+        THROW_FAILURE((std::string("Texture for rendering Level Information not initialized properly: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
+    }
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);

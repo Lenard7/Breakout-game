@@ -35,11 +35,11 @@ MainMenu::MainMenu(SDL_Window** window,
     this->font_selection_box = TTF_OpenFont(font_path_selection_box, font_size_selection_box);
 
     // magenta
-    this->color_title = {255, 0, 255};
+    this->color_title = {255, 0, 255, 255};
     // white
-    this->color_unselected_menu_box = {255, 255, 255};
+    this->color_unselected_menu_box = {255, 255, 255, 255};
     // yellow
-    this->color_selected_menu_box = {249, 215, 28};
+    this->color_selected_menu_box = {249, 215, 28, 255};
 
     this->selector = MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME;
     this->selection_box = new SDL_Rect[MainMenu::MAIN_MENU_SELECTION_BOX::Count];
