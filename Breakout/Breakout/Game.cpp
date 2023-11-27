@@ -9,7 +9,7 @@ Game::Game()
 {
     // when entering the game, main window of the game should be opened
     SDL_SetMainReady();
-    SetupWindowSettings();
+    setupWindowSettings();
 }
 
 
@@ -25,7 +25,7 @@ Game::~Game()
 }
 
 
-void Game::GetDesktopResolution()
+void Game::getDesktopResolution()
 {
     RECT desktop;
     // Get a handle to the desktop window
@@ -40,9 +40,9 @@ void Game::GetDesktopResolution()
 }
 
 
-void Game::SetupWindowSettings()
+void Game::setupWindowSettings()
 {
-    GetDesktopResolution();
+    getDesktopResolution();
     
     this->window_vertical_size = static_cast<unsigned>(/* 0.95 * */ this->window_vertical_size);
     this->window = SDL_CreateWindow("Breakout.exe", 

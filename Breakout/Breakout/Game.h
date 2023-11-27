@@ -36,8 +36,8 @@ private:
     ~Game();
 
     // private methods
-    void GetDesktopResolution();
-    void SetupWindowSettings();
+    void getDesktopResolution();
+    void setupWindowSettings();
     STATE runMainMenu();
     STATE runLevel();
 

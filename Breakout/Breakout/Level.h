@@ -76,9 +76,9 @@ private:
 	// TODO [lpavic]: use lower camel case names for functions
 	void drawLevel();
 	void handleKeyboardStates(const Uint8 const* keyboard);
-	void ParseLevelFile(tinyxml2::XMLDocument & doc);
-	void PrintLevel() const;
-	void RefreshFrames();
+	void parseLevelFile(tinyxml2::XMLDocument & doc);
+	void printLevel() const;
+	void refreshFrames();
 	void relativePositionBallBrick(const unsigned & i);
 	void relativePositionBallPaddle();
 	void restartFrame();

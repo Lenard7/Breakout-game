@@ -114,7 +114,7 @@ Level::STATE Level::runImplementation()
 			levelOrdinalNum = NULL;
 		}
 
-		ParseLevelFile(doc);
+		parseLevelFile(doc);
 		if (fp)
 		{
 			fclose(fp);
@@ -341,17 +341,17 @@ void Level::drawLevel()
 	}
 
 	// TODO [lpavic]: see if this is needed
-	RefreshFrames();
+	refreshFrames();
 
-	this->ball.DrawSprite(&this->renderer);
-	this->paddle.DrawSprite(&this->renderer);
+	this->ball.drawSprite(&this->renderer);
+	this->paddle.drawSprite(&this->renderer);
 	
 	// TODO [lpavic]: whole game lags when there are more bricks
 	for (unsigned i = 0; i < this->num_of_bricks; i++)
 	{
 		if (this->bricks[i].getIsAlive())
 		{
-			this->bricks[i].DrawSprite(&this->renderer);
+			this->bricks[i].drawSprite(&this->renderer);
 		}
 	}
 
@@ -392,7 +392,7 @@ void Level::handleKeyboardStates(const Uint8 const* keyboard)
 }
 
 
-void Level::ParseLevelFile(tinyxml2::XMLDocument & doc)
+void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 {
 	tinyxml2::XMLElement* rootElement = doc.FirstChildElement("Level");
 	if (rootElement == NULL)
@@ -459,11 +459,11 @@ void Level::ParseLevelFile(tinyxml2::XMLDocument & doc)
 		}
 	}
 
-	PrintLevel();
+	printLevel();
 }
 
 
-void Level::PrintLevel() const // TODO [lpavic]: finish printing all attributes of class Level
+void Level::printLevel() const // TODO [lpavic]: finish printing all attributes of class Level
 {
 	std::cout << "Row Count : " << this->rowCount << "\n"
 		<< "Column Count : " << this->columnCount << "\n"
@@ -485,7 +485,7 @@ void Level::PrintLevel() const // TODO [lpavic]: finish printing all attributes 
 }
 
 
-void Level::RefreshFrames()
+void Level::refreshFrames()
 {
     int timerFPS;
 

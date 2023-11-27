@@ -1,7 +1,7 @@
 # include "GameElement.h"
 
 
-void GameElement::DrawSprite(SDL_Renderer* const * const renderer)
+void GameElement::drawSprite(SDL_Renderer* const * const renderer)
 {
     SDL_Surface* surface;
     SDL_Texture* sdl_texture;
