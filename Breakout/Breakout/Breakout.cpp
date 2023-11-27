@@ -10,10 +10,10 @@
  * before pushing to git repository, always build in Debug and Release configurations
  * always check if some header, dll or other lib objects are needed somewhere or it is not when making bigger changes
  * edit README.md file after bigger changes
- * beware of cont correctnes
+ * beware of const correctnes
  * check for code writing style (where to use Pascal case, snake case, Camel case etc.)
  * check in which order should be attributes and methods be written inside definition of class (alphabetical, data types...)
- * check what is passed to function calls
+ * check what is passed to function calls and what they are returning, use reference and pointers for larger data types (custom one, but also for basic one to be consistent)
  * check error cases inside code, e.g. if (SDL_Init() < 0) {...}
  * resolve warnings after major implementation
  * see to use rule of 3/5/6
@@ -24,6 +24,7 @@
  * take in considerations if some methods should be private, variables protected etc.
  * see which methods need to be marked as noexcept
  * see that setters and getters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
+ * make setters and getters for all private and protected attributes for future potentional use
  * let compiler decide if small methods should be inlined by defining methods inside class' definition
  */
 
