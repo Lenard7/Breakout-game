@@ -47,7 +47,7 @@ Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 		}
 		this->break_sound = temp;
 
-		// TODO [lpavic]: se how to check error here, maybe use Attribute method instead UnsignedAttribute?
+		// TODO [lpavic]: see how to check error here, maybe use Attribute method instead UnsignedAttribute?
 		this->break_score = Brick.UnsignedAttribute("BreakScore");
 	}
 }

@@ -395,18 +395,27 @@ void Level::handleKeyboardStates(const Uint8 * const keyboard)
 void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 {
 	tinyxml2::XMLElement* root_element = doc.FirstChildElement("Level");
-	if (root_element == NULL)
+	if (root_element == nullptr)
 	{
 		THROW_FAILURE("Level element in xml file not found!");
-	}	
+	}
+
+	// TODO [lpavic]: see how to check error here, maybe use Attribute method instead UnsignedAttribute?
 	this->row_count = root_element->UnsignedAttribute("RowCount");
 	this->column_count = root_element->UnsignedAttribute("ColumnCount");
 	this->row_spacing = root_element->UnsignedAttribute("RowSpacing");
 	this->column_spacing = root_element->UnsignedAttribute("ColumnSpacing");
-	this->background_texture = root_element->Attribute("BackgroundTexture");
+	
+	const char* temp;
+	temp = root_element->Attribute("BackgroundTexture");
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Error while parsing \"BackgroundTexture\" attribute from xml file!\n");
+	}
+	this->background_texture = std::string(temp);
 
 	tinyxml2::XMLElement* brick_types = root_element->FirstChildElement("BrickTypes");
-	if (brick_types == NULL)
+	if (brick_types == nullptr)
 	{
 		THROW_FAILURE("BrickTypes element in xml file not found!");
 	}
@@ -439,10 +448,11 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 	brick_type_temp.push_back(brick_temp);
 
 	tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
-	if (brick_types == NULL)
+	if (brick_types == nullptr)
 	{
 		THROW_FAILURE("Bricks element in xml file not found!");
 	}
+
 	this->bricks_string = bricks->GetText();
 	this->num_of_bricks = this->row_count * this->column_count; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
 

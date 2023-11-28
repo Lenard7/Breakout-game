@@ -12,11 +12,13 @@ LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& f
                                    const std::string& display_string, const SDL_Color& color)
 {
     this->texture = texture;
+
     this->font = TTF_OpenFont((std::string(Resources::fonts_resources) + font_type).c_str(), font_size);
     if (this->font == nullptr)
     {
         THROW_FAILURE((std::string("Font for Level Information not opened properly: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
     }
+
     this->display_string = display_string;
     this->color = color;
 }
