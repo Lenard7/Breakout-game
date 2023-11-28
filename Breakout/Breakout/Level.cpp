@@ -106,12 +106,12 @@ Level::STATE Level::runImplementation()
 		if (level_file_name)
 		{
 			free(level_file_name);
-			level_file_name = NULL;
+			level_file_name = nullptr;
 		}
 		if (level_ordinal_num)
 		{
 			free(level_ordinal_num);
-			level_ordinal_num = NULL;
+			level_ordinal_num = nullptr;
 		}
 
 		parseLevelFile(doc);
@@ -123,7 +123,7 @@ Level::STATE Level::runImplementation()
 		setLevelScene();
 
 		this->renderer = SDL_CreateRenderer(window, -1, 0);
-		if(this->renderer == NULL)
+		if(this->renderer == nullptr)
 		{
 			THROW_FAILURE("Error while creating renderer for level!\n");
 		}
@@ -266,7 +266,7 @@ Level::STATE Level::runImplementation()
 								pause_menu->destroy();
 								this->setState(Level::RUNNING);
 								this->renderer = SDL_CreateRenderer(window, -1, 0);
-								if(this->renderer == NULL)
+								if(this->renderer == nullptr)
 								{
 									THROW_FAILURE("Error while creating renderer for level!\n");
 								}
