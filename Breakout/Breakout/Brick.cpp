@@ -1,21 +1,55 @@
 #include "Brick.h"
+#include "ErrorHandler.h"
 #include "Resources.h"
 
 
 Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 {
-		this->ID = Brick.Attribute("Id");
-		this->texture_path = std::string(Resources::path_resources) + std::string(Brick.Attribute("Texture"));
-		this->hit_points = Brick.Attribute("HitPoints");
-		// TODO [lpavic]: make this hitsound path correct
-		this->hit_sound = Brick.Attribute("HitSound");
+	const char* temp;
 
-		if (this->ID != "I")
+	// TODO [lpavic]: maybe implement function that loads attributes safely (code is repeating)
+	temp = Brick.Attribute("Id");
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Error while parsing \"id\" attribute from xml file!\n");
+	}
+	this->ID = std::string(temp);
+	
+	temp = Brick.Attribute("Texture");
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Error while parsing \"Texture\" attribute from xml file!\n");
+	}
+	this->texture_path = std::string(Resources::path_resources) + std::string(temp);
+
+	temp = Brick.Attribute("HitPoints");
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Error while parsing \"HitPoints\" attribute from xml file!\n");
+	}
+	this->hit_points = temp;
+
+	// TODO [lpavic]: make this hitsound path correct
+	temp = Brick.Attribute("HitSound");
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Error while parsing \"HitSound\" attribute from xml file!\n");
+	}
+	this->hit_sound = temp;
+
+	if (this->ID != "I")
+	{
+		// TODO [lpavic]: make this breaksound path correct
+		temp = Brick.Attribute("BreakSound");
+		if (temp == nullptr)
 		{
-			// TODO [lpavic]: make this breaksound path correct
-			this->break_sound = Brick.Attribute("BreakSound");
-			this->break_score = Brick.UnsignedAttribute("BreakScore");
+			THROW_FAILURE("Error while parsing \"BreakSound\" attribute from xml file!\n");
 		}
+		this->break_sound = temp;
+
+		// TODO [lpavic]: se how to check error here, maybe use Attribute method instead UnsignedAttribute?
+		this->break_score = Brick.UnsignedAttribute("BreakScore");
+	}
 }
 
 
