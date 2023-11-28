@@ -1,6 +1,8 @@
 #include "Game.h"
 
+extern "C" {
 #include <SDL_ttf.h>
+} 
 
 #include <iostream>
 #include <string>

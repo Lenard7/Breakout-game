@@ -1,7 +1,9 @@
 # include "ErrorHandler.h"
 # include "GameElement.h"
 
+extern "C" {
 #include <SDL_ttf.h>
+}
 
 
 void GameElement::drawSprite(SDL_Renderer* const * const renderer)

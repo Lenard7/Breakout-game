@@ -2,7 +2,9 @@
 #include "LevelInformation.h"
 #include "Resources.h"
 
+extern "C" {
 #include <SDL_ttf.h>
+}
 
 #include <iostream>
 LevelInformation::LevelInformation() {}

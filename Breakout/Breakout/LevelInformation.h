@@ -1,5 +1,6 @@
 #pragma once
 
+extern "C" {
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
 #endif
@@ -7,6 +8,7 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 #include <SDL_ttf.h>
+}
 
 #include <string>
 

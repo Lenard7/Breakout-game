@@ -1,11 +1,14 @@
 #pragma once
 
+extern "C" {
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
 #endif
 
 #include <SDL_image.h>
 #include <SDL_rect.h>
+}
+
 #include <iostream>
 
 // TODO [lpavic]: see to improve implementation

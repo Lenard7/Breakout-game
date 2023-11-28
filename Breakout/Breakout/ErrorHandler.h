@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
-#include <stdlib.h>
 
+extern "C" {
+#include <stdlib.h>
+}
 
 #ifndef NDEBUG
 // print error with file name and line number in debug mode - file name and line number would be written wrong(always the same value no metter where throw happened) without using macros

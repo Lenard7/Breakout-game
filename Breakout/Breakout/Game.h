@@ -1,5 +1,6 @@
 #pragma once
 
+extern "C" {
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
 #endif
@@ -8,6 +9,7 @@
 #include <SDL_image.h>
 
 #include "wtypes.h"
+}
 
 // TODO [lpavic]: see to improve implementation
 // this class is made as singleton (Meyer's implementation, no need of explicit destructor call)

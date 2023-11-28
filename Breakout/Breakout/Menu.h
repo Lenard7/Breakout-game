@@ -1,5 +1,6 @@
 #pragma once
 
+extern "C" {
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
 #endif
@@ -7,6 +8,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+}
 
 
 // TODO [lpavic]: see if this class needs to be implemented as abstract class or normal base class for Pause and Main menu;

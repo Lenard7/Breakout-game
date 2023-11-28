@@ -1,8 +1,10 @@
 #pragma once
 
+extern "C" {
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
 #endif
+}
 
 #include "GameElement.h"
 
