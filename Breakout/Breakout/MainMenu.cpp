@@ -32,7 +32,16 @@ MainMenu::MainMenu(SDL_Window** window,
     this->font_size_title = this->window_vertical_size / 5;
     this->font_size_selection_box = this->font_size_title / 2;
     this->font_title = TTF_OpenFont(font_path_title, font_size_title);
+    if (this->font_title == nullptr)
+    {
+        THROW_FAILURE("Error while initializing font title for Main Menu!");
+    }
+    
     this->font_selection_box = TTF_OpenFont(font_path_selection_box, font_size_selection_box);
+    if (this->font_selection_box == nullptr)
+    {
+        THROW_FAILURE("Error while initializing font selection box for Main Menu!");
+    }
 
     // magenta
     this->color_title = {255, 0, 255, 255};
@@ -44,7 +53,10 @@ MainMenu::MainMenu(SDL_Window** window,
     this->selector = MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME;
     this->selection_box = new SDL_Rect[MainMenu::MAIN_MENU_SELECTION_BOX::Count];
     this->renderer = SDL_CreateRenderer(*window, -1, 0);
-
+    if (this->renderer == nullptr)
+    {
+        THROW_FAILURE("Error while initializing renderer for Main Menu!");
+    }
 
     title.h = this->window_vertical_size / 5;
     title.w = this->window_horizontal_size / 2;
@@ -55,12 +67,24 @@ MainMenu::MainMenu(SDL_Window** window,
     SDL_Texture* texture;
 
     surface = TTF_RenderText_Solid(this->font_title, "B R E A K O U T", this->color_title);
+    if (surface == nullptr)
+    {
+        THROW_FAILURE("Error while initializing surface for Main Menu for font title!");
+    }
+
     texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == nullptr)
+    {
+        THROW_FAILURE("Error while initializing texture for Main Menu for surface for font title!");
+    }
 
     surface->w = title.w;
     surface->h = title.h;
 
-    SDL_RenderCopy(renderer, texture, NULL, &title);
+    if (SDL_RenderCopy(renderer, texture, NULL, &title) < 0)
+    {
+        THROW_FAILURE("Error while copying texture of font title to renderer in Main menu!");
+    }
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -87,19 +111,34 @@ MainMenu::MainMenu(SDL_Window** window,
             surface = TTF_RenderText_Solid(font_selection_box, 
                                             main_menu_selection_box_text[i], 
                                             this->color_selected_menu_box);
+            if (surface == nullptr)
+            {
+                THROW_FAILURE("Error while initializing surface for Main Menu for seleciton box!");
+            }
         }
         else
         {
             surface = TTF_RenderText_Solid(font_selection_box, 
                                             main_menu_selection_box_text[i], 
                                             this->color_unselected_menu_box);
+            if (surface == nullptr)
+            {
+                THROW_FAILURE("Error while initializing surface for Main Menu for seleciton box!");
+            }
         }
         texture = SDL_CreateTextureFromSurface(renderer, surface);
+        if (texture == nullptr)
+        {
+            THROW_FAILURE("Error while initializing texture for Main Menu for surface for selection box!");
+        }
 
         surface->w = this->selection_box[i].w;
         surface->h = this->selection_box[i].h;
 
-        SDL_RenderCopy(renderer, texture, NULL, (selection_box + i));
+        if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+        {
+            THROW_FAILURE("Error while copying texture of selection box to renderer in Pause menu!");
+        }
 
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
@@ -177,19 +216,34 @@ MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                         surface = TTF_RenderText_Solid(font_title, 
                                                         main_menu_selection_box_text[i], 
                                                         this->color_selected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Main Menu for seleciton box!");
+                        }
                     }
                     else
                     {
                         surface = TTF_RenderText_Solid(font_title, 
                                                         main_menu_selection_box_text[i], 
                                                         this->color_unselected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Main Menu for seleciton box!");
+                        }
                     }
                     texture = SDL_CreateTextureFromSurface(renderer, surface);
+                    if (texture == nullptr)
+                    {
+                        THROW_FAILURE("Error while initializing texture for Main Menu for surface for selection box!");
+                    }
 
                     surface->w = this->selection_box[i].w;
                     surface->h = this->selection_box[i].h;
 
-                    SDL_RenderCopy(renderer, texture, NULL, (selection_box + i));
+                    if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+                    {
+                        THROW_FAILURE("Error while copying texture of selection box to renderer in Main menu!");
+                    }
 
                     SDL_FreeSurface(surface);
                     SDL_DestroyTexture(texture);
@@ -225,19 +279,34 @@ MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                         surface = TTF_RenderText_Solid(font_title, 
                                                         main_menu_selection_box_text[i], 
                                                         this->color_selected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Main Menu for seleciton box!");
+                        }
                     }
                     else
                     {
                         surface = TTF_RenderText_Solid(font_title, 
                                                         main_menu_selection_box_text[i], 
                                                         this->color_unselected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Main Menu for seleciton box!");
+                        }
                     }
                     texture = SDL_CreateTextureFromSurface(renderer, surface);
+                    if (texture == nullptr)
+                    {
+                        THROW_FAILURE("Error while initializing texture for Main Menu for surface for selection box!");
+                    }
 
                     surface->w = this->selection_box[i].w;
                     surface->h = this->selection_box[i].h;
 
-                    SDL_RenderCopy(renderer, texture, NULL, (selection_box + i));
+                    if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+                    {
+                        THROW_FAILURE("Error while copying texture of selection box to renderer in Main menu!");
+                    }
 
                     SDL_FreeSurface(surface);
                     SDL_DestroyTexture(texture);
