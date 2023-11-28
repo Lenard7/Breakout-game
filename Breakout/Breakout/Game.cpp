@@ -51,7 +51,6 @@ void Game::setupWindowSettings()
                                     window_horizontal_size, 
                                     window_vertical_size, 
                                     SDL_WINDOW_SHOWN);
-
     if (window == NULL)
     {
         THROW_FAILURE("Failed creting SDL window!\n");

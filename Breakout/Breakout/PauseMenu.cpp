@@ -33,8 +33,18 @@ PauseMenu::PauseMenu(SDL_Window** window,
     /////////////////////CHECK IF EVERYTHING IS OK//////////////////
     this->font_size_title = this->window_vertical_size / 5;
     this->font_size_selection_box = this->font_size_title / 2;
+    
     this->font_title = TTF_OpenFont(font_path_title, font_size_title);
+    if (this->font_title == nullptr)
+    {
+        THROW_FAILURE("Error while initializing font title for Pause Menu!");
+    }
+    
     this->font_selection_box = TTF_OpenFont(font_path_selection_box, font_size_selection_box);
+    if (this->font_selection_box == nullptr)
+    {
+        THROW_FAILURE("Error while initializing font selection box for Pause Menu!");
+    }
 
     // magenta
     this->color_title = {255, 0, 255, 255};
@@ -45,25 +55,40 @@ PauseMenu::PauseMenu(SDL_Window** window,
 
     this->selector = PauseMenu::PAUSE_MENU_SELECTION_BOX::CONTINUE;
     this->selection_box = new SDL_Rect[PauseMenu::PAUSE_MENU_SELECTION_BOX::Count];
+    
     this->renderer = SDL_CreateRenderer(*window, -1, 0);
+    if (this->renderer == nullptr)
+    {
+        THROW_FAILURE("Error while initializing renderer for Pause Menu!");
+    }
 
-
-
-    title.h = this->window_vertical_size / 5;
-    title.w = this->window_horizontal_size / 2;
-    title.y = 0;
-    title.x = this->window_horizontal_size / 2 - title.w / 2;
+    this->title.h = this->window_vertical_size / 5;
+    this->title.w = this->window_horizontal_size / 2;
+    this->title.y = 0;
+    this->title.x = this->window_horizontal_size / 2 - title.w / 2;
 
     SDL_Surface* surface;
     SDL_Texture* texture;
 
     surface = TTF_RenderText_Solid(this->font_title, "P A U S E", this->color_title);
+    if (surface == nullptr)
+    {
+        THROW_FAILURE("Error while initializing surface for Pause Menu for font title!");
+    }
+
     texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == nullptr)
+    {
+        THROW_FAILURE("Error while initializing texture for Pause Menu for surface for font title!");
+    }
 
     surface->w = title.w;
     surface->h = title.h;
 
-    SDL_RenderCopy(renderer, texture, NULL, &title);
+    if (SDL_RenderCopy(renderer, texture, NULL, &title) < 0)
+    {
+        THROW_FAILURE("Error while copying texture of font title to renderer in Pause menu!");
+    }
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
@@ -90,19 +115,35 @@ PauseMenu::PauseMenu(SDL_Window** window,
             surface = TTF_RenderText_Solid(font_selection_box, 
                                             pause_menu_selection_box_text[i], 
                                             this->color_selected_menu_box);
+            if (surface == nullptr)
+            {
+                THROW_FAILURE("Error while initializing surface for Pause Menu for seleciton box!");
+            }
         }
         else
         {
             surface = TTF_RenderText_Solid(font_selection_box, 
                                             pause_menu_selection_box_text[i], 
                                             this->color_unselected_menu_box);
+            if (surface == nullptr)
+            {
+                THROW_FAILURE("Error while initializing surface for Pause Menu for seleciton box!");
+            }
         }
+
         texture = SDL_CreateTextureFromSurface(renderer, surface);
+        if (texture == nullptr)
+        {
+            THROW_FAILURE("Error while initializing texture for Pause Menu for surface for selection box!");
+        }
 
         surface->w = this->selection_box[i].w;
         surface->h = this->selection_box[i].h;
 
-        SDL_RenderCopy(renderer, texture, NULL, (selection_box + i));
+        if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+        {
+            THROW_FAILURE("Error while copying texture of selection box to renderer in Pause menu!");
+        }
 
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
@@ -196,19 +237,35 @@ PauseMenu::PAUSE_MENU_SELECTION_BOX PauseMenu::runImplementation()
                         surface = TTF_RenderText_Solid(font_title, 
                                                         pause_menu_selection_box_text[i], 
                                                         this->color_selected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Pause Menu for seleciton box!");
+                        }
                     }
                     else
                     {
                         surface = TTF_RenderText_Solid(font_title, 
                                                         pause_menu_selection_box_text[i], 
                                                         this->color_unselected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Pause Menu for seleciton box!");
+                        }
                     }
+
                     texture = SDL_CreateTextureFromSurface(renderer, surface);
+                    if (texture == nullptr)
+                    {
+                        THROW_FAILURE("Error while initializing texture for Pause Menu for surface for selection box!");
+                    }
 
                     surface->w = this->selection_box[i].w;
                     surface->h = this->selection_box[i].h;
 
-                    SDL_RenderCopy(renderer, texture, NULL, (selection_box + i));
+                    if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+                    {
+                        THROW_FAILURE("Error while copying texture of selection box to renderer in Pause menu!");
+                    }
 
                     SDL_FreeSurface(surface);
                     SDL_DestroyTexture(texture);
@@ -244,19 +301,34 @@ PauseMenu::PAUSE_MENU_SELECTION_BOX PauseMenu::runImplementation()
                         surface = TTF_RenderText_Solid(font_title, 
                                                         pause_menu_selection_box_text[i], 
                                                         this->color_selected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Pause Menu for seleciton box!");
+                        }
                     }
                     else
                     {
                         surface = TTF_RenderText_Solid(font_title, 
                                                         pause_menu_selection_box_text[i], 
                                                         this->color_unselected_menu_box);
+                        if (surface == nullptr)
+                        {
+                            THROW_FAILURE("Error while initializing surface for Pause Menu for seleciton box!");
+                        }
                     }
                     texture = SDL_CreateTextureFromSurface(renderer, surface);
+                    if (texture == nullptr)
+                    {
+                        THROW_FAILURE("Error while initializing texture for Pause Menu for surface for selection box!");
+                    }
 
                     surface->w = this->selection_box[i].w;
                     surface->h = this->selection_box[i].h;
 
-                    SDL_RenderCopy(renderer, texture, NULL, (selection_box + i));
+                    if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+                    {
+                        THROW_FAILURE("Error while copying texture of selection box to renderer in Pause menu!");
+                    }
 
                     SDL_FreeSurface(surface);
                     SDL_DestroyTexture(texture);
