@@ -53,7 +53,7 @@ void Game::setupWindowSettings()
                                     SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
-        THROW_FAILURE("Failed creting SDL window!\n");
+        THROW_FAILURE((std::string("Failed creting SDL window: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
     }
 }
 

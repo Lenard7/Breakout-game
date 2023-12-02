@@ -125,7 +125,7 @@ Level::STATE Level::runImplementation()
 		this->renderer = SDL_CreateRenderer(window, -1, 0);
 		if(this->renderer == nullptr)
 		{
-			THROW_FAILURE("Error while creating renderer for level!\n");
+        	THROW_FAILURE((std::string("Error while creating renderer for level: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
 		}
 
 		SDL_Event event;
@@ -268,7 +268,7 @@ Level::STATE Level::runImplementation()
 								this->renderer = SDL_CreateRenderer(window, -1, 0);
 								if(this->renderer == nullptr)
 								{
-									THROW_FAILURE("Error while creating renderer for level!\n");
+        							THROW_FAILURE((std::string("Error while creating renderer for level: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
 								}
 								// do not return, setLevelState to continue and check later,
 									// if Continue, do not call for Level destructor
@@ -333,11 +333,11 @@ void Level::drawLevel()
 {
 	if (SDL_SetRenderDrawColor(this->renderer, 20, 20, 20, 255) != 0)
 	{
-		THROW_FAILURE("Setting render draw color error!\n");
+		THROW_FAILURE((std::string("Setting render draw color error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
 	}
 	if (SDL_RenderClear(this->renderer) != 0)
 	{
-		THROW_FAILURE("Clearing level renderer error!\n");
+		THROW_FAILURE((std::string("Clearing level renderer error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
 	}
 
 	// TODO [lpavic]: see if this is needed
