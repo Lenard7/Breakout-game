@@ -8,6 +8,7 @@ Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 	const char* temp;
 
 	// TODO [lpavic]: maybe implement function that loads attributes safely (code is repeating)
+	// QueryStringAttribute function not used because this->ID is std::string data type, not const char*
 	temp = Brick.Attribute("Id");
 	if (temp == nullptr)
 	{
@@ -47,8 +48,10 @@ Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 		}
 		this->break_sound = temp;
 
-		// TODO [lpavic]: see how to check error here, maybe use Attribute method instead UnsignedAttribute?
-		this->break_score = Brick.UnsignedAttribute("BreakScore");
+		if (Brick.QueryUnsignedAttribute("BreakScore", &(this->break_score)) != tinyxml2::XML_SUCCESS)
+		{
+			THROW_FAILURE("Error while parsing \"BreakScore\" attribute from xml file!\n");
+		}
 	}
 }
 

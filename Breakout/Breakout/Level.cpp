@@ -400,11 +400,25 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 		THROW_FAILURE("Level element in xml file not found!");
 	}
 
-	// TODO [lpavic]: see how to check error here, maybe use Attribute method instead UnsignedAttribute?
-	this->row_count = root_element->UnsignedAttribute("RowCount");
-	this->column_count = root_element->UnsignedAttribute("ColumnCount");
-	this->row_spacing = root_element->UnsignedAttribute("RowSpacing");
-	this->column_spacing = root_element->UnsignedAttribute("ColumnSpacing");
+	if (root_element->QueryUnsignedAttribute("RowCount", &(this->row_count)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"RowCount\" attribute from xml file!\n");
+	}
+
+	if (root_element->QueryUnsignedAttribute("ColumnCount", &(this->column_count)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"ColumnCount\" attribute from xml file!\n");
+	}
+
+	if (root_element->QueryUnsignedAttribute("RowSpacing", &(this->row_spacing)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"RowSpacing\" attribute from xml file!\n");
+	}
+
+	if (root_element->QueryUnsignedAttribute("ColumnSpacing", &(this->column_spacing)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"ColumnSpacing\" attribute from xml file!\n");
+	}
 	
 	const char* temp;
 	temp = root_element->Attribute("BackgroundTexture");
@@ -420,9 +434,12 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 		THROW_FAILURE("BrickTypes element in xml file not found!");
 	}
 	
-	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
-
 	tinyxml2::XMLElement* brick_type = brick_types->FirstChildElement("BrickType");
+	if (brick_type == nullptr)
+	{
+		THROW_FAILURE("BrickType element in xml file not found!");
+	}
+
 	// vector of all types of bricks inside Level (if all bricks inside level are Soft, this vector will only have 2 elements with ID 'S' and '_')
 	std::vector<Brick> brick_type_temp;
 	for (;brick_type != nullptr; brick_type = brick_type->NextSiblingElement("BrickType"))
@@ -430,7 +447,12 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 		bool id_exists = false;
 		for(std::vector<Brick>::iterator it = brick_type_temp.begin(); it != brick_type_temp.end(); ++it)
 		{
-			if (it->getID() == brick_type->Attribute("Id"))
+			const char* temp_id = brick_type->Attribute("Id");
+			if (temp_id == nullptr)
+			{
+				THROW_FAILURE("Id element inside BrickType element not found!");
+			}
+			if (it->getID() == temp_id)
 			{
 				id_exists = true;
 			}
@@ -448,15 +470,22 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 	brick_type_temp.push_back(brick_temp);
 
 	tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
-	if (brick_types == nullptr)
+	if (bricks == nullptr)
 	{
 		THROW_FAILURE("Bricks element in xml file not found!");
 	}
 
-	this->bricks_string = bricks->GetText();
+	temp = bricks->GetText();
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Bricks string element in xml file not found!");
+	}
+	this->bricks_string = std::string(temp);
+
 	this->num_of_bricks = this->row_count * this->column_count; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
 
 	unsigned temp_brick_count = 0;
+	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
 	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned int>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
 	{
 		for (unsigned j = 0; j < brick_type_temp.size(); ++j)
