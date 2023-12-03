@@ -38,8 +38,8 @@ public:
 	const std::string& getTexturePath() const;
     const double& getVelocityX() const;
     const double& getVelocityY() const;
-	void setID(const std::string ID);
-    void setTexture(const SDL_Rect texture);
-    void setVelocityX(const double velocity_x);
-    void setVelocityY(const double velocity_y);
+	void setID(const std::string& ID);
+    void setTexture(const SDL_Rect& texture);
+    void setVelocityX(const double& velocity_x);
+    void setVelocityY(const double& velocity_y);
 };

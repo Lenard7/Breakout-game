@@ -24,7 +24,7 @@ private:
 
 public:
     LevelInformation();
-    LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int font_size, 
+    LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int& font_size, 
                      const std::string& display_string, const SDL_Color& color);
     LevelInformation(const LevelInformation&) = default;
     LevelInformation(LevelInformation&&) = default;

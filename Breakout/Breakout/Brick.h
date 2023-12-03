@@ -33,6 +33,6 @@ public:
 	const std::string& getHitSound() const;
 	const bool& getIsAlive() const;
 
-	void setHitPoints(const std::string hit_points);
+	void setHitPoints(const std::string& hit_points);
 	void setIsAlive(const bool is_alive);
 };

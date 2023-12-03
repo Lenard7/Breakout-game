@@ -3,13 +3,13 @@
 #include "ErrorHandler.h"
 
 
-PauseMenu * PauseMenu::pause_menu = nullptr;
+PauseMenu* PauseMenu::pause_menu = nullptr;
 const char* const PauseMenu::pause_menu_selection_box_text[] = { "Continue", /*"Restart",*/ "Quit", "Exit"};
 
 
-PauseMenu * PauseMenu::getInstance(SDL_Window** window,
-                                    unsigned& window_horizontal_size,
-                                    unsigned& window_vertical_size)
+PauseMenu* PauseMenu::getInstance(SDL_Window* const * const window,
+                                    const unsigned& window_horizontal_size,
+                                    const unsigned& window_vertical_size)
 {
     if (pause_menu == nullptr)
     {
@@ -22,9 +22,9 @@ PauseMenu * PauseMenu::getInstance(SDL_Window** window,
 // TODO [lpavic]: coppied from main menu, see how to improve this
 // setup attributes of PauseMenu singleton object, 
 // setup graphics for first scene when Main menu is entered
-PauseMenu::PauseMenu(SDL_Window** window,
-                    unsigned& window_horizontal_size,
-                    unsigned& window_vertical_size) : Menu()
+PauseMenu::PauseMenu(SDL_Window* const* const window,
+                    const unsigned& window_horizontal_size,
+                    const unsigned& window_vertical_size) : Menu()
 {
     this->window = *window;
 	this->window_horizontal_size = window_horizontal_size;
@@ -173,7 +173,7 @@ void PauseMenu::destroy()
 
 
 // TODO [lpavic]: coppied from main menu, see how to improve this
-PauseMenu::PAUSE_MENU_SELECTION_BOX PauseMenu::runImplementation()
+const PauseMenu::PAUSE_MENU_SELECTION_BOX PauseMenu::runImplementation()
 {
     while (1)
     {

@@ -21,17 +21,17 @@ private:
     PAUSE_MENU_SELECTION_BOX selector;
     static const char* const pause_menu_selection_box_text[];
 
-    PauseMenu(SDL_Window** window, unsigned& window_horizontal_size, unsigned& window_vertical_size);
+    PauseMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
     virtual ~PauseMenu();
 
 public:
-    static PauseMenu* getInstance(SDL_Window** window, 
-                                unsigned& window_horizontal_size,
-                                unsigned& window_vertical_size);
-    PauseMenu(const PauseMenu &) = delete;
-    PauseMenu & operator = (const PauseMenu &) = delete;
+    static PauseMenu* getInstance(SDL_Window* const * const window, 
+                                const unsigned& window_horizontal_size,
+                                const unsigned& window_vertical_size);
+    PauseMenu(const PauseMenu&) = delete;
+    PauseMenu& operator = (const PauseMenu&) = delete;
     void destroy();
 
     // this method is implemented as state machine
-    PAUSE_MENU_SELECTION_BOX runImplementation();
+    const PAUSE_MENU_SELECTION_BOX runImplementation();
 };

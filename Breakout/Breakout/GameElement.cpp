@@ -41,7 +41,7 @@ const SDL_Rect& GameElement::getTexture() const { return this->texture; }
 const std::string& GameElement::getTexturePath() const { return this->texture_path; }
 const double& GameElement::getVelocityX() const { return this->velocity_x; }
 const double& GameElement::getVelocityY() const { return this->velocity_y; }
-void GameElement::setID(const std::string ID) { this->ID = ID; }
-void GameElement::setTexture(const SDL_Rect texture) { this->texture = texture;}
-void GameElement::setVelocityX(const double velocity_x) { this->velocity_x = velocity_x; }
-void GameElement::setVelocityY(const double velocity_y) { this->velocity_y = velocity_y; }
+void GameElement::setID(const std::string& ID) { this->ID = ID; }
+void GameElement::setTexture(const SDL_Rect& texture) { this->texture = texture;}
+void GameElement::setVelocityX(const double& velocity_x) { this->velocity_x = velocity_x; }
+void GameElement::setVelocityY(const double& velocity_y) { this->velocity_y = velocity_y; }

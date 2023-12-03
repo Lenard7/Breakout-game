@@ -7,9 +7,9 @@ MainMenu* MainMenu::main_menu = nullptr;
 const char* const MainMenu::main_menu_selection_box_text[] = { "New game", "Exit"};
 
 
-MainMenu* MainMenu::getInstance(SDL_Window** window,
-                                    unsigned& window_horizontal_size,
-                                    unsigned& window_vertical_size)
+MainMenu* MainMenu::getInstance(SDL_Window* const * const window,
+                                    const unsigned& window_horizontal_size,
+                                    const unsigned& window_vertical_size)
 {
     if (main_menu == nullptr)
     {
@@ -21,9 +21,9 @@ MainMenu* MainMenu::getInstance(SDL_Window** window,
 
 // setup attributes of MainMenu singleton object, 
 // setup graphics for first scene when Main menu is entered
-MainMenu::MainMenu(SDL_Window** window,
-                    unsigned& window_horizontal_size,
-                    unsigned& window_vertical_size) : Menu()
+MainMenu::MainMenu(SDL_Window* const * const window,
+                    const unsigned& window_horizontal_size,
+                    const unsigned& window_vertical_size) : Menu()
 {
     this->window = *window;
 	this->window_horizontal_size = window_horizontal_size;
@@ -166,7 +166,7 @@ void MainMenu::destroy()
 }
 
 
-MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
+const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
 {
     while (1)
     {

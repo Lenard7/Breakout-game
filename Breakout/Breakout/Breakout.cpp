@@ -15,7 +15,7 @@ extern "C" {
  * beware of const correctnes
  * check for code writing style (where to use Pascal case, snake case, Camel case etc.)
  * check in which order should be attributes and methods be written inside definition of class (alphabetical, data types...)
- * check what is passed to function calls and what they are returning, use reference and pointers for larger data types (custom one, but also for basic one to be consistent)
+ * check what is passed to function calls and what they are returning, use reference and pointers for larger data types (custom one, but also for basic one to be consistent, but not for bool or single char which have less memory than their address)
  * check error cases inside code, e.g. if (SDL_Init() < 0) {...}
  * resolve warnings after major implementation
  * see to use rule of 3/5/6

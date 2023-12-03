@@ -16,21 +16,21 @@ public:
     };
 
 private:
-    static MainMenu * main_menu;
+    static MainMenu* main_menu;
     MAIN_MENU_SELECTION_BOX selector;
     static const char* const main_menu_selection_box_text[];
 
-    MainMenu(SDL_Window** window, unsigned& window_horizontal_size, unsigned& window_vertical_size);
+    MainMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
     virtual ~MainMenu();
 
 public:
-    static MainMenu * getInstance(SDL_Window** window, 
-                                unsigned& window_horizontal_size,
-                                unsigned& window_vertical_size);
-    MainMenu(const MainMenu &) = delete;
-    MainMenu & operator = (const MainMenu &) = delete;
+    static MainMenu* getInstance(SDL_Window * const * const window, 
+                                const unsigned& window_horizontal_size,
+                                const unsigned& window_vertical_size);
+    MainMenu(const MainMenu&) = delete;
+    MainMenu& operator = (const MainMenu&) = delete;
     void destroy();
 
     // this method is implemented as state machine
-    MAIN_MENU_SELECTION_BOX runImplementation();
+    const MAIN_MENU_SELECTION_BOX runImplementation();
 };

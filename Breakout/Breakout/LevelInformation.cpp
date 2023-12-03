@@ -10,7 +10,7 @@ extern "C" {
 LevelInformation::LevelInformation() {}
 
 
-LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int font_size, 
+LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int& font_size, 
                                    const std::string& display_string, const SDL_Color& color)
 {
     this->texture = texture;

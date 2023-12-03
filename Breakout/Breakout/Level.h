@@ -31,7 +31,7 @@ public:
 
 private:
 	// attributes
-    static Level * level;
+    static Level* level;
     STATE state;
 	// TODO [lpavic]: make this variable non-static member that is assigned by checking folder that contains level files
 	static unsigned level_num;
@@ -69,26 +69,26 @@ private:
 	unsigned num_of_level_information{0};
 	bool level_victory{false};
 
-	Level(SDL_Window** window, unsigned& window_horizontal_size, unsigned& window_vertical_size);
+	Level(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
 	~Level();
 
 	void drawLevel();
-	void handleKeyboardStates(const Uint8 * const keyboard);
-	void parseLevelFile(tinyxml2::XMLDocument & doc);
+	void handleKeyboardStates(const Uint8* const keyboard);
+	void parseLevelFile(const tinyxml2::XMLDocument& doc);
 	void printLevel() const;
 	void refreshFrames();
-	void relativePositionBallBrick(const unsigned & i);
+	void relativePositionBallBrick(const unsigned& i);
 	void relativePositionBallPaddle();
 	void restartFrame();
 	void setLevelScene();
 	void setLimitSituations();
 
 public:
-	static Level * getInstance(SDL_Window** window, 
-                                unsigned& window_horizontal_size,
-                                unsigned& window_vertical_size);
+	static Level* getInstance(SDL_Window* const * const window, 
+                                const unsigned& window_horizontal_size,
+                                const unsigned& window_vertical_size);
 	Level(const Level&) = delete;
-	Level & operator = (const Level &) = delete;
+	Level& operator = (const Level&) = delete;
 	void destroy();
 
     // this method is implemented as state machine

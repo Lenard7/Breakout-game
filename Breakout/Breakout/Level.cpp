@@ -17,9 +17,9 @@ unsigned Level::level_num = 3;
 
 
 // TODO [lpavic]: see if some methods should be actually in constructor - e.g. setLevelScene initializes some variables that maybee can be initialized inside constructor
-Level::Level(SDL_Window** window,
-			unsigned& window_horizontal_size,
-			unsigned& window_vertical_size) : state(Level::RUNNING)
+Level::Level(SDL_Window* const * const window,
+			const unsigned& window_horizontal_size,
+			const unsigned& window_vertical_size) : state(Level::RUNNING)
 {
 	this->window = *window;
 	this->window_horizontal_size = window_horizontal_size;
@@ -46,9 +46,9 @@ Level::~Level()
 }
 
 
-Level * Level::getInstance(SDL_Window** window,
-                                    unsigned& window_horizontal_size,
-                                    unsigned& window_vertical_size)
+Level* Level::getInstance(SDL_Window* const * const window,
+                                    const unsigned& window_horizontal_size,
+                                    const unsigned& window_vertical_size)
 {
     if (level == nullptr)
     {
@@ -364,7 +364,7 @@ void Level::drawLevel()
 }
 
 
-void Level::handleKeyboardStates(const Uint8 * const keyboard)
+void Level::handleKeyboardStates(const Uint8* const keyboard)
 {
 	SDL_Rect temp = this->paddle.getTexture();
 	if (keyboard[SDL_SCANCODE_LEFT])
@@ -392,9 +392,9 @@ void Level::handleKeyboardStates(const Uint8 * const keyboard)
 }
 
 
-void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
+void Level::parseLevelFile(const tinyxml2::XMLDocument& doc)
 {
-	tinyxml2::XMLElement* root_element = doc.FirstChildElement("Level");
+	const tinyxml2::XMLElement* root_element = doc.FirstChildElement("Level");
 	if (root_element == nullptr)
 	{
 		THROW_FAILURE("Level element in xml file not found!");
@@ -428,13 +428,13 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 	}
 	this->background_texture = std::string(temp);
 
-	tinyxml2::XMLElement* brick_types = root_element->FirstChildElement("BrickTypes");
+	const tinyxml2::XMLElement* brick_types = root_element->FirstChildElement("BrickTypes");
 	if (brick_types == nullptr)
 	{
 		THROW_FAILURE("BrickTypes element in xml file not found!");
 	}
 	
-	tinyxml2::XMLElement* brick_type = brick_types->FirstChildElement("BrickType");
+	const tinyxml2::XMLElement* brick_type = brick_types->FirstChildElement("BrickType");
 	if (brick_type == nullptr)
 	{
 		THROW_FAILURE("BrickType element in xml file not found!");
@@ -469,7 +469,7 @@ void Level::parseLevelFile(tinyxml2::XMLDocument & doc)
 	brick_temp.setID("_");
 	brick_type_temp.push_back(brick_temp);
 
-	tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
+	const tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
 	if (bricks == nullptr)
 	{
 		THROW_FAILURE("Bricks element in xml file not found!");
@@ -539,7 +539,7 @@ void Level::refreshFrames()
 }
 
 
-void Level::relativePositionBallBrick(const unsigned & i)
+void Level::relativePositionBallBrick(const unsigned& i)
 {
 	if(this->ball.getTexture().x <= this->bricks[i].getTexture().x + this->bricks[i].getTexture().w / 2
 		&& this->ball.getTexture().x + this->ball.getTexture().w >= this->bricks[i].getTexture().x)

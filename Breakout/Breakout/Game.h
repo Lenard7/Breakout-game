@@ -39,12 +39,12 @@ private:
     // private methods
     void getDesktopResolution();
     void setupWindowSettings();
-    STATE runMainMenu();
-    STATE runLevel();
+    const STATE runMainMenu();
+    const STATE runLevel();
 
 public:
     // constructors and assign operator
-    static Game & getInstance();
+    static Game& getInstance();
     Game(const Game&) = delete;
     Game& operator =(const Game&) = delete;
 
@@ -53,9 +53,9 @@ public:
     void runImplementation();
 
     // setters and getters
-    inline const STATE getState() const { return state; }
+    inline const STATE& getState() const { return state; }
 
-    inline void setState(const STATE state) { this->state = state; }
+    inline void setState(const STATE& state) { this->state = state; }
 };
 
 
