@@ -1,21 +1,26 @@
 // this is only pseudocode
 
+// descendants of GAME_ELEMENT
 class GAME_ELEMENT
 {
     ID
-    Texture
-    height
-    width
-    velocityX
-    velocityY
+    texture
+    texture_path
+    velocity_x
+    velocity_y
+}
+
+class BALL : GAME_ELEMENT
+{
 }
 
 class BRICK : GAME_ELEMENT
 {
-    HitPoints
-    HitSound
-    BreakSound
-    BreakScore
+    hit_points
+    hit_sound
+    break_sound
+    break_score
+    is_alive
 }
 
 class PADDLE : GAME_ELEMENT
@@ -23,8 +28,42 @@ class PADDLE : GAME_ELEMENT
     HitSound
 }
 
-class BALL : GAME_ELEMENT
+
+// descendants of MENU
+class MENU
 {
+    window
+    window_horizontal_size
+    window_vertical_size
+
+    renderer
+
+    title
+    font_title
+    font_path_title
+    font_size_title
+    color_title
+
+    selection_box
+    font_selection_box
+    font_path_selection_box
+    font_size_selection_box
+    color_unselected_menu_box
+    color_selected_menu_box
+    
+    background_image
 }
 
-// TODO [lpavic]: add other elements
+class MAIN_MENU : MENU
+{
+    main_menu
+    selector
+    main_menu_selection_box_text
+}
+
+class PAUSE_MENU : MENU
+{
+    pause_menu
+    selector
+    pause_menu_selection_box_text
+}

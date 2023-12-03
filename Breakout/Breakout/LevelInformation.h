@@ -13,7 +13,7 @@ extern "C" {
 #include <string>
 
 
-// TODO [lpavic]: see to improve implementation
+// TODO [lpavic]: see to improve implementation - also see if this class should be descendant of GameElement class
 class LevelInformation
 {
 private:
