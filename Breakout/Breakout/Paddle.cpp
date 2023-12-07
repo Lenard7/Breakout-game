@@ -7,6 +7,3 @@ Paddle::Paddle() : GameElement::GameElement()
 {
     this->texture_path = std::string(Resources::texture_resources) + std::string("Paddle.png");
 }
-
-
-const std::string& Paddle::getHitSound() const { return this->hit_sound; }

@@ -52,10 +52,18 @@ public:
     // this method is implemented as state machine
     void runImplementation();
 
-    // setters and getters
-    inline const STATE& getState() const { return state; }
+    // getters and setters
+    inline const STATE& getState() const { return this->state; }
+	// TODO [lpavic]: there is no const since there would need const_cast for SDL_Window* a = this->getWindow(); invokation - better to use smart pointers in classes
+    inline SDL_Window* getWindow() const { return this->window; }
+    inline const unsigned& getWindowHorizontalSize() const { return this->window_horizontal_size; }
+    inline const unsigned& getWindowVerticalSize() const { return this->window_vertical_size; }
 
     inline void setState(const STATE& state) { this->state = state; }
+	// TODO [lpavic]: use smart pointer
+    inline void setWindow(SDL_Window* const window) { this->window = window; }
+    inline void setWindowHorizontalSize(const unsigned& window_horizontal_size) { this->window_horizontal_size = window_horizontal_size; }
+    inline void setWindowVerticalSize(const unsigned& window_vertical_size) { this->window_vertical_size = window_vertical_size; }
 };
 
 

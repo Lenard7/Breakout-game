@@ -23,5 +23,8 @@ public:
     Paddle& operator =(Paddle&&) = default;
     virtual ~Paddle() = default;
 
-	const std::string& getHitSound() const;
+	// getters and setters
+    inline const std::string& getHitSound() const { return this->hit_sound; }
+	
+    inline void setHitSound(const std::string& hit_sound) { this->hit_sound = hit_sound; }
 };

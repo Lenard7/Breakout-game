@@ -82,6 +82,3 @@ LevelInformation::~LevelInformation()
         TTF_CloseFont(this->font);
     }
 }
-
-
-const SDL_Rect LevelInformation::getTexture() const { return this->texture; }

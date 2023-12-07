@@ -61,7 +61,7 @@ void Game::setupWindowSettings()
 // TODO [lpavic]: refactor this while refactoring MainMenu class
 const Game::STATE Game::runMainMenu()
 {
-    MainMenu * main_menu = MainMenu::getInstance(&window, 
+    MainMenu* main_menu = MainMenu::getInstance(&window, 
                                                 window_horizontal_size, 
                                                 window_vertical_size);
 
@@ -95,7 +95,7 @@ const Game::STATE Game::runLevel()
 {
     while(1)
     {
-        Level * level = Level::getInstance(&window, 
+        Level* level = Level::getInstance(&window, 
                                         window_horizontal_size, 
                                         window_vertical_size);
 

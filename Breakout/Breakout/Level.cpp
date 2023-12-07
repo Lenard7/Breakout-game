@@ -486,7 +486,7 @@ void Level::parseLevelFile(const tinyxml2::XMLDocument& doc)
 
 	unsigned temp_brick_count = 0;
 	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
-	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned int>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
+	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
 	{
 		for (unsigned j = 0; j < brick_type_temp.size(); ++j)
 		{
@@ -512,7 +512,7 @@ void Level::printLevel() const // TODO [lpavic]: finish printing all attributes 
 
 	if (bricks)
 	{
-		for (unsigned int i = 0; i < this->row_count * this->column_count; ++i)
+		for (unsigned i = 0; i < this->row_count * this->column_count; ++i)
 		{
 			std::cout << i + 1 << ".\n";
 			std::cout << this->bricks[i].getID() << "\n"
@@ -700,7 +700,7 @@ void Level::setLevelScene()
 	this->ball.setVelocityY(this->window_vertical_size * 0.003);
 
 	SDL_Rect temp_rect; // using this local variable because calculations for each dimension would be very long and unreadable
-	for (unsigned int i = 0; i < (this->getColumnCount() * this->getRowCount()); ++i)
+	for (unsigned i = 0; i < (this->getColumnCount() * this->getRowCount()); ++i)
     {
         if (this->bricks[i].getID() != "_")
         {
@@ -768,11 +768,3 @@ void Level::setLimitSituations()
         this->ball.setVelocityY(this->window_vertical_size * 0.003);
     }
 }
-
-
-const unsigned Level::getRowCount() const { return this->row_count; }
-const unsigned int Level::getColumnCount() const { return this->column_count; }
-const unsigned int Level::getRowSpacing() const { return this->row_spacing; }
-const unsigned int Level::getColumnSpacing() const { return this->column_spacing; }
-const std::string Level::getBackgroundTexture() const { return this->background_texture; }
-const unsigned int Level::getNumOfBricks() const { return this->num_of_bricks; }

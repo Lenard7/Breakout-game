@@ -17,8 +17,8 @@ class GameElement
 // TODO [lpavic]: see that all attributes are used
 protected:
     std::string ID{""};
-	std::string texture_path{""};
     SDL_Rect texture{0};
+	std::string texture_path{""};
     double velocity_x{0};
     double velocity_y{0};
 
@@ -33,13 +33,16 @@ public:
     // TODO [lpavic]: see if this function should be virtual and reimplemented in derived classes
     void drawSprite(SDL_Renderer* const * const renderer);
 
-	const std::string& getID() const;
-    const SDL_Rect& getTexture() const;
-	const std::string& getTexturePath() const;
-    const double& getVelocityX() const;
-    const double& getVelocityY() const;
-	void setID(const std::string& ID);
-    void setTexture(const SDL_Rect& texture);
-    void setVelocityX(const double& velocity_x);
-    void setVelocityY(const double& velocity_y);
+    // getters and setters
+	inline const std::string& getID() const { return this->ID; }
+    inline const SDL_Rect& getTexture() const { return this->texture; }
+	inline const std::string& getTexturePath() const { return this->texture_path; }
+    inline const double& getVelocityX() const { return this->velocity_x; }
+    inline const double& getVelocityY() const { return this->velocity_y; }
+
+    inline void setID(const std::string& ID) { this->ID = ID; }
+    inline void setTexture(const SDL_Rect& texture) { this->texture = texture; }
+    inline void setTexturePath(const std::string& texture_path) { this->texture_path = texture_path; }
+    inline void setVelocityX(const double& velocity_x) { this->velocity_x = velocity_x; }
+    inline void setVelocityY(const double& velocity_y) { this->velocity_y = velocity_y; }
 };

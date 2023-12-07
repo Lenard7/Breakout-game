@@ -18,7 +18,7 @@ public:
 
 private:
     static PauseMenu* pause_menu;
-    PAUSE_MENU_SELECTION_BOX selector;
+    PAUSE_MENU_SELECTION_BOX selector{CONTINUE};
     static const char* const pause_menu_selection_box_text[];
 
     PauseMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
@@ -34,4 +34,9 @@ public:
 
     // this method is implemented as state machine
     const PAUSE_MENU_SELECTION_BOX runImplementation();
+
+    // getters and setters
+    inline const PAUSE_MENU_SELECTION_BOX& getSelector() const { return this->selector; }
+
+    inline void setSelector(const PAUSE_MENU_SELECTION_BOX& selector) { this->selector = selector; }
 };

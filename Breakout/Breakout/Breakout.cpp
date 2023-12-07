@@ -25,8 +25,8 @@ extern "C" {
  * make intendations correct (also free lines at the end of files)
  * take in considerations if some methods should be private, variables protected etc.
  * see which methods need to be marked as noexcept
- * see that setters and getters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
- * make setters and getters for all private and protected attributes for future potentional use
+ * see that getters and setters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
+ * make getters and setters for all private and protected attributes for future potentional use
  * let compiler decide if small methods should be inlined by defining methods inside class' definition
  * try to use smart pointer and/or containers instead of raw pointers and also inside each destructor check if all pointers are freed
  */

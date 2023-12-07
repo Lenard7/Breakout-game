@@ -34,5 +34,15 @@ public:
 
     void drawSurface(SDL_Renderer* const * const renderer, const std::string& display_string_value);
 
-    const SDL_Rect getTexture() const;
+    //getters and setters
+    inline const SDL_Rect& getTexture() const { return this->texture; }
+	// TODO [lpavic]: use smart pointer
+    inline TTF_Font* getFont() const { return this->font; }
+    inline const std::string& getDisplayString() const { return this->display_string; }
+    inline const SDL_Color& getColor() const { return this->color; }
+
+    inline void setTexture(const SDL_Rect& texture) { this->texture = texture; }
+    inline void setFont(TTF_Font* const font) { this->font = font; }
+    inline void setDisplayString(const std::string& display_string) { this->display_string = display_string; }
+    inline void setColor(const SDL_Color& color) { this->color = color; }
 };
