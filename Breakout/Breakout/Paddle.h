@@ -10,7 +10,7 @@ extern "C" {
 
 #include <iostream>
 
-// TODO [lpavic]: see to improve implementation
+
 class Paddle : public GameElement
 {
 private:

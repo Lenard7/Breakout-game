@@ -11,7 +11,7 @@ extern "C" {
 
 #include <iostream>
 
-// TODO [lpavic]: see to improve implementation
+
 class GameElement
 {
 // TODO [lpavic]: see that all attributes are used

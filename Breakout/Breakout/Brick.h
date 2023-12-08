@@ -1,10 +1,10 @@
 #pragma once
-// TODO [lpavic]: see to improve implementation
 
 #include "GameElement.h"
 #include "tinyxml2.h"
 
 #include <iostream>
+
 
 class Brick : public GameElement
 {
@@ -19,12 +19,12 @@ private:
 	bool is_alive{false};
 
 public:
-	Brick() = default;
 	Brick(const tinyxml2::XMLElement& Brick);
+	Brick() = default;
 	Brick(const Brick&) = default;
 	Brick(Brick&&) = default;
 	Brick& operator =(const Brick&) = default;
-	Brick& operator =(Brick&& temp);
+	Brick& operator =(Brick&& temp) = default;
 	~Brick() = default;
 
 	inline const unsigned& getBreakScore() const { return this->break_score; }

@@ -2,6 +2,7 @@
 
 #include <string>
 
+// TODO [lpavic]: consider using std::filesystem::path
 namespace Resources
 {
     // "..\..\Resources\"

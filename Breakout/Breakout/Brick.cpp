@@ -53,24 +53,9 @@ Brick::Brick(const tinyxml2::XMLElement& Brick) : GameElement()
 			THROW_FAILURE("Error while parsing \"BreakScore\" attribute from xml file!\n");
 		}
 	}
-}
-
-
- Brick& Brick::operator =(Brick&& temp)
- {
- 	if (this != &temp)
- 	{
-		GameElement::operator=(std::move(temp));
- 		this->ID = temp.ID;
- 		this->texture_path = temp.texture_path;
- 		this->hit_points = temp.hit_points;
- 		this->hit_sound = temp.hit_sound;
-
-		if (temp.ID != "I")
-		{
-			this->break_sound = temp.break_sound;
-			this->break_score = temp.break_score;
-		}
+	else
+	{
+		this->break_sound = "";
+		this->break_score = 0;
 	}
-	return *this;
 }

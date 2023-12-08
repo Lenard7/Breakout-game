@@ -10,7 +10,6 @@ extern "C" {
 
 #include <iostream>
 
-// TODO [lpavic]: see to improve implementation
 class Ball : public GameElement
 {
 public:
