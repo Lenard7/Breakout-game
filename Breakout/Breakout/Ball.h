@@ -14,9 +14,9 @@ class Ball : public GameElement
 {
 public:
     Ball();
-    Ball(const Ball&) = default;
-    Ball(Ball&&) = default;
-    Ball& operator =(const Ball&) = default;
-    Ball& operator =(Ball&&) = default;
+    Ball(const Ball& ball) = default;
+    Ball(Ball&& ball) = default;
+    Ball& operator =(const Ball& ball) = default;
+    Ball& operator =(Ball&& ball) = default;
     virtual ~Ball() = default;
 };

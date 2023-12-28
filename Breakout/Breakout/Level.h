@@ -9,6 +9,8 @@
 #include <memory>
 #include <vector>
 
+
+// this class is made as singleton
 class Level
 {
 public:
@@ -46,6 +48,7 @@ private:
     SDL_Window* window{nullptr};
     unsigned window_horizontal_size{0};
     unsigned window_vertical_size{0};
+	// TODO [lpavic]: this renderer maybe should be unique pointer!?
     SDL_Renderer* renderer{nullptr};
 	// offset variable as offset in dimensions of window
 	// TODO [lpavic]: unused variable?
@@ -89,8 +92,10 @@ public:
 	static Level* getInstance(SDL_Window* const * const window, 
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
-	Level(const Level&) = delete;
-	Level& operator = (const Level&) = delete;
+	Level(const Level& level) = delete;
+	Level(Level&& level);
+	Level& operator =(const Level& level) = delete;
+	Level& operator =(Level&& level);
 	void destroy();
 
     // this method is implemented as state machine

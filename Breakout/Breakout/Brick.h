@@ -21,10 +21,10 @@ private:
 public:
 	Brick(const tinyxml2::XMLElement& Brick);
 	Brick() = default;
-	Brick(const Brick&) = default;
-	Brick(Brick&&) = default;
-	Brick& operator =(const Brick&) = default;
-	Brick& operator =(Brick&& temp) = default;
+	Brick(const Brick& brick) = default;
+	Brick(Brick&& brick) = default;
+	Brick& operator =(const Brick& brick) = default;
+	Brick& operator =(Brick&& brick) = default;
 	~Brick() = default;
 
 	inline const unsigned& getBreakScore() const { return this->break_score; }

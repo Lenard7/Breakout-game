@@ -18,10 +18,9 @@ Game::~Game()
 {
     if (window)
     {
+        // TODO [lpavic]: call custom deleter?
         SDL_DestroyWindow(window);
     }
-    
-    SDL_Quit();
 }
 
 
@@ -142,6 +141,24 @@ Game& Game::getInstance()
 }
 
 
+Game::Game(Game&& game)
+{
+    // TODO [lpavic]: implement this and consider defining smart pointers
+}
+
+
+Game& Game::operator =(Game&& game)
+{
+    // TODO [lpavic]: implement this and consider defining smart pointers
+    if (this != &game)
+    {
+
+	}
+
+    return *this;
+}
+
+
 void Game::runImplementation()
 {
     while (this->getState() != Game::END)
@@ -162,7 +179,6 @@ void Game::runImplementation()
                     SDL_DestroyWindow(window);
                 }
                 
-                SDL_Quit();
                 break;
 
             default:

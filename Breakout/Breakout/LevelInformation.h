@@ -18,17 +18,18 @@ class LevelInformation
 {
 private:
     SDL_Rect texture{0, 0, 0, 0};
+	// TODO [lpavic]: use smart pointer
     TTF_Font* font{nullptr};
     std::string display_string{""};
     SDL_Color color{0, 0, 0, 255};
 
 public:
-    LevelInformation();
     LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int& font_size, 
                      const std::string& display_string, const SDL_Color& color);
-    LevelInformation(const LevelInformation&) = default;
-    LevelInformation(LevelInformation&&) = default;
-    LevelInformation& operator =(const LevelInformation&) = default;
+    LevelInformation();
+    LevelInformation(const LevelInformation& level_information);
+    LevelInformation(LevelInformation&& level_information);
+    LevelInformation& operator =(const LevelInformation& level_information);
     LevelInformation& operator =(LevelInformation&& level_information);
     virtual ~LevelInformation();
 
@@ -42,6 +43,7 @@ public:
     inline const SDL_Color& getColor() const { return this->color; }
 
     inline void setTexture(const SDL_Rect& texture) { this->texture = texture; }
+	// TODO [lpavic]: use smart pointer
     inline void setFont(TTF_Font* const font) { this->font = font; }
     inline void setDisplayString(const std::string& display_string) { this->display_string = display_string; }
     inline void setColor(const SDL_Color& color) { this->color = color; }

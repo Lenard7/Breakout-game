@@ -24,17 +24,21 @@ protected:
     unsigned window_horizontal_size{0};
     unsigned window_vertical_size{0};
 
+    // TODO [lpavic]: this renderer maybe should be unique pointer!?
     SDL_Renderer* renderer{nullptr};
 
     // title
     SDL_Rect title{0};
+    // TODO [lpavic]: this font_title maybe should be unique pointer!?
     TTF_Font* font_title{nullptr};
     static const char font_path_title[];
     unsigned font_size_title{0};
     SDL_Color color_title{0, 0, 0, 255};
 
     // array of selection boxes
+    // TODO [lpavic]: this selection_box maybe should be unique pointer!?
     SDL_Rect* selection_box{nullptr};
+    // TODO [lpavic]: this font_selection_box maybe should be unique pointer!?
     TTF_Font* font_selection_box{nullptr};
     static const char font_path_selection_box[];
     unsigned font_size_selection_box{0};
@@ -45,9 +49,11 @@ protected:
     SDL_Rect background_image{0, 0, 0, 0};
 
 public:
-    Menu() {}
-    Menu(const Menu&) = delete;
-    Menu& operator =(const Menu&) = delete;
+    Menu();
+    Menu(const Menu& menu);
+    Menu(Menu&& menu);
+    Menu& operator =(const Menu& menu);
+    Menu& operator =(Menu&& menu);
     virtual ~Menu();
 
     // getters and setters

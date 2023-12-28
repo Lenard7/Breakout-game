@@ -17,10 +17,10 @@ private:
 	std::string hit_sound{""};
 public:
     Paddle();
-    Paddle(const Paddle&) = default;
-    Paddle(Paddle&&) = default;
-    Paddle& operator =(const Paddle&) = default;
-    Paddle& operator =(Paddle&&) = default;
+    Paddle(const Paddle& paddle) = default;
+    Paddle(Paddle&& paddle) = default;
+    Paddle& operator =(const Paddle& paddle) = default;
+    Paddle& operator =(Paddle&& paddle) = default;
     virtual ~Paddle() = default;
 
 	// getters and setters

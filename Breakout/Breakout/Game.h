@@ -11,7 +11,6 @@ extern "C" {
 #include "wtypes.h"
 }
 
-// TODO [lpavic]: see to improve implementation
 // this class is made as singleton (Meyer's implementation, no need of explicit destructor call)
 class Game
 {
@@ -28,9 +27,12 @@ private:
     // attributes
     STATE state{MAIN_MENU};
     
+	// TODO [lpavic]: this window maybe should be shared pointer!?
     SDL_Window* window{nullptr};
     unsigned window_horizontal_size{0};
     unsigned window_vertical_size{0};
+
+    // TODO [lpavic]: see if main_menu and level should be attributes to this class and not local variables inside runLevel and runMainMenu methods - maybe they shouldn't
     
     // constructor and destructor are private for singleton purpose
     Game();
@@ -45,8 +47,10 @@ private:
 public:
     // constructors and assign operator
     static Game& getInstance();
-    Game(const Game&) = delete;
-    Game& operator =(const Game&) = delete;
+    Game(const Game& game) = delete;
+    Game(Game&& game);
+    Game& operator =(const Game& game) = delete;
+    Game& operator =(Game&& game);
 
     // public methods
     // this method is implemented as state machine

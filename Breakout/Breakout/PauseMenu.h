@@ -28,8 +28,11 @@ public:
     static PauseMenu* getInstance(SDL_Window* const * const window, 
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
-    PauseMenu(const PauseMenu&) = delete;
-    PauseMenu& operator = (const PauseMenu&) = delete;
+    PauseMenu(const PauseMenu& pause_menu) = delete;
+    PauseMenu(PauseMenu&& pause_menu) = default; // this move copy constructor will call move copy constructor of Menu class
+    PauseMenu& operator = (const PauseMenu& pause_menu) = delete;
+    PauseMenu& operator =(PauseMenu&& pause_menu) = default;
+    
     void destroy();
 
     // this method is implemented as state machine

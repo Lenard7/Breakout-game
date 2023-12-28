@@ -42,7 +42,7 @@ Level::Level(SDL_Window* const * const window,
 
 Level::~Level()
 {
-
+    // TODO [lpavic]: implement this and consider smart pointers
 }
 
 
@@ -55,6 +55,24 @@ Level* Level::getInstance(SDL_Window* const * const window,
         level = new Level(window, window_horizontal_size, window_vertical_size);
     }
     return level;
+}
+
+
+Level::Level(Level&& level)
+{
+    // TODO [lpavic]: implement this and consider defining smart pointers
+}
+
+
+Level& Level::operator =(Level&& level)
+{
+    // TODO [lpavic]: implement this and consider defining smart pointers
+	if (this != &level)
+    {
+
+	}
+
+    return *this;
 }
 
 

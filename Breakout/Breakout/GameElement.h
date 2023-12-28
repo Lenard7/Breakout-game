@@ -24,10 +24,10 @@ protected:
 
 public:
     GameElement() = default;
-    GameElement(const GameElement&) = default;
-    GameElement(GameElement&&) = default;
-    GameElement& operator =(const GameElement&) = default;
-    GameElement& operator =(GameElement&&) = default;
+    GameElement(const GameElement& game_element) = default;
+    GameElement(GameElement&& game_element) = default;
+    GameElement& operator =(const GameElement& game_element) = default;
+    GameElement& operator =(GameElement&& game_element) = default;
     virtual ~GameElement() = default;
 
     // TODO [lpavic]: see if this function should be virtual and reimplemented in derived classes

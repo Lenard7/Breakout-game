@@ -7,7 +7,6 @@ extern "C" {
 }
 
 #include <iostream>
-LevelInformation::LevelInformation() {}
 
 
 LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int& font_size, 
@@ -26,22 +25,106 @@ LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& f
 }
 
 
-LevelInformation& LevelInformation::operator =(LevelInformation&& level_information)
+LevelInformation::LevelInformation() 
+{
+    // default constructor will indead set all members as specified in class definition
+    // by using unifrom intialization {}
+}
+
+
+LevelInformation::LevelInformation(const LevelInformation& level_information)
+{
+    this->texture = level_information.texture;
+    
+    if (level_information.font)
+    {
+        // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+        // this->font = level_information.font;
+    }
+    
+    this->display_string = level_information.display_string;
+    this->color = level_information.color;
+}
+
+
+LevelInformation::LevelInformation(LevelInformation&& level_information)
+{
+    this->texture = level_information.texture;
+
+    if (level_information.font)
+    {
+        // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+        // this->font = level_information.font;
+        // TODO [lpavic]: call custom deleter?
+        // TTF_CloseFont(level_information.font);
+        // level_information.font = nullptr;
+    }
+
+    this->display_string = level_information.display_string;
+    this->color = level_information.color;
+}
+
+
+LevelInformation& LevelInformation::operator=(const LevelInformation& level_information)
 {
     if (this != &level_information)
     {
         this->texture = level_information.texture;
+
         if (this->font)
         {
+            // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
             TTF_CloseFont(this->font);
+            this->font = nullptr;
         }
-        this->font = level_information.font;
-        level_information.font = 0;
+        if (level_information.font)
+        {
+            // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+            // this->font = level_information.font;
+        }
+
         this->display_string = level_information.display_string;
         this->color = level_information.color;
     }
 
     return *this;
+}
+
+
+LevelInformation& LevelInformation::operator =(LevelInformation&& level_information)
+{
+    if (this != &level_information)
+    {
+        this->texture = level_information.texture;
+
+        if (this->font)
+        {
+            // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+            TTF_CloseFont(this->font);
+            this->font = nullptr;
+        }
+        if (level_information.font)
+        {
+            // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+            this->font = level_information.font;
+            level_information.font = nullptr;
+        }
+
+        this->display_string = level_information.display_string;
+        this->color = level_information.color;
+    }
+
+    return *this;
+}
+
+
+LevelInformation::~LevelInformation()
+{
+    if (this->font)
+    {
+        // TODO [lpavic]: call custom deleter?
+        TTF_CloseFont(this->font);
+    }
 }
 
 
@@ -72,13 +155,4 @@ void LevelInformation:: drawSurface(SDL_Renderer* const * const renderer, const 
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
-}
-
-
-LevelInformation::~LevelInformation()
-{
-    if (this->font)
-    {
-        TTF_CloseFont(this->font);
-    }
 }

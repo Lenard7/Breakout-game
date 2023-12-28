@@ -27,8 +27,11 @@ public:
     static MainMenu* getInstance(SDL_Window * const * const window, 
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
-    MainMenu(const MainMenu&) = delete;
-    MainMenu& operator = (const MainMenu&) = delete;
+    MainMenu(const MainMenu& main_menu) = delete;
+    MainMenu(MainMenu&& main_menu) = default; // this move copy constructor will call move copy constructor of Menu class
+    MainMenu& operator =(const MainMenu& main_menu) = delete;
+    MainMenu& operator =(MainMenu&& main_menu) = default;
+
     void destroy();
 
     // this method is implemented as state machine
