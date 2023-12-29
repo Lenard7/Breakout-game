@@ -5,7 +5,7 @@ const char Menu::font_path_title[] = "..\\..\\Resources\\Textures\\Fonts\\LHANDW
 const char Menu::font_path_selection_box[] = "..\\..\\Resources\\Textures\\Fonts\\LHANDW.TTF";
 
 
-Menu::Menu()
+Menu::Menu() noexcept
 {
 
 }

@@ -7,18 +7,6 @@ MainMenu* MainMenu::main_menu = nullptr;
 const char* const MainMenu::main_menu_selection_box_text[] = { "New game", "Exit"};
 
 
-MainMenu* MainMenu::getInstance(SDL_Window* const * const window,
-                                    const unsigned& window_horizontal_size,
-                                    const unsigned& window_vertical_size)
-{
-    if (main_menu == nullptr)
-    {
-        main_menu = new MainMenu(window, window_horizontal_size, window_vertical_size);
-    }
-    return main_menu;
-}
-
-
 // setup attributes of MainMenu singleton object, 
 // setup graphics for first scene when Main menu is entered
 MainMenu::MainMenu(SDL_Window* const * const window,
@@ -153,6 +141,18 @@ MainMenu::~MainMenu()
 {
     // TODO [lpavic]: deallocate window pointer, but this pointer should be shared so 
         // game object still has its own pointer
+}
+
+
+MainMenu* MainMenu::getInstance(SDL_Window* const * const window,
+                                    const unsigned& window_horizontal_size,
+                                    const unsigned& window_vertical_size)
+{
+    if (main_menu == nullptr)
+    {
+        main_menu = new MainMenu(window, window_horizontal_size, window_vertical_size);
+    }
+    return main_menu;
 }
 
 
@@ -317,5 +317,4 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
             }
         }
     }
-    
 }

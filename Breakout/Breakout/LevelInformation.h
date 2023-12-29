@@ -26,7 +26,7 @@ private:
 public:
     LevelInformation(const SDL_Rect& texture, const std::string& font_type, const int& font_size, 
                      const std::string& display_string, const SDL_Color& color);
-    LevelInformation();
+    LevelInformation() noexcept;
     LevelInformation(const LevelInformation& level_information);
     LevelInformation(LevelInformation&& level_information);
     LevelInformation& operator =(const LevelInformation& level_information);
@@ -36,15 +36,15 @@ public:
     void drawSurface(SDL_Renderer* const * const renderer, const std::string& display_string_value);
 
     //getters and setters
-    inline const SDL_Rect& getTexture() const { return this->texture; }
+    inline const SDL_Rect& getTexture() const noexcept { return this->texture; }
 	// TODO [lpavic]: use smart pointer
-    inline TTF_Font* getFont() const { return this->font; }
-    inline const std::string& getDisplayString() const { return this->display_string; }
-    inline const SDL_Color& getColor() const { return this->color; }
+    inline TTF_Font* getFont() const noexcept { return this->font; }
+    inline const std::string& getDisplayString() const noexcept { return this->display_string; }
+    inline const SDL_Color& getColor() const noexcept { return this->color; }
 
-    inline void setTexture(const SDL_Rect& texture) { this->texture = texture; }
+    inline void setTexture(const SDL_Rect& texture) noexcept { this->texture = texture; }
 	// TODO [lpavic]: use smart pointer
-    inline void setFont(TTF_Font* const font) { this->font = font; }
-    inline void setDisplayString(const std::string& display_string) { this->display_string = display_string; }
-    inline void setColor(const SDL_Color& color) { this->color = color; }
+    inline void setFont(TTF_Font* const font) noexcept { this->font = font; }
+    inline void setDisplayString(const std::string& display_string) noexcept { this->display_string = display_string; }
+    inline void setColor(const SDL_Color& color) noexcept { this->color = color; }
 };

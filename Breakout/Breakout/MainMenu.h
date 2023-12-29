@@ -28,9 +28,9 @@ public:
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
     MainMenu(const MainMenu& main_menu) = delete;
-    MainMenu(MainMenu&& main_menu) = default; // this move copy constructor will call move copy constructor of Menu class
+    MainMenu(MainMenu&& main_menu) noexcept = default; // this move copy constructor will call move copy constructor of Menu class
     MainMenu& operator =(const MainMenu& main_menu) = delete;
-    MainMenu& operator =(MainMenu&& main_menu) = default;
+    MainMenu& operator =(MainMenu&& main_menu) noexcept = default;
 
     void destroy();
 
@@ -38,7 +38,7 @@ public:
     const MAIN_MENU_SELECTION_BOX runImplementation();
 
     //getters and setters
-    inline const MAIN_MENU_SELECTION_BOX& getSelector() const { return this->selector; }
+    inline const MAIN_MENU_SELECTION_BOX& getSelector() const noexcept { return this->selector; }
 
-    inline void setSelector(const MAIN_MENU_SELECTION_BOX& selector) { this->selector = selector; }
+    inline void setSelector(const MAIN_MENU_SELECTION_BOX& selector) noexcept { this->selector = selector; }
 };

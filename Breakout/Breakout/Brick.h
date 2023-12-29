@@ -19,23 +19,23 @@ private:
 	bool is_alive{false};
 
 public:
-	Brick(const tinyxml2::XMLElement& Brick);
-	Brick() = default;
-	Brick(const Brick& brick) = default;
-	Brick(Brick&& brick) = default;
-	Brick& operator =(const Brick& brick) = default;
-	Brick& operator =(Brick&& brick) = default;
-	~Brick() = default;
+	explicit Brick(const tinyxml2::XMLElement& Brick);
+	Brick() noexcept = default;
+	Brick(const Brick& brick) noexcept = default;
+	Brick(Brick&& brick) noexcept = default;
+	Brick& operator =(const Brick& brick) noexcept = default;
+	Brick& operator =(Brick&& brick) noexcept = default;
+	~Brick() noexcept = default;
 
-	inline const unsigned& getBreakScore() const { return this->break_score; }
-	inline const std::string& getBreakSound() const { return this->break_sound; }
-	inline const std::string& getHitPoints() const { return this->hit_points; }
-	inline const std::string& getHitSound() const { return this->hit_sound; }
-	inline const bool getIsAlive() const { return this->is_alive; }
+	inline const unsigned& getBreakScore() const noexcept { return this->break_score; }
+	inline const std::string& getBreakSound() const noexcept { return this->break_sound; }
+	inline const std::string& getHitPoints() const noexcept { return this->hit_points; }
+	inline const std::string& getHitSound() const noexcept { return this->hit_sound; }
+	inline const bool getIsAlive() const noexcept { return this->is_alive; }
 
-	inline void setBreakScore(const unsigned& hit_points) { this->break_score = break_score; }
-	inline void setBreakSound(const std::string& hit_points) { this->break_sound = break_sound; }
-	inline void setHitPoints(const std::string& hit_points) { this->hit_points = hit_points; }
-	inline void setHitSound(const std::string& hit_points) { this->hit_sound = hit_sound; }
-	inline void setIsAlive(const bool is_alive) { this->is_alive = is_alive; }
+	inline void setBreakScore(const unsigned& hit_points) noexcept { this->break_score = break_score; }
+	inline void setBreakSound(const std::string& hit_points) noexcept { this->break_sound = break_sound; }
+	inline void setHitPoints(const std::string& hit_points) noexcept { this->hit_points = hit_points; }
+	inline void setHitSound(const std::string& hit_points) noexcept { this->hit_sound = hit_sound; }
+	inline void setIsAlive(const bool is_alive) noexcept { this->is_alive = is_alive; }
 };

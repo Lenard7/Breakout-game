@@ -13,10 +13,10 @@ extern "C" {
 class Ball : public GameElement
 {
 public:
-    Ball();
-    Ball(const Ball& ball) = default;
-    Ball(Ball&& ball) = default;
-    Ball& operator =(const Ball& ball) = default;
-    Ball& operator =(Ball&& ball) = default;
-    virtual ~Ball() = default;
+    Ball() noexcept;
+    Ball(const Ball& ball) noexcept = default;
+    Ball(Ball&& ball) noexcept = default;
+    Ball& operator =(const Ball& ball) noexcept = default;
+    Ball& operator =(Ball&& ball) noexcept = default;
+    virtual ~Ball() noexcept = default;
 };

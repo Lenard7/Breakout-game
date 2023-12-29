@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 
-Ball::Ball() : GameElement() 
+Ball::Ball() noexcept(noexcept(GameElement())) : GameElement() 
 {
     this->texture_path = std::string(Resources::texture_resources) + std::string("Ball.png"); 
 }

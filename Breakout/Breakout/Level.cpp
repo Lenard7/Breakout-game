@@ -46,6 +46,447 @@ Level::~Level()
 }
 
 
+void Level::drawLevel()
+{
+	if (SDL_SetRenderDrawColor(this->renderer, 20, 20, 20, 255) != 0)
+	{
+		THROW_FAILURE((std::string("Setting render draw color error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
+	}
+	if (SDL_RenderClear(this->renderer) != 0)
+	{
+		THROW_FAILURE((std::string("Clearing level renderer error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
+	}
+
+	// TODO [lpavic]: see if this is needed
+	// refreshFrames();
+
+	this->ball.drawSprite(&this->renderer);
+	this->paddle.drawSprite(&this->renderer);
+	
+	// TODO [lpavic]: whole game lags when there are more bricks
+	for (unsigned i = 0; i < this->num_of_bricks; i++)
+	{
+		if (this->bricks[i].getIsAlive())
+		{
+			this->bricks[i].drawSprite(&this->renderer);
+		}
+	}
+
+	// TODO [lpavic]: display lives, score and level as multiline string
+	this->level_information[0].drawSurface(&(this->renderer), std::to_string(this->num_of_lives));
+	this->level_information[1].drawSurface(&(this->renderer), std::to_string(this->current_level + 1));
+	this->level_information[2].drawSurface(&(this->renderer), std::to_string(this->total_score));
+
+	SDL_RenderPresent(this->renderer);
+}
+
+
+void Level::handleKeyboardStates(const Uint8* const keyboard) noexcept
+{
+	SDL_Rect temp = this->paddle.getTexture();
+	if (keyboard[SDL_SCANCODE_LEFT])
+	{
+		temp.x += static_cast<int>(-this->paddle.getVelocityX());
+		this->paddle.setTexture(temp);
+	}
+
+	if (keyboard[SDL_SCANCODE_RIGHT])
+	{
+		temp.x += static_cast<int>(this->paddle.getVelocityX());
+		this->paddle.setTexture(temp);
+	}
+
+	// TODO [lpavic]: implement better
+	// if (keyboard[SDL_SCANCODE_DOWN])
+	// {
+	// 	if (sqrt(pow(this->ball.getVelocityY(), 2) + pow(this->ball.getVelocityX(), 2)) 
+	// 		< 1.05 * static_cast<double>(sqrt(pow(this->window_horizontal_size, 2) + pow(this->window_vertical_size, 2))))
+	// 	{
+	// 		this->ball.setVelocityX(1.05 * this->ball.getVelocityX());
+	// 		this->ball.setVelocityY(1.05 * this->ball.getVelocityY());
+	// 	}
+	// }
+}
+
+
+void Level::parseLevelFile(const tinyxml2::XMLDocument& doc)
+{
+	const tinyxml2::XMLElement* root_element = doc.FirstChildElement("Level");
+	if (root_element == nullptr)
+	{
+		THROW_FAILURE("Level element in xml file not found!");
+	}
+
+	if (root_element->QueryUnsignedAttribute("RowCount", &(this->row_count)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"RowCount\" attribute from xml file!\n");
+	}
+
+	if (root_element->QueryUnsignedAttribute("ColumnCount", &(this->column_count)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"ColumnCount\" attribute from xml file!\n");
+	}
+
+	if (root_element->QueryUnsignedAttribute("RowSpacing", &(this->row_spacing)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"RowSpacing\" attribute from xml file!\n");
+	}
+
+	if (root_element->QueryUnsignedAttribute("ColumnSpacing", &(this->column_spacing)) != tinyxml2::XML_SUCCESS)
+	{
+		THROW_FAILURE("Error while parsing \"ColumnSpacing\" attribute from xml file!\n");
+	}
+	
+	const char* temp;
+	temp = root_element->Attribute("BackgroundTexture");
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Error while parsing \"BackgroundTexture\" attribute from xml file!\n");
+	}
+	this->background_texture = std::string(temp);
+
+	const tinyxml2::XMLElement* brick_types = root_element->FirstChildElement("BrickTypes");
+	if (brick_types == nullptr)
+	{
+		THROW_FAILURE("BrickTypes element in xml file not found!");
+	}
+	
+	const tinyxml2::XMLElement* brick_type = brick_types->FirstChildElement("BrickType");
+	if (brick_type == nullptr)
+	{
+		THROW_FAILURE("BrickType element in xml file not found!");
+	}
+
+	// vector of all types of bricks inside Level (if all bricks inside level are Soft, this vector will only have 2 elements with ID 'S' and '_')
+	std::vector<Brick> brick_type_temp;
+	for (;brick_type != nullptr; brick_type = brick_type->NextSiblingElement("BrickType"))
+	{
+		bool id_exists = false;
+		for(std::vector<Brick>::iterator it = brick_type_temp.begin(); it != brick_type_temp.end(); ++it)
+		{
+			const char* temp_id = brick_type->Attribute("Id");
+			if (temp_id == nullptr)
+			{
+				THROW_FAILURE("Id element inside BrickType element not found!");
+			}
+			if (it->getID() == temp_id)
+			{
+				id_exists = true;
+			}
+		}
+		if (!id_exists)
+		{
+			Brick brick_type_object(*brick_type);
+			brick_type_temp.push_back(brick_type_object);
+		}
+	}
+
+	// "_" is not actually a brick type, but only placeholder in Bricks_string for a place in game where there is no brick
+	Brick brick_temp;
+	brick_temp.setID("_");
+	brick_type_temp.push_back(brick_temp);
+
+	const tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
+	if (bricks == nullptr)
+	{
+		THROW_FAILURE("Bricks element in xml file not found!");
+	}
+
+	temp = bricks->GetText();
+	if (temp == nullptr)
+	{
+		THROW_FAILURE("Bricks string element in xml file not found!");
+	}
+	this->bricks_string = std::string(temp);
+
+	this->num_of_bricks = this->row_count * this->column_count; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
+
+	unsigned temp_brick_count = 0;
+	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
+	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
+	{
+		for (unsigned j = 0; j < brick_type_temp.size(); ++j)
+		{
+			if (brick_type_temp[j].getID() == std::string(1, this->bricks_string[size_of_bricks_string]))
+			{
+				this->bricks[temp_brick_count] = brick_type_temp[j];
+				temp_brick_count++;
+			}
+		}
+	}
+
+	printLevel();
+}
+
+
+void Level::printLevel() const noexcept // TODO [lpavic]: finish printing all attributes of class Level
+{
+	std::cout << "Row Count : " << this->row_count << "\n"
+		<< "Column Count : " << this->column_count << "\n"
+		<< "Row Spacing : " << this->row_spacing << "\n"
+		<< "Column Spacing : " << this->column_spacing << "\n"
+		<< "Background Texture : " << this->background_texture << "\n\n";
+
+	if (bricks)
+	{
+		for (unsigned i = 0; i < this->row_count * this->column_count; ++i)
+		{
+			std::cout << i + 1 << ".\n";
+			std::cout << this->bricks[i].getID() << "\n"
+				<< this->bricks[i].getTexturePath() << "\n"
+				<< this->bricks[i].getHitPoints() << "\n"
+				<< this->bricks[i].getHitSound() << "\n";
+		}
+	}
+}
+
+
+void Level::refreshFrames()
+{
+    int timer_FPS;
+
+	this->frame_information.frame_count++;
+    timer_FPS = SDL_GetTicks() - this->frame_information.last_frame;
+
+    // TODO [lpavic]: make this dynamical, not hardcoded
+    if (timer_FPS < (1000 / 60))
+    {
+        SDL_Delay((1000 / 60) - timer_FPS);
+    }
+}
+
+
+void Level::relativePositionBallBrick(const unsigned& i) noexcept
+{
+	if(this->ball.getTexture().x <= this->bricks[i].getTexture().x + this->bricks[i].getTexture().w / 2
+		&& this->ball.getTexture().x + this->ball.getTexture().w >= this->bricks[i].getTexture().x)
+    {
+        // TODO [lpavic]: this condition should be implemented in all conditions where cordinates are checked
+        if (static_cast<double>(this->ball.getTexture().y) 
+			>= static_cast<double>(this->bricks[i].getTexture().y) + static_cast<double>(this->bricks[i].getTexture().h) 
+			- sqrt(pow(this->ball.getVelocityY(), 2) + pow(this->ball.getVelocityX(), 2)) - this->offset)
+        {
+            this->ball.setVelocityY(abs(this->ball.getVelocityY()));
+            if (this->ball.getVelocityX() >= 0)
+            {
+				this->ball.setVelocityX(-this->ball.getVelocityX());
+            }
+        }
+		else if (this->ball.getTexture().y <= this->bricks[i].getTexture().y - this->ball.getTexture().h)
+        {
+			this->ball.setVelocityY(-this->ball.getVelocityY());
+            if (this->ball.getVelocityX() >= 0)
+            {
+				this->ball.setVelocityX(-this->ball.getVelocityX());
+            }
+        }
+    }
+    else if (this->ball.getTexture().x + this->ball.getTexture().w < this->bricks[i].getTexture().x )
+    {
+        if (this->ball.getTexture().y >= this->bricks[i].getTexture().y + this->bricks[i].getTexture().h / 2)
+        {
+            this->ball.setVelocityX(-this->ball.getVelocityX());
+            if (this->ball.getVelocityY() >= 0)
+            {
+				this->ball.setVelocityY(-this->ball.getVelocityY());
+            }
+        }
+        else
+        {
+			this->ball.setVelocityX(-this->ball.getVelocityX());
+            if (this->ball.getVelocityY() <= 0)
+            {
+				this->ball.setVelocityY(-this->ball.getVelocityY());
+            }
+        }
+    }
+    else if (this->ball.getTexture().x > this->bricks[i].getTexture().x + this->bricks[i].getTexture().w / 2 
+		&& this->ball.getTexture().x <= this->bricks[i].getTexture().x + this->bricks[i].getTexture().w)
+    {
+        if (this->ball.getTexture().y >= this->bricks[i].getTexture().y + this->bricks[i].getTexture().h)
+        {
+			this->ball.setVelocityY(-this->ball.getVelocityY());
+            if (this->ball.getVelocityX() <= 0)
+            {
+				this->ball.setVelocityX(-this->ball.getVelocityX());
+            }
+        }
+        else
+        {
+			this->ball.setVelocityY(-this->ball.getVelocityY());
+            if (this->ball.getVelocityX() <= 0)
+            {
+				this->ball.setVelocityX(-this->ball.getVelocityX());
+            }
+        }
+    }
+    else if (this->ball.getTexture().x > this->bricks[i].getTexture().x + this->bricks[i].getTexture().w)
+    {
+        if (this->ball.getTexture().y >= this->bricks[i].getTexture().y + this->bricks[i].getTexture().h / 2)
+        {
+			this->ball.setVelocityX(-this->ball.getVelocityX());
+            if (this->ball.getVelocityY() >= 0)
+            {
+				this->ball.setVelocityY(-this->ball.getVelocityY());
+            }
+        }
+        else
+        {
+			this->ball.setVelocityX(-this->ball.getVelocityX());
+            if (this->ball.getVelocityY() <= 0)
+            {
+				this->ball.setVelocityY(-this->ball.getVelocityY());
+            }
+        }
+    }
+}
+
+
+void Level::relativePositionBallPaddle() noexcept
+{
+	double rel = static_cast<float>(this->paddle.getTexture().x + (this->paddle.getTexture().w / 2)) - (this->ball.getTexture().x + (this->ball.getTexture().w / 2));
+    double angle = static_cast<double>(atan(rel / (this->paddle.getTexture().w / 2)));
+	double ball_speed = sqrt(pow(this->ball.getVelocityX(), 2) + pow(this->ball.getVelocityY(), 2));
+	this->ball.setVelocityX(-static_cast<double>(ball_speed) * static_cast<double>(sin(angle)));
+	this->ball.setVelocityY(-static_cast<double>(ball_speed) * static_cast<double>(cos(angle)));
+}
+
+
+void Level::restartFrame()
+{
+	// number of milliseconds since the SDL library initialized
+	// TODO[lpavic]: game is lagging when calling this function
+    this->frame_information.last_frame = SDL_GetTicks();
+
+    if (this->frame_information.last_frame >= this->frame_information.last_time + 100)
+    {
+        this->frame_information.last_time = this->frame_information.last_frame;
+        this->frame_information.fps = this->frame_information.frame_count;
+        this->frame_information.frame_count = 0;
+    }
+}
+
+
+void Level::setLevelScene()
+{
+    this->num_of_lives++;
+
+	this->num_of_level_information = 3;
+	this->level_information = std::make_unique<LevelInformation[]>(this->num_of_level_information);
+
+	// this is alternative way of setting values of level_information without using reset method of unique pointer
+	// this->level_information[0] = std::move(LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
+	// 											  std::string("Lives: "), {255, 255, 255, 255}));
+	// this->level_information[1] = std::move(LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
+	// 											  std::string("Level: "), {255, 255, 255, 255}));
+	// this->level_information[2] = std::move(LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
+	// 											  std::string("Score: "), {255, 255, 255, 255}));
+
+	this->level_information.reset(new LevelInformation[3]
+	{
+		LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
+						std::string("arial.ttf"), 
+						100, 
+						std::string("Lives: "), 
+						{255, 255, 255, 255}),
+		LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
+						std::string("arial.ttf"), 
+						100, 
+						std::string("Level: "), 
+						{255, 255, 255, 255}),
+		LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
+						std::string("arial.ttf"), 
+						100, 
+						std::string("Score: "), 
+						{255, 255, 255, 255})
+	});
+
+	this->paddle.setTexture({static_cast<int>(this->window_horizontal_size / 2 - this->window_horizontal_size / 6 / 2), 
+							static_cast<int>(this->window_vertical_size - this->window_vertical_size / 20 - 10), // hardcoded 10 for making little space between bottom frame and the paddle
+							static_cast<int>(this->window_horizontal_size / 6), 
+							static_cast<int>(this->window_vertical_size / 20)});
+	this->paddle.setVelocityX(this->window_horizontal_size * 0.005);
+
+	this->ball.setTexture({static_cast<int>(this->window_horizontal_size / 2 - this->paddle.getTexture().h / 2 / 2), 
+							static_cast<int>(this->window_vertical_size - this->paddle.getTexture().h / 2 - this->paddle.getTexture().h - 10), 
+							this->paddle.getTexture().h / 2, 
+							this->paddle.getTexture().h / 2});
+	// if velocity_y or velocity_x drops below 1, ball wont move in that axis
+	// TODO [lpavic]: if there are more bricks, ball and paddle will move slowly
+	this->ball.setVelocityX(this->window_horizontal_size * 0.003);
+	this->ball.setVelocityY(this->window_vertical_size * 0.003);
+
+	SDL_Rect temp_rect; // using this local variable because calculations for each dimension would be very long and unreadable
+	for (unsigned i = 0; i < (this->getColumnCount() * this->getRowCount()); ++i)
+    {
+        if (this->bricks[i].getID() != "_")
+        {
+            this->bricks[i].setIsAlive(true);
+        }
+        else
+        {
+            this->bricks[i].setIsAlive(false);
+        }
+
+		temp_rect.w = (this->window_horizontal_size - (this->getColumnSpacing() * (this->getColumnCount() + 1))) / this->getColumnCount();
+		temp_rect.h = static_cast<int>(0.1 * static_cast<double>((this->window_vertical_size - this->getRowCount() * this->getRowSpacing()) / this->getRowCount()));
+		temp_rect.x = (i % this->getColumnCount()) * (temp_rect.w + this->getColumnSpacing()) + this->getColumnSpacing() / 2;
+		temp_rect.y = this->level_information[0].getTexture().h + (i / this->getColumnCount()) * (temp_rect.h + this->getRowSpacing()) + this->getRowSpacing() / 2;
+		this->bricks[i].setTexture(temp_rect);
+    }
+}
+
+
+void Level::setLimitSituations() noexcept
+{
+	SDL_Rect temp_rect;
+	
+	if (this->paddle.getTexture().x < 0)
+    {
+		temp_rect = this->paddle.getTexture();
+		temp_rect.x = 0;
+        this->paddle.setTexture(temp_rect);
+    }
+
+    if (this->paddle.getTexture().x > static_cast<int>(window_horizontal_size) - this->paddle.getTexture().w)
+    {
+		temp_rect = this->paddle.getTexture();
+		temp_rect.x = window_horizontal_size - this->paddle.getTexture().w;
+        this->paddle.setTexture(temp_rect);
+    }
+
+    if (this->ball.getTexture().y < this->level_information[0].getTexture().h)
+    {
+        temp_rect = this->ball.getTexture();
+		temp_rect.y = this->level_information[0].getTexture().h;
+		this->ball.setTexture(temp_rect);
+        ball.setVelocityY(ball.getVelocityY() * (-1));
+    }
+
+    if (this->ball.getTexture().x < 0 || this->ball.getTexture().x > static_cast<int>(window_horizontal_size) - this->ball.getTexture().w)
+    {
+        this->ball.setVelocityX(this->ball.getVelocityX() * (-1));
+    }
+
+    if (this->ball.getTexture().y + this->ball.getTexture().h > static_cast<int>(window_vertical_size))
+    {
+        this->num_of_lives--;
+
+		temp_rect = this->paddle.getTexture();
+        temp_rect.x = window_horizontal_size / 2 - this->paddle.getTexture().w / 2;
+        temp_rect.y = window_vertical_size - this->paddle.getTexture().h;
+        this->paddle.setTexture(temp_rect);
+
+		temp_rect = this->ball.getTexture();
+		temp_rect.x = window_horizontal_size / 2 - this->ball.getTexture().w / 2;
+        temp_rect.y = window_vertical_size - this->ball.getTexture().h - this->paddle.getTexture().h;
+        this->ball.setTexture(temp_rect);
+        this->ball.setVelocityX(this->window_horizontal_size * 0.003);
+        this->ball.setVelocityY(this->window_vertical_size * 0.003);
+    }
+}
+
+
 Level* Level::getInstance(SDL_Window* const * const window,
                                     const unsigned& window_horizontal_size,
                                     const unsigned& window_vertical_size)
@@ -345,444 +786,4 @@ Level::STATE Level::runImplementation()
 	}
 	this->setState(Level::QUIT);
 	return Level::STATE::QUIT;
-}
-
-void Level::drawLevel()
-{
-	if (SDL_SetRenderDrawColor(this->renderer, 20, 20, 20, 255) != 0)
-	{
-		THROW_FAILURE((std::string("Setting render draw color error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
-	}
-	if (SDL_RenderClear(this->renderer) != 0)
-	{
-		THROW_FAILURE((std::string("Clearing level renderer error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
-	}
-
-	// TODO [lpavic]: see if this is needed
-	// refreshFrames();
-
-	this->ball.drawSprite(&this->renderer);
-	this->paddle.drawSprite(&this->renderer);
-	
-	// TODO [lpavic]: whole game lags when there are more bricks
-	for (unsigned i = 0; i < this->num_of_bricks; i++)
-	{
-		if (this->bricks[i].getIsAlive())
-		{
-			this->bricks[i].drawSprite(&this->renderer);
-		}
-	}
-
-	// TODO [lpavic]: display lives, score and level as multiline string
-	this->level_information[0].drawSurface(&(this->renderer), std::to_string(this->num_of_lives));
-	this->level_information[1].drawSurface(&(this->renderer), std::to_string(this->current_level + 1));
-	this->level_information[2].drawSurface(&(this->renderer), std::to_string(this->total_score));
-
-	SDL_RenderPresent(this->renderer);
-}
-
-
-void Level::handleKeyboardStates(const Uint8* const keyboard)
-{
-	SDL_Rect temp = this->paddle.getTexture();
-	if (keyboard[SDL_SCANCODE_LEFT])
-	{
-		temp.x += static_cast<int>(-this->paddle.getVelocityX());
-		this->paddle.setTexture(temp);
-	}
-
-	if (keyboard[SDL_SCANCODE_RIGHT])
-	{
-		temp.x += static_cast<int>(this->paddle.getVelocityX());
-		this->paddle.setTexture(temp);
-	}
-
-	// TODO [lpavic]: implement better
-	// if (keyboard[SDL_SCANCODE_DOWN])
-	// {
-	// 	if (sqrt(pow(this->ball.getVelocityY(), 2) + pow(this->ball.getVelocityX(), 2)) 
-	// 		< 1.05 * static_cast<double>(sqrt(pow(this->window_horizontal_size, 2) + pow(this->window_vertical_size, 2))))
-	// 	{
-	// 		this->ball.setVelocityX(1.05 * this->ball.getVelocityX());
-	// 		this->ball.setVelocityY(1.05 * this->ball.getVelocityY());
-	// 	}
-	// }
-}
-
-
-void Level::parseLevelFile(const tinyxml2::XMLDocument& doc)
-{
-	const tinyxml2::XMLElement* root_element = doc.FirstChildElement("Level");
-	if (root_element == nullptr)
-	{
-		THROW_FAILURE("Level element in xml file not found!");
-	}
-
-	if (root_element->QueryUnsignedAttribute("RowCount", &(this->row_count)) != tinyxml2::XML_SUCCESS)
-	{
-		THROW_FAILURE("Error while parsing \"RowCount\" attribute from xml file!\n");
-	}
-
-	if (root_element->QueryUnsignedAttribute("ColumnCount", &(this->column_count)) != tinyxml2::XML_SUCCESS)
-	{
-		THROW_FAILURE("Error while parsing \"ColumnCount\" attribute from xml file!\n");
-	}
-
-	if (root_element->QueryUnsignedAttribute("RowSpacing", &(this->row_spacing)) != tinyxml2::XML_SUCCESS)
-	{
-		THROW_FAILURE("Error while parsing \"RowSpacing\" attribute from xml file!\n");
-	}
-
-	if (root_element->QueryUnsignedAttribute("ColumnSpacing", &(this->column_spacing)) != tinyxml2::XML_SUCCESS)
-	{
-		THROW_FAILURE("Error while parsing \"ColumnSpacing\" attribute from xml file!\n");
-	}
-	
-	const char* temp;
-	temp = root_element->Attribute("BackgroundTexture");
-	if (temp == nullptr)
-	{
-		THROW_FAILURE("Error while parsing \"BackgroundTexture\" attribute from xml file!\n");
-	}
-	this->background_texture = std::string(temp);
-
-	const tinyxml2::XMLElement* brick_types = root_element->FirstChildElement("BrickTypes");
-	if (brick_types == nullptr)
-	{
-		THROW_FAILURE("BrickTypes element in xml file not found!");
-	}
-	
-	const tinyxml2::XMLElement* brick_type = brick_types->FirstChildElement("BrickType");
-	if (brick_type == nullptr)
-	{
-		THROW_FAILURE("BrickType element in xml file not found!");
-	}
-
-	// vector of all types of bricks inside Level (if all bricks inside level are Soft, this vector will only have 2 elements with ID 'S' and '_')
-	std::vector<Brick> brick_type_temp;
-	for (;brick_type != nullptr; brick_type = brick_type->NextSiblingElement("BrickType"))
-	{
-		bool id_exists = false;
-		for(std::vector<Brick>::iterator it = brick_type_temp.begin(); it != brick_type_temp.end(); ++it)
-		{
-			const char* temp_id = brick_type->Attribute("Id");
-			if (temp_id == nullptr)
-			{
-				THROW_FAILURE("Id element inside BrickType element not found!");
-			}
-			if (it->getID() == temp_id)
-			{
-				id_exists = true;
-			}
-		}
-		if (!id_exists)
-		{
-			Brick brick_type_object(*brick_type);
-			brick_type_temp.push_back(brick_type_object);
-		}
-	}
-
-	// "_" is not actually a brick type, but only placeholder in Bricks_string for a place in game where there is no brick
-	Brick brick_temp;
-	brick_temp.setID("_");
-	brick_type_temp.push_back(brick_temp);
-
-	const tinyxml2::XMLElement* bricks = root_element->FirstChildElement("Bricks");
-	if (bricks == nullptr)
-	{
-		THROW_FAILURE("Bricks element in xml file not found!");
-	}
-
-	temp = bricks->GetText();
-	if (temp == nullptr)
-	{
-		THROW_FAILURE("Bricks string element in xml file not found!");
-	}
-	this->bricks_string = std::string(temp);
-
-	this->num_of_bricks = this->row_count * this->column_count; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
-
-	unsigned temp_brick_count = 0;
-	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
-	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
-	{
-		for (unsigned j = 0; j < brick_type_temp.size(); ++j)
-		{
-			if (brick_type_temp[j].getID() == std::string(1, this->bricks_string[size_of_bricks_string]))
-			{
-				this->bricks[temp_brick_count] = brick_type_temp[j];
-				temp_brick_count++;
-			}
-		}
-	}
-
-	printLevel();
-}
-
-
-void Level::printLevel() const // TODO [lpavic]: finish printing all attributes of class Level
-{
-	std::cout << "Row Count : " << this->row_count << "\n"
-		<< "Column Count : " << this->column_count << "\n"
-		<< "Row Spacing : " << this->row_spacing << "\n"
-		<< "Column Spacing : " << this->column_spacing << "\n"
-		<< "Background Texture : " << this->background_texture << "\n\n";
-
-	if (bricks)
-	{
-		for (unsigned i = 0; i < this->row_count * this->column_count; ++i)
-		{
-			std::cout << i + 1 << ".\n";
-			std::cout << this->bricks[i].getID() << "\n"
-				<< this->bricks[i].getTexturePath() << "\n"
-				<< this->bricks[i].getHitPoints() << "\n"
-				<< this->bricks[i].getHitSound() << "\n";
-		}
-	}
-}
-
-
-void Level::refreshFrames()
-{
-    int timer_FPS;
-
-	this->frame_information.frame_count++;
-    timer_FPS = SDL_GetTicks() - this->frame_information.last_frame;
-
-    // TODO [lpavic]: make this dynamical, not hardcoded
-    if (timer_FPS < (1000 / 60))
-    {
-        SDL_Delay((1000 / 60) - timer_FPS);
-    }
-}
-
-
-void Level::relativePositionBallBrick(const unsigned& i)
-{
-	if(this->ball.getTexture().x <= this->bricks[i].getTexture().x + this->bricks[i].getTexture().w / 2
-		&& this->ball.getTexture().x + this->ball.getTexture().w >= this->bricks[i].getTexture().x)
-    {
-        // TODO [lpavic]: this condition should be implemented in all conditions where cordinates are checked
-        if (static_cast<double>(this->ball.getTexture().y) 
-			>= static_cast<double>(this->bricks[i].getTexture().y) + static_cast<double>(this->bricks[i].getTexture().h) 
-			- sqrt(pow(this->ball.getVelocityY(), 2) + pow(this->ball.getVelocityX(), 2)) - this->offset)
-        {
-            this->ball.setVelocityY(abs(this->ball.getVelocityY()));
-            if (this->ball.getVelocityX() >= 0)
-            {
-				this->ball.setVelocityX(-this->ball.getVelocityX());
-            }
-        }
-		else if (this->ball.getTexture().y <= this->bricks[i].getTexture().y - this->ball.getTexture().h)
-        {
-			this->ball.setVelocityY(-this->ball.getVelocityY());
-            if (this->ball.getVelocityX() >= 0)
-            {
-				this->ball.setVelocityX(-this->ball.getVelocityX());
-            }
-        }
-    }
-    else if (this->ball.getTexture().x + this->ball.getTexture().w < this->bricks[i].getTexture().x )
-    {
-        if (this->ball.getTexture().y >= this->bricks[i].getTexture().y + this->bricks[i].getTexture().h / 2)
-        {
-            this->ball.setVelocityX(-this->ball.getVelocityX());
-            if (this->ball.getVelocityY() >= 0)
-            {
-				this->ball.setVelocityY(-this->ball.getVelocityY());
-            }
-        }
-        else
-        {
-			this->ball.setVelocityX(-this->ball.getVelocityX());
-            if (this->ball.getVelocityY() <= 0)
-            {
-				this->ball.setVelocityY(-this->ball.getVelocityY());
-            }
-        }
-    }
-    else if (this->ball.getTexture().x > this->bricks[i].getTexture().x + this->bricks[i].getTexture().w / 2 
-		&& this->ball.getTexture().x <= this->bricks[i].getTexture().x + this->bricks[i].getTexture().w)
-    {
-        if (this->ball.getTexture().y >= this->bricks[i].getTexture().y + this->bricks[i].getTexture().h)
-        {
-			this->ball.setVelocityY(-this->ball.getVelocityY());
-            if (this->ball.getVelocityX() <= 0)
-            {
-				this->ball.setVelocityX(-this->ball.getVelocityX());
-            }
-        }
-        else
-        {
-			this->ball.setVelocityY(-this->ball.getVelocityY());
-            if (this->ball.getVelocityX() <= 0)
-            {
-				this->ball.setVelocityX(-this->ball.getVelocityX());
-            }
-        }
-    }
-    else if (this->ball.getTexture().x > this->bricks[i].getTexture().x + this->bricks[i].getTexture().w)
-    {
-        if (this->ball.getTexture().y >= this->bricks[i].getTexture().y + this->bricks[i].getTexture().h / 2)
-        {
-			this->ball.setVelocityX(-this->ball.getVelocityX());
-            if (this->ball.getVelocityY() >= 0)
-            {
-				this->ball.setVelocityY(-this->ball.getVelocityY());
-            }
-        }
-        else
-        {
-			this->ball.setVelocityX(-this->ball.getVelocityX());
-            if (this->ball.getVelocityY() <= 0)
-            {
-				this->ball.setVelocityY(-this->ball.getVelocityY());
-            }
-        }
-    }
-}
-
-
-void Level::relativePositionBallPaddle()
-{
-	double rel = static_cast<float>(this->paddle.getTexture().x + (this->paddle.getTexture().w / 2)) - (this->ball.getTexture().x + (this->ball.getTexture().w / 2));
-    double angle = static_cast<double>(atan(rel / (this->paddle.getTexture().w / 2)));
-	double ball_speed = sqrt(pow(this->ball.getVelocityX(), 2) + pow(this->ball.getVelocityY(), 2));
-	this->ball.setVelocityX(-static_cast<double>(ball_speed) * static_cast<double>(sin(angle)));
-	this->ball.setVelocityY(-static_cast<double>(ball_speed) * static_cast<double>(cos(angle)));
-}
-
-
-void Level::restartFrame()
-{
-	// number of milliseconds since the SDL library initialized
-	// TODO[lpavic]: game is lagging when calling this function
-    this->frame_information.last_frame = SDL_GetTicks();
-
-    if (this->frame_information.last_frame >= this->frame_information.last_time + 100)
-    {
-        this->frame_information.last_time = this->frame_information.last_frame;
-        this->frame_information.fps = this->frame_information.frame_count;
-        this->frame_information.frame_count = 0;
-    }
-}
-
-
-void Level::setLevelScene()
-{
-    this->num_of_lives++;
-
-	this->num_of_level_information = 3;
-	this->level_information = std::make_unique<LevelInformation[]>(this->num_of_level_information);
-
-	// this is alternative way of setting values of level_information without using reset method of unique pointer
-	// this->level_information[0] = std::move(LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
-	// 											  std::string("Lives: "), {255, 255, 255, 255}));
-	// this->level_information[1] = std::move(LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
-	// 											  std::string("Level: "), {255, 255, 255, 255}));
-	// this->level_information[2] = std::move(LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, std::string("arial.ttf"), 100, 
-	// 											  std::string("Score: "), {255, 255, 255, 255}));
-
-	this->level_information.reset(new LevelInformation[3]
-	{
-		LevelInformation(SDL_Rect{0, 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
-						std::string("arial.ttf"), 
-						100, 
-						std::string("Lives: "), 
-						{255, 255, 255, 255}),
-		LevelInformation(SDL_Rect{static_cast<int>(this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
-						std::string("arial.ttf"), 
-						100, 
-						std::string("Level: "), 
-						{255, 255, 255, 255}),
-		LevelInformation(SDL_Rect{static_cast<int>(2 * this->window_horizontal_size / 3), 0, static_cast<int>(this->window_horizontal_size / 3), static_cast<int>(this->window_vertical_size / 10)}, 
-						std::string("arial.ttf"), 
-						100, 
-						std::string("Score: "), 
-						{255, 255, 255, 255})
-	});
-
-	this->paddle.setTexture({static_cast<int>(this->window_horizontal_size / 2 - this->window_horizontal_size / 6 / 2), 
-							static_cast<int>(this->window_vertical_size - this->window_vertical_size / 20 - 10), // hardcoded 10 for making little space between bottom frame and the paddle
-							static_cast<int>(this->window_horizontal_size / 6), 
-							static_cast<int>(this->window_vertical_size / 20)});
-	this->paddle.setVelocityX(this->window_horizontal_size * 0.005);
-
-	this->ball.setTexture({static_cast<int>(this->window_horizontal_size / 2 - this->paddle.getTexture().h / 2 / 2), 
-							static_cast<int>(this->window_vertical_size - this->paddle.getTexture().h / 2 - this->paddle.getTexture().h - 10), 
-							this->paddle.getTexture().h / 2, 
-							this->paddle.getTexture().h / 2});
-	// if velocity_y or velocity_x drops below 1, ball wont move in that axis
-	// TODO [lpavic]: if there are more bricks, ball and paddle will move slowly
-	this->ball.setVelocityX(this->window_horizontal_size * 0.003);
-	this->ball.setVelocityY(this->window_vertical_size * 0.003);
-
-	SDL_Rect temp_rect; // using this local variable because calculations for each dimension would be very long and unreadable
-	for (unsigned i = 0; i < (this->getColumnCount() * this->getRowCount()); ++i)
-    {
-        if (this->bricks[i].getID() != "_")
-        {
-            this->bricks[i].setIsAlive(true);
-        }
-        else
-        {
-            this->bricks[i].setIsAlive(false);
-        }
-
-		temp_rect.w = (this->window_horizontal_size - (this->getColumnSpacing() * (this->getColumnCount() + 1))) / this->getColumnCount();
-		temp_rect.h = static_cast<int>(0.1 * static_cast<double>((this->window_vertical_size - this->getRowCount() * this->getRowSpacing()) / this->getRowCount()));
-		temp_rect.x = (i % this->getColumnCount()) * (temp_rect.w + this->getColumnSpacing()) + this->getColumnSpacing() / 2;
-		temp_rect.y = this->level_information[0].getTexture().h + (i / this->getColumnCount()) * (temp_rect.h + this->getRowSpacing()) + this->getRowSpacing() / 2;
-		this->bricks[i].setTexture(temp_rect);
-    }
-}
-
-
-void Level::setLimitSituations()
-{
-	SDL_Rect temp_rect;
-	
-	if (this->paddle.getTexture().x < 0)
-    {
-		temp_rect = this->paddle.getTexture();
-		temp_rect.x = 0;
-        this->paddle.setTexture(temp_rect);
-    }
-
-    if (this->paddle.getTexture().x > static_cast<int>(window_horizontal_size) - this->paddle.getTexture().w)
-    {
-		temp_rect = this->paddle.getTexture();
-		temp_rect.x = window_horizontal_size - this->paddle.getTexture().w;
-        this->paddle.setTexture(temp_rect);
-    }
-
-    if (this->ball.getTexture().y < this->level_information[0].getTexture().h)
-    {
-        temp_rect = this->ball.getTexture();
-		temp_rect.y = this->level_information[0].getTexture().h;
-		this->ball.setTexture(temp_rect);
-        ball.setVelocityY(ball.getVelocityY() * (-1));
-    }
-
-    if (this->ball.getTexture().x < 0 || this->ball.getTexture().x > static_cast<int>(window_horizontal_size) - this->ball.getTexture().w)
-    {
-        this->ball.setVelocityX(this->ball.getVelocityX() * (-1));
-    }
-
-    if (this->ball.getTexture().y + this->ball.getTexture().h > static_cast<int>(window_vertical_size))
-    {
-        this->num_of_lives--;
-
-		temp_rect = this->paddle.getTexture();
-        temp_rect.x = window_horizontal_size / 2 - this->paddle.getTexture().w / 2;
-        temp_rect.y = window_vertical_size - this->paddle.getTexture().h;
-        this->paddle.setTexture(temp_rect);
-
-		temp_rect = this->ball.getTexture();
-		temp_rect.x = window_horizontal_size / 2 - this->ball.getTexture().w / 2;
-        temp_rect.y = window_vertical_size - this->ball.getTexture().h - this->paddle.getTexture().h;
-        this->ball.setTexture(temp_rect);
-        this->ball.setVelocityX(this->window_horizontal_size * 0.003);
-        this->ball.setVelocityY(this->window_vertical_size * 0.003);
-    }
 }

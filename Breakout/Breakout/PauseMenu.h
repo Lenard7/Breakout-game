@@ -29,9 +29,9 @@ public:
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
     PauseMenu(const PauseMenu& pause_menu) = delete;
-    PauseMenu(PauseMenu&& pause_menu) = default; // this move copy constructor will call move copy constructor of Menu class
+    PauseMenu(PauseMenu&& pause_menu) noexcept = default; // this move copy constructor will call move copy constructor of Menu class
     PauseMenu& operator = (const PauseMenu& pause_menu) = delete;
-    PauseMenu& operator =(PauseMenu&& pause_menu) = default;
+    PauseMenu& operator =(PauseMenu&& pause_menu) noexcept = default;
     
     void destroy();
 
@@ -39,7 +39,7 @@ public:
     const PAUSE_MENU_SELECTION_BOX runImplementation();
 
     // getters and setters
-    inline const PAUSE_MENU_SELECTION_BOX& getSelector() const { return this->selector; }
+    inline const PAUSE_MENU_SELECTION_BOX& getSelector() const noexcept { return this->selector; }
 
-    inline void setSelector(const PAUSE_MENU_SELECTION_BOX& selector) { this->selector = selector; }
+    inline void setSelector(const PAUSE_MENU_SELECTION_BOX& selector) noexcept { this->selector = selector; }
 };

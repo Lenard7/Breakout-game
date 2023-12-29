@@ -49,7 +49,7 @@ protected:
     SDL_Rect background_image{0, 0, 0, 0};
 
 public:
-    Menu();
+    Menu() noexcept;
     Menu(const Menu& menu);
     Menu(Menu&& menu);
     Menu& operator =(const Menu& menu);
@@ -58,47 +58,47 @@ public:
 
     // getters and setters
     // TODO [lpavic]: use smart pointer
-    inline SDL_Window* getWindow() const { return this->window; }
-    inline const unsigned& getWindowHorizontalSize() const { return this->window_horizontal_size; }
-    inline const unsigned& getWindowVerticalSize() const { return this->window_vertical_size; }
+    inline SDL_Window* getWindow() const noexcept { return this->window; }
+    inline const unsigned& getWindowHorizontalSize() const noexcept { return this->window_horizontal_size; }
+    inline const unsigned& getWindowVerticalSize() const noexcept { return this->window_vertical_size; }
 	
     // TODO [lpavic]: use smart pointer
-    inline SDL_Renderer* getRenderer() const { return this->renderer; }
+    inline SDL_Renderer* getRenderer() const noexcept { return this->renderer; }
 
-    inline const SDL_Rect& getTitle() const { return this->title; }
-    inline TTF_Font* getFontTitle() const { return this->font_title; }
-    inline const unsigned& getFontSizeTitle() const { return this->font_size_title; }
-    inline const SDL_Color& getColorTitle() const { return this->color_title; }
+    inline const SDL_Rect& getTitle() const noexcept { return this->title; }
+    inline TTF_Font* getFontTitle() const noexcept { return this->font_title; }
+    inline const unsigned& getFontSizeTitle() const noexcept { return this->font_size_title; }
+    inline const SDL_Color& getColorTitle() const noexcept { return this->color_title; }
 
-    inline SDL_Rect* getSelectionBox() const { return this->selection_box; }
-    inline TTF_Font* getFontSelectionBox() const { return this->font_selection_box; }
-    inline const unsigned& getFontSizeSelectionBox() const { return this->font_size_selection_box; }
-    inline const SDL_Color& getColorUnselectedMenuBox() const { return this->color_unselected_menu_box; }
-    inline const SDL_Color& getColorSelectedMenuBox() const { return this->color_selected_menu_box; }
+    inline SDL_Rect* getSelectionBox() const noexcept { return this->selection_box; }
+    inline TTF_Font* getFontSelectionBox() const noexcept { return this->font_selection_box; }
+    inline const unsigned& getFontSizeSelectionBox() const noexcept { return this->font_size_selection_box; }
+    inline const SDL_Color& getColorUnselectedMenuBox() const noexcept { return this->color_unselected_menu_box; }
+    inline const SDL_Color& getColorSelectedMenuBox() const noexcept { return this->color_selected_menu_box; }
 
-    inline const SDL_Rect& getBackgroundImage() const { return this->background_image; }
+    inline const SDL_Rect& getBackgroundImage() const noexcept { return this->background_image; }
     
     
     // TODO [lpavic]: use smart pointer
-	inline void setWindow(SDL_Window* const window) { this->window = window; }
-    inline void setWindowHorizontalSize(const unsigned& window_horizontal_size) { this->window_horizontal_size = window_horizontal_size; }
-    inline void setWindowVerticalSize(const unsigned& window_vertical_size) { this->window_vertical_size = window_vertical_size; }
+	inline void setWindow(SDL_Window* const window) noexcept { this->window = window; }
+    inline void setWindowHorizontalSize(const unsigned& window_horizontal_size) noexcept { this->window_horizontal_size = window_horizontal_size; }
+    inline void setWindowVerticalSize(const unsigned& window_vertical_size) noexcept { this->window_vertical_size = window_vertical_size; }
 	// TODO [lpavic]: use smart pointer
-    inline void setRenderer(SDL_Renderer* const renderer) { this->renderer = renderer; }
+    inline void setRenderer(SDL_Renderer* const renderer) noexcept { this->renderer = renderer; }
 
-    inline void setTitle(const SDL_Rect& title) { this->title = title; }
+    inline void setTitle(const SDL_Rect& title) noexcept { this->title = title; }
 	// TODO [lpavic]: use smart pointer
-    inline void setFontTitle(TTF_Font* const font_title) { this->font_title = font_title; }
-    inline void setFontSizeTitle(const unsigned& font_size_title) { this->font_size_title = font_size_title; }
-    inline void setColorTitle(const SDL_Color& color_title) { this->color_title = color_title; }
+    inline void setFontTitle(TTF_Font* const font_title) noexcept { this->font_title = font_title; }
+    inline void setFontSizeTitle(const unsigned& font_size_title) noexcept { this->font_size_title = font_size_title; }
+    inline void setColorTitle(const SDL_Color& color_title) noexcept { this->color_title = color_title; }
 
 	// TODO [lpavic]: use smart pointer
-    inline void setSelectionBox(SDL_Rect* const selection_box) { this->selection_box = selection_box; }
+    inline void setSelectionBox(SDL_Rect* const selection_box) noexcept { this->selection_box = selection_box; }
 	// TODO [lpavic]: use smart pointer
-    inline void setFontSelectionBox(TTF_Font* const font_selection_box) { this->font_selection_box = font_selection_box; }
-    inline void setFontSizeSelectionBox(const unsigned& font_size_selection_box) { this->font_size_selection_box = font_size_selection_box; }
-    inline void setColorUnselectedMenuBox(const SDL_Color& color_unselected_menu_box) { this->color_unselected_menu_box = color_unselected_menu_box; }
-    inline void setColorSelectedMenuBox(const SDL_Color& color_selected_menu_box) { this->color_selected_menu_box = color_selected_menu_box; }
+    inline void setFontSelectionBox(TTF_Font* const font_selection_box) noexcept { this->font_selection_box = font_selection_box; }
+    inline void setFontSizeSelectionBox(const unsigned& font_size_selection_box) noexcept { this->font_size_selection_box = font_size_selection_box; }
+    inline void setColorUnselectedMenuBox(const SDL_Color& color_unselected_menu_box) noexcept { this->color_unselected_menu_box = color_unselected_menu_box; }
+    inline void setColorSelectedMenuBox(const SDL_Color& color_selected_menu_box) noexcept { this->color_selected_menu_box = color_selected_menu_box; }
 
-    inline void setBackgroundImage(const SDL_Rect& background_image) { this->background_image = background_image; }
+    inline void setBackgroundImage(const SDL_Rect& background_image) noexcept { this->background_image = background_image; }
 };

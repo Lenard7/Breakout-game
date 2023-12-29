@@ -25,7 +25,7 @@ LevelInformation::LevelInformation(const SDL_Rect& texture, const std::string& f
 }
 
 
-LevelInformation::LevelInformation() 
+LevelInformation::LevelInformation() noexcept
 {
     // default constructor will indead set all members as specified in class definition
     // by using unifrom intialization {}

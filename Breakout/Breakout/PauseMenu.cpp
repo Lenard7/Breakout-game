@@ -7,18 +7,6 @@ PauseMenu* PauseMenu::pause_menu = nullptr;
 const char* const PauseMenu::pause_menu_selection_box_text[] = { "Continue", /*"Restart",*/ "Quit", "Exit"};
 
 
-PauseMenu* PauseMenu::getInstance(SDL_Window* const * const window,
-                                    const unsigned& window_horizontal_size,
-                                    const unsigned& window_vertical_size)
-{
-    if (pause_menu == nullptr)
-    {
-        pause_menu = new PauseMenu(window, window_horizontal_size, window_vertical_size);
-    }
-    return pause_menu;
-}
-
-
 // TODO [lpavic]: coppied from main menu, see how to improve this
 // setup attributes of PauseMenu singleton object, 
 // setup graphics for first scene when Main menu is entered
@@ -159,6 +147,18 @@ PauseMenu::~PauseMenu()
 {
     // TODO [lpavic]: deallocate window pointer, but this pointer should be shared so 
         // game object still has its own pointer
+}
+
+
+PauseMenu* PauseMenu::getInstance(SDL_Window* const * const window,
+                                    const unsigned& window_horizontal_size,
+                                    const unsigned& window_vertical_size)
+{
+    if (pause_menu == nullptr)
+    {
+        pause_menu = new PauseMenu(window, window_horizontal_size, window_vertical_size);
+    }
+    return pause_menu;
 }
 
 

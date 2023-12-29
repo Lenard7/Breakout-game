@@ -24,7 +24,7 @@ extern "C" {
  * see which variables are not used and remove them if they are not used
  * make intendations correct (also free lines at the end of files)
  * take in considerations if some methods should be private, variables protected etc.
- * see which methods need to be marked as noexcept
+ * see which methods need to be marked as noexcept - also check usage of keywords explicit and final
  * see that getters and setters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
  * make getters and setters for all private and protected attributes for future potentional use
  * let compiler decide if small methods should be inlined by defining methods inside class' definition
