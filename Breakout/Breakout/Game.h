@@ -58,7 +58,7 @@ public:
 
     // getters and setters
     inline const STATE& getState() const { return this->state; }
-	// TODO [lpavic]: there is no const since there would need const_cast for SDL_Window* a = this->getWindow(); invokation - better to use smart pointers in classes
+	// TODO [lpavic]: there is no const since there would need const_cast for SDL_Window* a = this->getWindow(); invocation - better to use smart pointers in classes
     inline SDL_Window* getWindow() const { return this->window; }
     inline const unsigned& getWindowHorizontalSize() const { return this->window_horizontal_size; }
     inline const unsigned& getWindowVerticalSize() const { return this->window_vertical_size; }

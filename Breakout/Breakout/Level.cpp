@@ -16,7 +16,7 @@ Level * Level::level = nullptr;
 unsigned Level::level_num = 3;
 
 
-// TODO [lpavic]: see if some methods should be actually in constructor - e.g. setLevelScene initializes some variables that maybee can be initialized inside constructor
+// TODO [lpavic]: see if some methods should be actually in constructor - e.g. setLevelScene initializes some variables that maybe can be initialized inside constructor
 Level::Level(SDL_Window* const * const window,
 			const unsigned& window_horizontal_size,
 			const unsigned& window_vertical_size) : state(Level::RUNNING)

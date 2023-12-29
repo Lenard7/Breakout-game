@@ -12,6 +12,7 @@ extern "C" {
  * before pushing to git repository, always build in Debug and Release configurations
  * always check if some header, dll or other lib objects are needed somewhere or it is not when making bigger changes
  * edit README.md file after bigger changes
+ * refresh BREAKOUT-GAME\Doc\Element_hierarchy.txt when needed
  * beware of const correctnes
  * check for code writing style (where to use Pascal case, snake case, Camel case etc.)
  * check in which order should be attributes and methods be written inside definition of class (alphabetical, data types...)
@@ -28,7 +29,8 @@ extern "C" {
  * see that getters and setters written in C++ way (https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters)
  * make getters and setters for all private and protected attributes for future potentional use
  * let compiler decide if small methods should be inlined by defining methods inside class' definition
- * try to use smart pointer and/or containers instead of raw pointers and also inside each destructor check if all pointers are freed
+ * try to use smart pointer and/or containers instead of raw pointers and also inside each destructor check if all pointers are freed - see which container is appropriate in which situation
+ * e.g. std::vector causes unnecessary dynamic memory allocation and sometimes is better to use some other container
  */
 
 
@@ -37,14 +39,11 @@ extern "C" {
  *      sounds, sprites, fonts -> Release configuration will not handle parsing xml files -> xml files, images, sounds etc.
  *      should be inside "Resource Files" folder
  * TODO [lpavic]: make .xml files to have only brick types that are used inside each level
- * TODO [lpavic]: write inheritance classes inside BREAKOUT-GAME\Doc\Element_hierarchy.txt
  */
 
 
 /** General TODOs inside code
  * TODO [lpavic]: Many constants are hardcoded.
- * TODO [lpavic]: Functions take and return data by value in cases when it is not efficient. E.g. coping std::string, 
-    std::vector causes unnecessary dynamic memory allocation.
  * TODO [lpavic]: try to use template (functions and classes) where there is needed
  */
 
