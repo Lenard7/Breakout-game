@@ -8,7 +8,7 @@
 class MainMenu : public Menu
 {
 public:
-    enum MAIN_MENU_SELECTION_BOX
+    enum class MAIN_MENU_SELECTION_BOX
     {
         NEW_GAME = 0,
         EXIT,
@@ -17,7 +17,7 @@ public:
 
 private:
     static MainMenu* main_menu;
-    MAIN_MENU_SELECTION_BOX selector{NEW_GAME};
+    MAIN_MENU_SELECTION_BOX selector{MAIN_MENU_SELECTION_BOX::NEW_GAME};
     static const char* const main_menu_selection_box_text[];
 
     MainMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);

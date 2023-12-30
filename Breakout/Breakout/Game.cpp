@@ -67,17 +67,17 @@ const Game::STATE Game::runMainMenu()
     {
         switch(main_menu->runImplementation())
         {
-            case MainMenu::NEW_GAME:
+            case MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME:
                 main_menu->destroy();
                 return Game::STATE::PLAY;
                 break;
             
-            case MainMenu::EXIT:
+            case MainMenu::MAIN_MENU_SELECTION_BOX::EXIT:
                 main_menu->destroy();
                 return Game::STATE::END;
                 break;
             
-            case MainMenu::Count:
+            case MainMenu::MAIN_MENU_SELECTION_BOX::Count:
                 THROW_FAILURE("Count state for main menu not valid!\n");
                 break;
             
@@ -98,21 +98,21 @@ const Game::STATE Game::runLevel()
 
         switch(level->runImplementation())
         {
-            case Level::QUIT:
+            case Level::STATE::QUIT:
                 level->destroy();
                 return Game::STATE::MAIN_MENU;
                 break;
             
-            case Level::EXIT:
+            case Level::STATE::EXIT:
                 level->destroy();
                 return Game::STATE::END;
                 break;
             
-            case Level::RUNNING:
+            case Level::STATE::RUNNING:
                 THROW_FAILURE("Running is not permited returned state of Level!\n");
                 break;
 
-            case Level::PAUSED:
+            case Level::STATE::PAUSED:
                 THROW_FAILURE("Paused is not permited returned state of Level!\n");
                 break;
 
@@ -121,7 +121,7 @@ const Game::STATE Game::runLevel()
             //     // delete level;
             //     break;
             
-            case Level::Count:
+            case Level::STATE::Count:
                 THROW_FAILURE("Count state for level is not valid!\n");
                 break;
 
@@ -141,13 +141,13 @@ Game& Game::getInstance()
 
 Game::Game(Game&& game)
 {
-    // TODO [lpavic]: implement this and consider defining smart pointers
+    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
 }
 
 
 Game& Game::operator =(Game&& game)
 {
-    // TODO [lpavic]: implement this and consider defining smart pointers
+    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
     if (this != &game)
     {
 
@@ -159,19 +159,19 @@ Game& Game::operator =(Game&& game)
 
 void Game::runImplementation()
 {
-    while (this->getState() != Game::END)
+    while (this->getState() != Game::STATE::END)
     {
         switch (this->getState())
         {
-            case Game::MAIN_MENU:
+            case Game::STATE::MAIN_MENU:
                 this->setState(this->runMainMenu());
                 break;
 
-            case Game::PLAY:
+            case Game::STATE::PLAY:
                 this->setState(this->runLevel());
                 break;
 
-            case Game::END:
+            case Game::STATE::END:
                 if (window)
                 {
                     SDL_DestroyWindow(window);

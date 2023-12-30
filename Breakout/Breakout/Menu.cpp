@@ -19,7 +19,7 @@ Menu::Menu(const Menu& menu)
 
 Menu::Menu(Menu&& menu)
 {
-    // TODO [lpavic]: implement this and consider defining smart pointers
+    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
 }
 
 
@@ -38,8 +38,7 @@ Menu& Menu::operator =(const Menu& menu)
 
 Menu& Menu::operator =(Menu&& menu)
 {
-    // TODO [lpavic]: implement this and consider defining smart pointers
-    // TODO [lpavic]: implement this and consider defining smart pointers
+    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
 	if (this != &menu)
     {
 

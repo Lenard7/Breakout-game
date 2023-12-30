@@ -16,7 +16,7 @@ class Game
 {
 public:
     // game state
-    enum STATE
+    enum class STATE
     {
         MAIN_MENU = 0,
         PLAY,
@@ -25,7 +25,7 @@ public:
 
 private:
     // attributes
-    STATE state{MAIN_MENU};
+    STATE state{STATE::MAIN_MENU};
     
 	// TODO [lpavic]: this window maybe should be shared pointer!?
     SDL_Window* window{nullptr};

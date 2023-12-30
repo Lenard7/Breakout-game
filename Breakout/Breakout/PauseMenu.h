@@ -7,7 +7,7 @@
 class PauseMenu : public Menu
 {
 public:
-    enum PAUSE_MENU_SELECTION_BOX
+    enum class PAUSE_MENU_SELECTION_BOX
     {
         CONTINUE = 0,
         // RESTART,
@@ -18,7 +18,7 @@ public:
 
 private:
     static PauseMenu* pause_menu;
-    PAUSE_MENU_SELECTION_BOX selector{CONTINUE};
+    PAUSE_MENU_SELECTION_BOX selector{PAUSE_MENU_SELECTION_BOX::CONTINUE};
     static const char* const pause_menu_selection_box_text[];
 
     PauseMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);

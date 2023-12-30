@@ -53,7 +53,7 @@ LevelInformation::LevelInformation(LevelInformation&& level_information)
 
     if (level_information.font)
     {
-        // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+        // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute and also marking method as noexcept(warning C26439)
         // this->font = level_information.font;
         // TODO [lpavic]: call custom deleter?
         // TTF_CloseFont(level_information.font);
@@ -99,7 +99,7 @@ LevelInformation& LevelInformation::operator =(LevelInformation&& level_informat
 
         if (this->font)
         {
-            // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute
+            // TODO [lpavic]: resolve this by using std::shared_ptr<TTF_Font> font as an attribute and also marking method as noexcept(warning C26439)
             TTF_CloseFont(this->font);
             this->font = nullptr;
         }

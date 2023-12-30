@@ -39,7 +39,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
     this->color_selected_menu_box = {249, 215, 28, 255};
 
     this->selector = MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME;
-    this->selection_box = new SDL_Rect[MainMenu::MAIN_MENU_SELECTION_BOX::Count];
+    this->selection_box = new SDL_Rect[static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count)];
     this->renderer = SDL_CreateRenderer(*window, -1, 0);
     if (this->renderer == nullptr)
     {
@@ -79,7 +79,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
 
     // TODO [lpavic]: drawing of selectors should be private function (maybe virtual and protected
     // inside Menu class )
-    for (unsigned i = 0; i < MainMenu::MAIN_MENU_SELECTION_BOX::Count; i++)
+    for (unsigned i = 0; i < static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count); i++)
     {
         // dividing by 3 so the selection boxes take only 1/3 of vertical part of the screen
         this->selection_box[i].h = ((this->window_vertical_size / 4) / 
@@ -184,10 +184,10 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
             {
                 switch (this->selector)
                 {
-                    case MainMenu::NEW_GAME:
+                    case MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME:
                         return MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME;
                         break;
-                    case MainMenu::EXIT:
+                    case MainMenu::MAIN_MENU_SELECTION_BOX::EXIT:
                         return MainMenu::MAIN_MENU_SELECTION_BOX::EXIT;
                         break;
                     default:
@@ -197,16 +197,14 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
 
             if (keyboard[SDL_SCANCODE_DOWN])
             {
-                
-
                 this->selector = static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(
-                    (this->selector + static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(1)) 
-                    % MainMenu::MAIN_MENU_SELECTION_BOX::Count
+                    (static_cast<int>(this->selector) + 1) 
+                    % static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count)
                 );
 
                 // TODO [lpavic]: drawing of selectors should be private function (maybe virtual and protected
                 // inside Menu class )
-                for (unsigned i = 0; i < MainMenu::MAIN_MENU_SELECTION_BOX::Count; i++)
+                for (unsigned i = 0; i < static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count); i++)
                 {
                     SDL_Surface* surface;
                     SDL_Texture* texture;
@@ -257,19 +255,19 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                 if (this->selector == static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(0))
                 {
                     this->selector = static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(
-                        MainMenu::MAIN_MENU_SELECTION_BOX::Count - static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(1)
+                        static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count) - 1
                     );
                 }
                 else
                 {
                     this->selector = static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(
-                        this->selector - static_cast<MainMenu::MAIN_MENU_SELECTION_BOX>(1)
+                        static_cast<int>(this->selector) - 1
                     );
                 }
 
                 // TODO [lpavic]: drawing of selectors should be private function (maybe virtual and protected
                 // inside Menu class )
-                for (unsigned i = 0; i < MainMenu::MAIN_MENU_SELECTION_BOX::Count; i++)
+                for (unsigned i = 0; i < static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count); i++)
                 {
                     SDL_Surface* surface;
                     SDL_Texture* texture;

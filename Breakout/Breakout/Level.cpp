@@ -19,7 +19,7 @@ unsigned Level::level_num = 3;
 // TODO [lpavic]: see if some methods should be actually in constructor - e.g. setLevelScene initializes some variables that maybe can be initialized inside constructor
 Level::Level(SDL_Window* const * const window,
 			const unsigned& window_horizontal_size,
-			const unsigned& window_vertical_size) : state(Level::RUNNING)
+			const unsigned& window_vertical_size) : state(Level::STATE::RUNNING)
 {
 	this->window = *window;
 	this->window_horizontal_size = window_horizontal_size;
@@ -202,7 +202,7 @@ void Level::parseLevelFile(const tinyxml2::XMLDocument& doc)
 	this->num_of_bricks = this->row_count * this->column_count; // empty spaces are special kind of bricks which are not going to be drawn and their HP = 0;
 
 	unsigned temp_brick_count = 0;
-	this->bricks = std::make_unique<Brick[]>(this->row_count * this->column_count);
+	this->bricks = std::make_unique<Brick[]>(static_cast<std::size_t>(this->row_count) * this->column_count);
 	for (unsigned size_of_bricks_string = 0; size_of_bricks_string < static_cast<unsigned>(this->bricks_string.size()) && temp_brick_count < this->num_of_bricks; ++size_of_bricks_string)
 	{
 		for (unsigned j = 0; j < brick_type_temp.size(); ++j)
@@ -344,7 +344,7 @@ void Level::relativePositionBallBrick(const unsigned& i) noexcept
 
 void Level::relativePositionBallPaddle() noexcept
 {
-	double rel = static_cast<float>(this->paddle.getTexture().x + (this->paddle.getTexture().w / 2)) - (this->ball.getTexture().x + (this->ball.getTexture().w / 2));
+	double rel = static_cast<double>(static_cast<double>(this->paddle.getTexture().x) + (this->paddle.getTexture().w / 2.0)) - (static_cast<double>(this->ball.getTexture().x) + (this->ball.getTexture().w / 2.0));
     double angle = static_cast<double>(atan(rel / (this->paddle.getTexture().w / 2)));
 	double ball_speed = sqrt(pow(this->ball.getVelocityX(), 2) + pow(this->ball.getVelocityY(), 2));
 	this->ball.setVelocityX(-static_cast<double>(ball_speed) * static_cast<double>(sin(angle)));
@@ -501,13 +501,13 @@ Level* Level::getInstance(SDL_Window* const * const window,
 
 Level::Level(Level&& level)
 {
-    // TODO [lpavic]: implement this and consider defining smart pointers
+    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
 }
 
 
 Level& Level::operator =(Level&& level)
 {
-    // TODO [lpavic]: implement this and consider defining smart pointers
+    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
 	if (this != &level)
     {
 
@@ -600,7 +600,7 @@ Level::STATE Level::runImplementation()
 				{
 					SDL_DestroyRenderer(renderer);
 				}
-				this->setState(Level::QUIT);
+				this->setState(Level::STATE::QUIT);
 				return Level::STATE::QUIT;
 			}
 
@@ -716,14 +716,14 @@ Level::STATE Level::runImplementation()
 					PauseMenu * pause_menu = PauseMenu::getInstance(&window, 
 													window_horizontal_size, 
 													window_vertical_size);
-					this->setState(Level::PAUSED);
-					while(this->getState() == Level::PAUSED)
+					this->setState(Level::STATE::PAUSED);
+					while(this->getState() == Level::STATE::PAUSED)
 					{
 						switch(pause_menu->runImplementation())
 						{
-							case PauseMenu::CONTINUE:
+							case PauseMenu::PAUSE_MENU_SELECTION_BOX::CONTINUE:
 								pause_menu->destroy();
-								this->setState(Level::RUNNING);
+								this->setState(Level::STATE::RUNNING);
 								this->renderer = SDL_CreateRenderer(window, -1, 0);
 								if(this->renderer == nullptr)
 								{
@@ -739,19 +739,19 @@ Level::STATE Level::runImplementation()
 							// 		// if Restart, do call for Level destructor and call it again
 							// 	break;
 							
-							case PauseMenu::QUIT:
+							case PauseMenu::PAUSE_MENU_SELECTION_BOX::QUIT:
 								pause_menu->destroy();
-								this->setState(Level::QUIT);
+								this->setState(Level::STATE::QUIT);
 								return Level::STATE::QUIT;
 								break;
 
-							case PauseMenu::EXIT:
+							case PauseMenu::PAUSE_MENU_SELECTION_BOX::EXIT:
 								pause_menu->destroy();
-								this->setState(Level::EXIT);
+								this->setState(Level::STATE::EXIT);
 								return Level::STATE::EXIT;
 								break;
 
-							case PauseMenu::Count:
+							case PauseMenu::PAUSE_MENU_SELECTION_BOX::Count:
 								THROW_FAILURE("Count state for main menu not valid!\n");
 								break;
 							
@@ -784,6 +784,6 @@ Level::STATE Level::runImplementation()
 	{
 		SDL_DestroyRenderer(renderer);
 	}
-	this->setState(Level::QUIT);
+	this->setState(Level::STATE::QUIT);
 	return Level::STATE::QUIT;
 }

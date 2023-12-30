@@ -14,7 +14,7 @@
 class Level
 {
 public:
-	enum STATE
+	enum class STATE
 	{
 		RUNNING = 0,
 		PAUSED,
@@ -34,7 +34,7 @@ public:
 private:
 	// attributes
     static Level* level;
-    STATE state{RUNNING};
+    STATE state{STATE::RUNNING};
 	// TODO [lpavic]: make this variable non-static member that is assigned by checking folder that contains level files
 	// TODO [lpavic]: getter and setter for static member?
 	static unsigned level_num;
