@@ -96,6 +96,7 @@
     <IncludePath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\include;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib;C:\Users\Leki\Desktop\Breakout\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(LibraryPath)</LibraryPath>
     <ReferencePath>C:\Users\Leki\Desktop\Breakout\Breakout-game\Third_party\SDL2-devel-2.0.18-VC\SDL2-2.0.18\lib\x64;$(ReferencePath)</ReferencePath>
+    <OutDir>$(ProjectDir)\..\..\Release\Breakout\Breakout</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -168,16 +169,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Third_party\tinXML files\Source\tinyxml2.cpp" />
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Breakout.cpp" />
-    <ClCompile Include="BrickType.cpp" />
+    <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameElement.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="HandleGraphics.cpp" />
+    <ClCompile Include="LevelInformation.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Paddle.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BrickType.h" />
-    <ClInclude Include="HandleGraphics.h" />
+    <ClInclude Include="Ball.h" />
+    <ClInclude Include="Brick.h" />
+    <ClInclude Include="ErrorHandler.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameElement.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelInformation.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Paddle.h" />
+    <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Resources.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Breakout.rc" />
