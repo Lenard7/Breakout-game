@@ -55,6 +55,7 @@ extern "C" {
     - when game is lost, message should be: "GAME LOST!", by pressing key "Esc" Main menu should be displayed
  */
 
+
 int main()
 {
     try

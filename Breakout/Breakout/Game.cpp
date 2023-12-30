@@ -1,6 +1,5 @@
-#include "Game.h"
 #include "ErrorHandler.h"
-
+#include "Game.h"
 #include "Level.h"
 #include "MainMenu.h"
 

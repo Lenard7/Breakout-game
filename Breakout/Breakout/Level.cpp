@@ -40,6 +40,7 @@ Level::Level(SDL_Window* const * const window,
 	}
 }
 
+
 Level::~Level()
 {
     // TODO [lpavic]: implement this and consider smart pointers

@@ -1,6 +1,5 @@
-#include "PauseMenu.h"
-
 #include "ErrorHandler.h"
+#include "PauseMenu.h"
 
 
 PauseMenu* PauseMenu::pause_menu = nullptr;

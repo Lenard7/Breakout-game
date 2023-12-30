@@ -11,6 +11,7 @@ extern "C" {
 #include "wtypes.h"
 }
 
+
 // this class is made as singleton (Meyer's implementation, no need of explicit destructor call)
 class Game
 {

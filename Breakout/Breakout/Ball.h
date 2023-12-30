@@ -10,6 +10,7 @@ extern "C" {
 
 #include <iostream>
 
+
 class Ball : public GameElement
 {
 public:
