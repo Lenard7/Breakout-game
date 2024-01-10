@@ -12,12 +12,10 @@ Game::Game()
 }
 
 
-// in Meyer's singleton implementation, destructor is not called until application terminates
-Game::~Game()
+void Game::customDeleterSDLWindow(SDL_Window* window)
 {
-    if (window)
+    if (window != nullptr)
     {
-        // TODO [lpavic]: call custom deleter?
         SDL_DestroyWindow(window);
     }
 }
@@ -43,13 +41,14 @@ void Game::setupWindowSettings()
     getDesktopResolution();
     
     this->window_vertical_size = static_cast<unsigned>(/* 0.95 * */ this->window_vertical_size);
-    this->window = SDL_CreateWindow("Breakout.exe", 
-                                    SDL_WINDOWPOS_UNDEFINED, 
-                                    SDL_WINDOWPOS_UNDEFINED, 
-                                    window_horizontal_size, 
-                                    window_vertical_size, 
-                                    SDL_WINDOW_SHOWN);
-    if (window == nullptr)
+    this->window = std::shared_ptr<SDL_Window>(SDL_CreateWindow("Breakout.exe", 
+                                                                SDL_WINDOWPOS_UNDEFINED, 
+                                                                SDL_WINDOWPOS_UNDEFINED, 
+                                                                window_horizontal_size, 
+                                                                window_vertical_size, 
+                                                                SDL_WINDOW_SHOWN), &customDeleterSDLWindow);
+    
+    if (!window)
     {
         THROW_FAILURE((std::string("Failed creting SDL window: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
     }
@@ -58,7 +57,7 @@ void Game::setupWindowSettings()
 
 const Game::STATE Game::runMainMenu()
 {
-    MainMenu* main_menu = MainMenu::getInstance(&window, 
+    MainMenu* main_menu = MainMenu::getInstance(window, 
                                                 window_horizontal_size, 
                                                 window_vertical_size);
 
@@ -91,7 +90,7 @@ const Game::STATE Game::runLevel()
 {
     while(1)
     {
-        Level* level = Level::getInstance(&window, 
+        Level* level = Level::getInstance(window, 
                                         window_horizontal_size, 
                                         window_vertical_size);
 
@@ -138,24 +137,6 @@ Game& Game::getInstance()
 }
 
 
-Game::Game(Game&& game)
-{
-    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
-}
-
-
-Game& Game::operator =(Game&& game)
-{
-    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
-    if (this != &game)
-    {
-
-	}
-
-    return *this;
-}
-
-
 void Game::runImplementation()
 {
     while (this->getState() != Game::STATE::END)
@@ -171,11 +152,6 @@ void Game::runImplementation()
                 break;
 
             case Game::STATE::END:
-                if (window)
-                {
-                    SDL_DestroyWindow(window);
-                }
-                
                 break;
 
             default:

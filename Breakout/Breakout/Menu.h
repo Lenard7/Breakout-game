@@ -10,22 +10,24 @@ extern "C" {
 #include <SDL_ttf.h>
 }
 
+#include <memory>
 
+
+// In one moment, there can be Main Menu and Options Menu in the same time, so Menu shouldn't be singleton, but there is no need to have copy and move constructors and assign operators
 // TODO [lpavic]: see if this class needs to be implemented as abstract class or normal base class for Pause and Main menu;
     // with PauseMenu and MainMenu, there can also be OptionMenu, LoadMenu...
 // TODO [lpavic]: see if Factory pattern should be used (maybe it does not, maybe it will only complicate whole design)
 class Menu
 {
 protected:
-    // TODO [lpavic]: this window maybe should be shared pointer!?
+	static void customDeleterSDLRenderer(SDL_Renderer* renderer);
 	// TODO [lpavic]: getter and setter for static member?
     // values of window variable and its dimensions are passed through constructor
-    SDL_Window* window{nullptr};
+    std::shared_ptr<SDL_Window> window{nullptr};
     unsigned window_horizontal_size{0};
     unsigned window_vertical_size{0};
 
-    // TODO [lpavic]: this renderer maybe should be unique pointer!?
-    SDL_Renderer* renderer{nullptr};
+    std::unique_ptr<SDL_Renderer, decltype(&customDeleterSDLRenderer)> renderer{nullptr, &customDeleterSDLRenderer};
 
     // title
     SDL_Rect title{0};
@@ -49,21 +51,19 @@ protected:
     SDL_Rect background_image{0, 0, 0, 0};
 
 public:
-    Menu() noexcept;
-    Menu(const Menu& menu);
-    Menu(Menu&& menu);
-    Menu& operator =(const Menu& menu);
-    Menu& operator =(Menu&& menu);
+    Menu() noexcept = default;
+    Menu(const Menu& menu) = delete;
+    Menu(Menu&& menu) = delete;
+    Menu& operator =(const Menu& menu) = delete;
+    Menu& operator =(Menu&& menu) = delete;
     virtual ~Menu();
 
     // getters and setters
-    // TODO [lpavic]: use smart pointer
-    inline SDL_Window* getWindow() const noexcept { return this->window; }
+    inline const std::shared_ptr<SDL_Window>& getWindow() const noexcept { return this->window; }
     inline const unsigned& getWindowHorizontalSize() const noexcept { return this->window_horizontal_size; }
     inline const unsigned& getWindowVerticalSize() const noexcept { return this->window_vertical_size; }
 	
-    // TODO [lpavic]: use smart pointer
-    inline SDL_Renderer* getRenderer() const noexcept { return this->renderer; }
+    inline const std::unique_ptr<SDL_Renderer, decltype(&customDeleterSDLRenderer)>& getRenderer() const noexcept { return this->renderer; }
 
     inline const SDL_Rect& getTitle() const noexcept { return this->title; }
     inline TTF_Font* getFontTitle() const noexcept { return this->font_title; }
@@ -79,12 +79,10 @@ public:
     inline const SDL_Rect& getBackgroundImage() const noexcept { return this->background_image; }
     
     
-    // TODO [lpavic]: use smart pointer
-	inline void setWindow(SDL_Window* const window) noexcept { this->window = window; }
+    inline void setWindow(const std::shared_ptr<SDL_Window>& window) { this->window = window; }
     inline void setWindowHorizontalSize(const unsigned& window_horizontal_size) noexcept { this->window_horizontal_size = window_horizontal_size; }
     inline void setWindowVerticalSize(const unsigned& window_vertical_size) noexcept { this->window_vertical_size = window_vertical_size; }
-	// TODO [lpavic]: use smart pointer
-    inline void setRenderer(SDL_Renderer* const renderer) noexcept { this->renderer = renderer; }
+    inline void setRenderer(std::unique_ptr<SDL_Renderer, decltype(&customDeleterSDLRenderer)>&& renderer ) noexcept { this->renderer = std::move(renderer); }
 
     inline void setTitle(const SDL_Rect& title) noexcept { this->title = title; }
 	// TODO [lpavic]: use smart pointer

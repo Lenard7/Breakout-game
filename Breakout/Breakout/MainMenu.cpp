@@ -1,5 +1,4 @@
 #include "MainMenu.h"
-
 #include "ErrorHandler.h"
 
 
@@ -9,11 +8,11 @@ const char* const MainMenu::main_menu_selection_box_text[] = { "New game", "Exit
 
 // setup attributes of MainMenu singleton object, 
 // setup graphics for first scene when Main menu is entered
-MainMenu::MainMenu(SDL_Window* const * const window,
+MainMenu::MainMenu(std::shared_ptr<SDL_Window>& window,
                     const unsigned& window_horizontal_size,
                     const unsigned& window_vertical_size) : Menu()
 {
-    this->window = *window;
+    this->window = window;
 	this->window_horizontal_size = window_horizontal_size;
 	this->window_vertical_size = window_vertical_size;
 
@@ -40,7 +39,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
 
     this->selector = MainMenu::MAIN_MENU_SELECTION_BOX::NEW_GAME;
     this->selection_box = new SDL_Rect[static_cast<int>(MainMenu::MAIN_MENU_SELECTION_BOX::Count)];
-    this->renderer = SDL_CreateRenderer(*window, -1, 0);
+    this->renderer.reset(SDL_CreateRenderer(window.get(), -1, 0));
     if (this->renderer == nullptr)
     {
         THROW_FAILURE((std::string("Error while initializing renderer for Main Menu: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -60,7 +59,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
         THROW_FAILURE((std::string("Error while initializing surface for Main Menu for font title: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
     }
 
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
     if (texture == nullptr)
     {
         THROW_FAILURE((std::string("Error while initializing texture for Main Menu for surface for font title: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -69,7 +68,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
     surface->w = title.w;
     surface->h = title.h;
 
-    if (SDL_RenderCopy(renderer, texture, NULL, &title) < 0)
+    if (SDL_RenderCopy(renderer.get(), texture, NULL, &title) < 0)
     {
         THROW_FAILURE((std::string("Error while copying texture of font title to renderer in Main menu: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
     }
@@ -114,7 +113,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
                 THROW_FAILURE((std::string("Error while initializing surface for Main Menu for seleciton box: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
             }
         }
-        texture = SDL_CreateTextureFromSurface(renderer, surface);
+        texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
         if (texture == nullptr)
         {
             THROW_FAILURE((std::string("Error while initializing texture for Main Menu for surface for selection box: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -123,7 +122,7 @@ MainMenu::MainMenu(SDL_Window* const * const window,
         surface->w = this->selection_box[i].w;
         surface->h = this->selection_box[i].h;
 
-        if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+        if (SDL_RenderCopy(renderer.get(), texture, NULL, (selection_box + i)) < 0)
         {
             THROW_FAILURE((std::string("Error while copying texture of selection box to renderer in Pause menu: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
         }
@@ -132,19 +131,11 @@ MainMenu::MainMenu(SDL_Window* const * const window,
         SDL_DestroyTexture(texture);
     }
 
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer.get());
 }
 
 
-// deallocate all pointers (for SDL pointers, use deallocation functions implemented inside SDL library)
-MainMenu::~MainMenu()
-{
-    // TODO [lpavic]: deallocate window pointer, but this pointer should be shared so 
-        // game object still has its own pointer
-}
-
-
-MainMenu* MainMenu::getInstance(SDL_Window* const * const window,
+MainMenu* MainMenu::getInstance(std::shared_ptr<SDL_Window>& window,
                                     const unsigned& window_horizontal_size,
                                     const unsigned& window_vertical_size)
 {
@@ -229,7 +220,7 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                             THROW_FAILURE((std::string("Error while initializing surface for Main Menu for seleciton box: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
                         }
                     }
-                    texture = SDL_CreateTextureFromSurface(renderer, surface);
+                    texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
                     if (texture == nullptr)
                     {
                         THROW_FAILURE((std::string("Error while initializing texture for Main Menu for surface for selection box: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -238,7 +229,7 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                     surface->w = this->selection_box[i].w;
                     surface->h = this->selection_box[i].h;
 
-                    if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+                    if (SDL_RenderCopy(renderer.get(), texture, NULL, (selection_box + i)) < 0)
                     {
                         THROW_FAILURE((std::string("Error while copying texture of selection box to renderer in Main menu: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
                     }
@@ -246,7 +237,7 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                     SDL_FreeSurface(surface);
                     SDL_DestroyTexture(texture);
                 }
-                SDL_RenderPresent(renderer);
+                SDL_RenderPresent(renderer.get());
                 ///////////////////////
             }
 
@@ -292,7 +283,7 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                             THROW_FAILURE((std::string("Error while initializing surface for Main Menu for seleciton box: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
                         }
                     }
-                    texture = SDL_CreateTextureFromSurface(renderer, surface);
+                    texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
                     if (texture == nullptr)
                     {
                         THROW_FAILURE((std::string("Error while initializing texture for Main Menu for surface for selection box: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -301,7 +292,7 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                     surface->w = this->selection_box[i].w;
                     surface->h = this->selection_box[i].h;
 
-                    if (SDL_RenderCopy(renderer, texture, NULL, (selection_box + i)) < 0)
+                    if (SDL_RenderCopy(renderer.get(), texture, NULL, (selection_box + i)) < 0)
                     {
                         THROW_FAILURE((std::string("Error while copying texture of selection box to renderer in Main menu: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
                     }
@@ -309,7 +300,7 @@ const MainMenu::MAIN_MENU_SELECTION_BOX MainMenu::runImplementation()
                     SDL_FreeSurface(surface);
                     SDL_DestroyTexture(texture);
 
-                    SDL_RenderPresent(renderer);
+                    SDL_RenderPresent(renderer.get());
                 }
                 /////////////////////////
             }
