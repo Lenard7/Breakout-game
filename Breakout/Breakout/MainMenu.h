@@ -4,7 +4,6 @@
 
 
 // this class is made as singleton
-
 class MainMenu : public Menu
 {
 public:
@@ -20,17 +19,19 @@ private:
     MAIN_MENU_SELECTION_BOX selector{MAIN_MENU_SELECTION_BOX::NEW_GAME};
     static const char* const main_menu_selection_box_text[];
 
-    MainMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
-    virtual ~MainMenu();
+    MainMenu(std::shared_ptr<SDL_Window>& window,
+                const unsigned& window_horizontal_size,
+                const unsigned& window_vertical_size);
+    virtual ~MainMenu() = default;
 
 public:
-    static MainMenu* getInstance(SDL_Window * const * const window, 
+    static MainMenu* getInstance(std::shared_ptr<SDL_Window>& window, 
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
     MainMenu(const MainMenu& main_menu) = delete;
-    MainMenu(MainMenu&& main_menu) noexcept = default; // this move copy constructor will call move copy constructor of Menu class
+    MainMenu(MainMenu&& main_menu) noexcept = delete;
     MainMenu& operator =(const MainMenu& main_menu) = delete;
-    MainMenu& operator =(MainMenu&& main_menu) noexcept = default;
+    MainMenu& operator =(MainMenu&& main_menu) noexcept = delete;
 
     void destroy();
 

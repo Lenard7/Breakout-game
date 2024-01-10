@@ -128,7 +128,7 @@ LevelInformation::~LevelInformation()
 }
 
 
-void LevelInformation:: drawSurface(SDL_Renderer* const * const renderer, const std::string& display_string_value)
+void LevelInformation:: drawSurface(SDL_Renderer* const renderer, const std::string& display_string_value)
 {
     SDL_Surface* surface;
     SDL_Texture* texture;
@@ -139,7 +139,7 @@ void LevelInformation:: drawSurface(SDL_Renderer* const * const renderer, const 
         THROW_FAILURE((std::string("Surface for rendering Level Information not initialized properly: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
     }
     
-    texture = SDL_CreateTextureFromSurface(*renderer, surface);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture == nullptr)
     {
         THROW_FAILURE((std::string("Texture for rendering Level Information not initialized properly: TTF_GetError(): ") + std::string(TTF_GetError()) + std::string("\n")).c_str());
@@ -148,7 +148,7 @@ void LevelInformation:: drawSurface(SDL_Renderer* const * const renderer, const 
     surface->w = this->texture.w;
     surface->h = this->texture.h;
 
-    if (SDL_RenderCopy(*renderer, texture, NULL, &(this->texture)) < 0)
+    if (SDL_RenderCopy(renderer, texture, NULL, &(this->texture)) < 0)
     {
         THROW_FAILURE((std::string("Texture for rendering Level Information not initialized properly: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
     }

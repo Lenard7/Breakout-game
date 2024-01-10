@@ -11,6 +11,8 @@ extern "C" {
 #include "wtypes.h"
 }
 
+#include <memory>
+
 
 // this class is made as singleton (Meyer's implementation, no need of explicit destructor call)
 class Game
@@ -28,8 +30,7 @@ private:
     // attributes
     STATE state{STATE::MAIN_MENU};
     
-	// TODO [lpavic]: this window maybe should be shared pointer!?
-    SDL_Window* window{nullptr};
+    std::shared_ptr<SDL_Window> window{nullptr};
     unsigned window_horizontal_size{0};
     unsigned window_vertical_size{0};
 
@@ -37,9 +38,11 @@ private:
     
     // constructor and destructor are private for singleton purpose
     Game();
-    ~Game();
+    // in Meyer's singleton implementation, destructor is not called until application terminates
+    ~Game() = default;
 
     // private methods
+    static void customDeleterSDLWindow(SDL_Window* window);
     void getDesktopResolution();
     void setupWindowSettings();
     const STATE runMainMenu();
@@ -47,11 +50,12 @@ private:
 
 public:
     // constructors and assign operator
+    // Game class is not meant to be copied or moved in any metter
     static Game& getInstance();
     Game(const Game& game) = delete;
-    Game(Game&& game);
+    Game(Game&& game) = delete;
     Game& operator =(const Game& game) = delete;
-    Game& operator =(Game&& game);
+    Game& operator =(Game&& game) = delete;
 
     // public methods
     // this method is implemented as state machine
@@ -59,14 +63,12 @@ public:
 
     // getters and setters
     inline const STATE& getState() const { return this->state; }
-	// TODO [lpavic]: there is no const since there would need const_cast for SDL_Window* a = this->getWindow(); invocation - better to use smart pointers in classes
-    inline SDL_Window* getWindow() const { return this->window; }
+    inline const std::shared_ptr<SDL_Window>& getWindow() const noexcept { return this->window; }
     inline const unsigned& getWindowHorizontalSize() const { return this->window_horizontal_size; }
     inline const unsigned& getWindowVerticalSize() const { return this->window_vertical_size; }
 
     inline void setState(const STATE& state) { this->state = state; }
-	// TODO [lpavic]: use smart pointer
-    inline void setWindow(SDL_Window* const window) { this->window = window; }
+    inline void setWindow(const std::shared_ptr<SDL_Window>& window) { this->window = window; }
     inline void setWindowHorizontalSize(const unsigned& window_horizontal_size) { this->window_horizontal_size = window_horizontal_size; }
     inline void setWindowVerticalSize(const unsigned& window_vertical_size) { this->window_vertical_size = window_vertical_size; }
 };

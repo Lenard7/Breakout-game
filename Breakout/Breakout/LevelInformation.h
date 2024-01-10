@@ -33,7 +33,7 @@ public:
     LevelInformation& operator =(LevelInformation&& level_information);
     virtual ~LevelInformation();
 
-    void drawSurface(SDL_Renderer* const * const renderer, const std::string& display_string_value);
+    void drawSurface(SDL_Renderer* const renderer, const std::string& display_string_value);
 
     //getters and setters
     inline const SDL_Rect& getTexture() const noexcept { return this->texture; }

@@ -32,6 +32,7 @@ public:
 	};
 
 private:
+	static void customDeleterSDLRenderer(SDL_Renderer* renderer);
 	// attributes
     static Level* level;
     STATE state{STATE::RUNNING};
@@ -43,13 +44,11 @@ private:
 	unsigned total_score{0};
 
 	// window data
-	// TODO [lpavic]: this window maybe should be shared pointer!?
     // values of window variable and its dimensions are passed through constructor
-    SDL_Window* window{nullptr};
+    std::shared_ptr<SDL_Window> window{nullptr};
     unsigned window_horizontal_size{0};
     unsigned window_vertical_size{0};
-	// TODO [lpavic]: this renderer maybe should be unique pointer!?
-    SDL_Renderer* renderer{nullptr};
+    std::unique_ptr<SDL_Renderer, decltype(&customDeleterSDLRenderer)> renderer{nullptr, &customDeleterSDLRenderer};
 	// offset variable as offset in dimensions of window
 	// TODO [lpavic]: unused variable?
 	unsigned offset{0};
@@ -74,8 +73,8 @@ private:
 	unsigned num_of_level_information{0};
 	bool level_victory{false};
 
-	Level(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
-	~Level();
+	Level(std::shared_ptr<SDL_Window>& window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
+	~Level() noexcept = default;
 
 	void drawLevel();
 	void handleKeyboardStates(const Uint8* const keyboard) noexcept;
@@ -89,13 +88,13 @@ private:
 	void setLimitSituations() noexcept;
 
 public:
-	static Level* getInstance(SDL_Window* const * const window, 
+	static Level* getInstance(std::shared_ptr<SDL_Window>& window, 
                                 const unsigned& window_horizontal_size,
                                 const unsigned& window_vertical_size);
 	Level(const Level& level) = delete;
-	Level(Level&& level);
+	Level(Level&& level) = delete;
 	Level& operator =(const Level& level) = delete;
-	Level& operator =(Level&& level);
+	Level& operator =(Level&& level) = delete;
 	void destroy();
 
     // this method is implemented as state machine
@@ -107,12 +106,10 @@ public:
     inline const unsigned& getNumOfLives() const noexcept { return this->num_of_lives; }
     inline const unsigned& getTotalScore() const noexcept { return this->total_score; }
 
-	// TODO [lpavic]: there is no const since there would need const_cast for SDL_Window* a = this->getWindow(); invokation - better to use smart pointers in classes
-	inline SDL_Window* getWindow() const noexcept { return this->window; }
+    inline const std::shared_ptr<SDL_Window>& getWindow() const noexcept { return this->window; }
     inline const unsigned& getWindowHorizontalSize() const noexcept { return this->window_horizontal_size; }
     inline const unsigned& getWindowVerticalSize() const noexcept { return this->window_vertical_size; }
-	// TODO [lpavic]: use smart pointer
-    inline SDL_Renderer* getRenderer() const noexcept { return this->renderer; }
+    inline const std::unique_ptr<SDL_Renderer, decltype(&customDeleterSDLRenderer)>& getRenderer() const noexcept { return this->renderer; }
     inline const unsigned& getOffset() const noexcept { return this->offset; }
     inline const FrameInformation& getFrameInformation() const noexcept { return this->frame_information; }
 
@@ -124,12 +121,10 @@ public:
 	inline const std::string& getBricksString() const noexcept { return this->bricks_string; }
 
 	inline const std::unique_ptr<Brick[]>& getBricks() const noexcept { return this->bricks; }
-	inline std::unique_ptr<Brick[]>& getBricks() noexcept { return this->bricks; }
 	inline const unsigned& getNumOfBricks() const noexcept { return this->num_of_bricks; }
 	inline const Paddle& getPaddle() const noexcept { return this->paddle; }
 	inline const Ball& getBall() const noexcept { return this->ball; }
 	inline const std::unique_ptr<LevelInformation[]>& getLevelInformation() const noexcept { return this->level_information; }
-	inline std::unique_ptr<LevelInformation[]>& getLevelInformation() noexcept { return this->level_information; }
 	inline const unsigned& getNumOfLevelInformation() const noexcept { return this->num_of_level_information; }
 	inline const bool getLevelVictory() const noexcept { return this->level_victory; }
 
@@ -138,12 +133,10 @@ public:
     inline void setNumOfLives(const unsigned& num_of_lives) noexcept { this->num_of_lives = num_of_lives; }
     inline void setTotalScore(const unsigned& total_score) noexcept { this->total_score = total_score; }
 
-	// TODO [lpavic]: use smart pointer
-	inline void setWindow(SDL_Window* const window ) noexcept { this->window = window; }
+    inline void setWindow(const std::shared_ptr<SDL_Window>& window) { this->window = window; }
     inline void setWindowHorizontalSize(const unsigned& window_horizontal_size ) noexcept { this->window_horizontal_size = window_horizontal_size; }
     inline void setWindowVerticalSize(const unsigned& window_vertical_size ) noexcept { this->window_vertical_size = window_vertical_size; }
-	// TODO [lpavic]: use smart pointer
-    inline void setRenderer(SDL_Renderer* const renderer ) noexcept { this->renderer = renderer; }
+    inline void setRenderer(std::unique_ptr<SDL_Renderer, decltype(&customDeleterSDLRenderer)>&& renderer ) noexcept { this->renderer = std::move(renderer); }
     inline void setOffset(const unsigned& offset ) noexcept { this->offset = offset; }
     inline void setFrameInformation(const FrameInformation& frame_information ) noexcept { this->frame_information = frame_information; }
 

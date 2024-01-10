@@ -31,7 +31,7 @@ public:
     virtual ~GameElement() noexcept = default;
 
     // TODO [lpavic]: see if this function should be virtual and reimplemented in derived classes
-    void drawSprite(SDL_Renderer* const * const renderer);
+    void drawSprite(SDL_Renderer* const renderer);
 
     // getters and setters
 	inline const std::string& getID() const noexcept { return this->ID; }

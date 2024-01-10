@@ -11,17 +11,26 @@
 #include <iostream>
 
 
+void Level::customDeleterSDLRenderer(SDL_Renderer* renderer)
+{
+	if (renderer != nullptr)
+	{
+		SDL_DestroyRenderer(renderer);
+	}
+}
+
+
 Level * Level::level = nullptr;
 // TODO [lpavic]: make this variable non-static member that is assigned by checking folder that contains level files
 unsigned Level::level_num = 3;
 
 
 // TODO [lpavic]: see if some methods should be actually in constructor - e.g. setLevelScene initializes some variables that maybe can be initialized inside constructor
-Level::Level(SDL_Window* const * const window,
+Level::Level(std::shared_ptr<SDL_Window>& window,
 			const unsigned& window_horizontal_size,
 			const unsigned& window_vertical_size) : state(Level::STATE::RUNNING)
 {
-	this->window = *window;
+	this->window = window;
 	this->window_horizontal_size = window_horizontal_size;
 	this->window_vertical_size = window_vertical_size;
 	this->offset = static_cast<int>(std::min(window_vertical_size, window_horizontal_size) * 0.01);
@@ -41,19 +50,13 @@ Level::Level(SDL_Window* const * const window,
 }
 
 
-Level::~Level()
-{
-    // TODO [lpavic]: implement this and consider smart pointers
-}
-
-
 void Level::drawLevel()
 {
-	if (SDL_SetRenderDrawColor(this->renderer, 20, 20, 20, 255) != 0)
+	if (SDL_SetRenderDrawColor(this->renderer.get(), 20, 20, 20, 255) != 0)
 	{
 		THROW_FAILURE((std::string("Setting render draw color error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
 	}
-	if (SDL_RenderClear(this->renderer) != 0)
+	if (SDL_RenderClear(this->renderer.get()) != 0)
 	{
 		THROW_FAILURE((std::string("Clearing level renderer error: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
 	}
@@ -61,24 +64,24 @@ void Level::drawLevel()
 	// TODO [lpavic]: see if this is needed
 	// refreshFrames();
 
-	this->ball.drawSprite(&this->renderer);
-	this->paddle.drawSprite(&this->renderer);
+	this->ball.drawSprite(this->renderer.get());
+	this->paddle.drawSprite(this->renderer.get());
 	
 	// TODO [lpavic]: whole game lags when there are more bricks
 	for (unsigned i = 0; i < this->num_of_bricks; i++)
 	{
 		if (this->bricks[i].getIsAlive())
 		{
-			this->bricks[i].drawSprite(&this->renderer);
+			this->bricks[i].drawSprite(this->renderer.get());
 		}
 	}
 
 	// TODO [lpavic]: display lives, score and level as multiline string
-	this->level_information[0].drawSurface(&(this->renderer), std::to_string(this->num_of_lives));
-	this->level_information[1].drawSurface(&(this->renderer), std::to_string(this->current_level + 1));
-	this->level_information[2].drawSurface(&(this->renderer), std::to_string(this->total_score));
+	this->level_information[0].drawSurface(this->renderer.get(), std::to_string(this->num_of_lives));
+	this->level_information[1].drawSurface(this->renderer.get(), std::to_string(this->current_level + 1));
+	this->level_information[2].drawSurface(this->renderer.get(), std::to_string(this->total_score));
 
-	SDL_RenderPresent(this->renderer);
+	SDL_RenderPresent(this->renderer.get());
 }
 
 
@@ -488,7 +491,7 @@ void Level::setLimitSituations() noexcept
 }
 
 
-Level* Level::getInstance(SDL_Window* const * const window,
+Level* Level::getInstance(std::shared_ptr<SDL_Window>& window,
                                     const unsigned& window_horizontal_size,
                                     const unsigned& window_vertical_size)
 {
@@ -497,24 +500,6 @@ Level* Level::getInstance(SDL_Window* const * const window,
         level = new Level(window, window_horizontal_size, window_vertical_size);
     }
     return level;
-}
-
-
-Level::Level(Level&& level)
-{
-    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
-}
-
-
-Level& Level::operator =(Level&& level)
-{
-    // TODO [lpavic]: implement this and consider defining smart pointers and also marking as noexcept(warning C26439)
-	if (this != &level)
-    {
-
-	}
-
-    return *this;
 }
 
 
@@ -582,7 +567,7 @@ Level::STATE Level::runImplementation()
 
 		setLevelScene();
 
-		this->renderer = SDL_CreateRenderer(window, -1, 0);
+		this->renderer.reset(SDL_CreateRenderer(window.get(), -1, 0));
 		if(this->renderer == nullptr)
 		{
         	THROW_FAILURE((std::string("Error while creating renderer for level: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -599,7 +584,7 @@ Level::STATE Level::runImplementation()
 			{
 				if (this->renderer)
 				{
-					SDL_DestroyRenderer(renderer);
+					SDL_RenderClear(this->renderer.get());
 				}
 				this->setState(Level::STATE::QUIT);
 				return Level::STATE::QUIT;
@@ -711,11 +696,12 @@ Level::STATE Level::runImplementation()
 				{
 					if (this->renderer)
 					{
-       					SDL_DestroyRenderer(renderer);
+       					SDL_RenderClear(renderer.get());
+						this->renderer.reset();
 					}
 
-					PauseMenu * pause_menu = PauseMenu::getInstance(&window, 
-													window_horizontal_size, 
+					PauseMenu * pause_menu = PauseMenu::getInstance(window,
+													window_horizontal_size,
 													window_vertical_size);
 					this->setState(Level::STATE::PAUSED);
 					while(this->getState() == Level::STATE::PAUSED)
@@ -725,7 +711,7 @@ Level::STATE Level::runImplementation()
 							case PauseMenu::PAUSE_MENU_SELECTION_BOX::CONTINUE:
 								pause_menu->destroy();
 								this->setState(Level::STATE::RUNNING);
-								this->renderer = SDL_CreateRenderer(window, -1, 0);
+								this->renderer.reset(SDL_CreateRenderer(window.get(), -1, 0));
 								if(this->renderer == nullptr)
 								{
         							THROW_FAILURE((std::string("Error while creating renderer for level: SDL_GetError(): ") + std::string(SDL_GetError()) + std::string("\n")).c_str());
@@ -775,16 +761,11 @@ Level::STATE Level::runImplementation()
 		}
 		if (this->level_victory)
 		{
-			// TODO [lpavic]: clear Renderer of Level and other pointers related to current level
-        	SDL_DestroyRenderer(this->renderer);
+        	SDL_RenderClear(this->renderer.get());
+			this->renderer.reset();
 		}
 	}
 
-	// TODO [lpavic]: see if this needs to be put inside destructor of Level
-	if (this->renderer)
-	{
-		SDL_DestroyRenderer(renderer);
-	}
 	this->setState(Level::STATE::QUIT);
 	return Level::STATE::QUIT;
 }

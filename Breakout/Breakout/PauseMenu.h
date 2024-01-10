@@ -21,17 +21,19 @@ private:
     PAUSE_MENU_SELECTION_BOX selector{PAUSE_MENU_SELECTION_BOX::CONTINUE};
     static const char* const pause_menu_selection_box_text[];
 
-    PauseMenu(SDL_Window* const * const window, const unsigned& window_horizontal_size, const unsigned& window_vertical_size);
-    virtual ~PauseMenu();
+    PauseMenu(std::shared_ptr<SDL_Window>& window,
+                const unsigned& window_horizontal_size,
+                const unsigned& window_vertical_size);
+    virtual ~PauseMenu() = default;
 
 public:
-    static PauseMenu* getInstance(SDL_Window* const * const window, 
-                                const unsigned& window_horizontal_size,
-                                const unsigned& window_vertical_size);
+    static PauseMenu* getInstance(std::shared_ptr<SDL_Window>& window,
+                                    const unsigned& window_horizontal_size,
+                                    const unsigned& window_vertical_size);
     PauseMenu(const PauseMenu& pause_menu) = delete;
-    PauseMenu(PauseMenu&& pause_menu) noexcept = default; // this move copy constructor will call move copy constructor of Menu class
+    PauseMenu(PauseMenu&& pause_menu) noexcept = delete;
     PauseMenu& operator = (const PauseMenu& pause_menu) = delete;
-    PauseMenu& operator =(PauseMenu&& pause_menu) noexcept = default;
+    PauseMenu& operator =(PauseMenu&& pause_menu) noexcept = delete;
     
     void destroy();
 
